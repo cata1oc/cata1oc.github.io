@@ -152,6 +152,72 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-初见保护模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2020/03/06/%E5%88%9D%E8%A7%81%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F/">初见保护模式</a>
+    </h1>
+  
+
+        
+        <a href="/blog/2020/03/06/%E5%88%9D%E8%A7%81%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
+  	<time datetime="2020-03-06T03:59:41.656Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="保护模式"><a href="#保护模式" class="headerlink" title="保护模式"></a>保护模式</h4><p>​        从80386开始，CPU有三种工作方式：<strong>实模式，保护模式和虚拟8086模式</strong>。在计算机刚启动时CPU处于实模式，然后通过切换机制再进入保护模式，所以现在的操作系统，都是运行在保护模式上。</p>
+<h4 id="为何要引入保护模式？"><a href="#为何要引入保护模式？" class="headerlink" title="为何要引入保护模式？"></a>为何要引入保护模式？</h4><p>​        在80286以前，CPU只有实模式，在这个模式下，所有的段都是可读，可写，可执行的；此时，系统程序和用户程序可以相互访问彼此的地址，用户稍有不慎就可能修改到系统程序段，影响系统程序的正常运行，导致系统崩溃。</p>
+<p>​        保护模式的引入提供了段间的保护机制，防止程序间胡乱访问地址带来的问题，同时也扩大了访问的内存空间。</p>
+<h4 id="段，页机制"><a href="#段，页机制" class="headerlink" title="段，页机制"></a>段，页机制</h4><p>​        段，页机制均是CPU所提供的，操作系统利用CPU提供的段，页机制，实现对虚拟地址空间的管理，使得操作系统在保护模式上有序，”安全”的工作。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/blog/2020/03/06/%E5%88%9D%E8%A7%81%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-HelloWorld" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -159,13 +225,13 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2020/03/05/HelloWorld/">HelloWorld</a>
+      <a class="article-title" href="/blog/2020/03/06/HelloWorld/">HelloWorld</a>
     </h1>
   
 
         
-        <a href="/blog/2020/03/05/HelloWorld/" class="archive-article-date">
-  	<time datetime="2020-03-05T11:40:43.892Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-05</time>
+        <a href="/blog/2020/03/06/HelloWorld/" class="archive-article-date">
+  	<time datetime="2020-03-06T02:14:26.520Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-06</time>
 </a>
         
       </header>
@@ -185,7 +251,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/blog/2020/03/05/HelloWorld/">展开全文 >></a>
+          <a class="article-more-a" href="/blog/2020/03/06/HelloWorld/">展开全文 >></a>
         </p>
       
 
@@ -387,7 +453,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">沉淀知识&lt;br&gt;提升自己</div>
   	  	
     	</section>
     
