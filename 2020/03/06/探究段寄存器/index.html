@@ -6,19 +6,27 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>初见保护模式 | cataLoc&#39;s Blog</title>
+  <title>探究段寄存器 | cataLoc&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="保护模式从80386开始，CPU有三种工作方式：实模式，保护模式和虚拟8086模式。在计算机刚启动时CPU处于实模式，然后通过切换机制再进入保护模式，所以现在的操作系统，都是运行在保护模式上。 为何要引入保护模式？在80286以前，CPU只有实模式，在这个模式下，所有的段都是可读，可写，可执行的；此时，系统程序和用户程序可以相互访问彼此的地址，用户稍有不慎就可能修改到系统程序段，影响系统程序的正常">
+  <meta name="description" content="[TOC] 1. 被忽视的ds1mov dword ptr ds:[0x003f048], eax  在进行ring3逆向时，海哥让我们不去管ds寄存器的作用，只需要理解，这条语句的作用是将eax的值，写入0x003f048这个地址处即可；但是到了保护模式，这种说法就不再准确了，接下来一步步探寻ds的本质 2. 段寄存器ds 是 CPU 中的一个寄存器，这种寄存器称为段寄存器，除了ds，还有cs、">
 <meta property="og:type" content="article">
-<meta property="og:title" content="初见保护模式">
-<meta property="og:url" content="http://yoursite.com/2020/03/06/%E5%88%9D%E8%A7%81%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:title" content="探究段寄存器">
+<meta property="og:url" content="http://yoursite.com/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/index.html">
 <meta property="og:site_name" content="cataLoc&#39;s Blog">
-<meta property="og:description" content="保护模式从80386开始，CPU有三种工作方式：实模式，保护模式和虚拟8086模式。在计算机刚启动时CPU处于实模式，然后通过切换机制再进入保护模式，所以现在的操作系统，都是运行在保护模式上。 为何要引入保护模式？在80286以前，CPU只有实模式，在这个模式下，所有的段都是可读，可写，可执行的；此时，系统程序和用户程序可以相互访问彼此的地址，用户稍有不慎就可能修改到系统程序段，影响系统程序的正常">
+<meta property="og:description" content="[TOC] 1. 被忽视的ds1mov dword ptr ds:[0x003f048], eax  在进行ring3逆向时，海哥让我们不去管ds寄存器的作用，只需要理解，这条语句的作用是将eax的值，写入0x003f048这个地址处即可；但是到了保护模式，这种说法就不再准确了，接下来一步步探寻ds的本质 2. 段寄存器ds 是 CPU 中的一个寄存器，这种寄存器称为段寄存器，除了ds，还有cs、">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-03-06T03:59:41.656Z">
-<meta property="article:modified_time" content="2020-03-07T01:03:54.368Z">
+<meta property="og:image" content="http://yoursite.com/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segmentReg.png">
+<meta property="og:image" content="http://yoursite.com/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/dsRegValue.png">
+<meta property="og:image" content="http://yoursite.com/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segRegBase.png">
+<meta property="og:image" content="http://yoursite.com/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segRegAttr_1.png">
+<meta property="og:image" content="http://yoursite.com/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segRegAttr_2.png">
+<meta property="og:image" content="http://yoursite.com/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segRegLimit.png">
+<meta property="og:image" content="http://yoursite.com/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segRegStruct.png">
+<meta property="article:published_time" content="2020-03-06T15:00:07.000Z">
+<meta property="article:modified_time" content="2020-03-07T01:05:20.445Z">
 <meta property="article:author" content="cataLoc">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segmentReg.png">
   
     <link rel="alternative" href="/atom.xml" title="cataLoc&#39;s Blog" type="application/atom+xml">
   
@@ -154,30 +162,158 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-初见保护模式" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="source/_posts/-探究段寄存器" class="article article-type-source/_posts/ " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      初见保护模式
+      探究段寄存器
     </h1>
   
 
         
-        <a href="/blog/2020/03/06/%E5%88%9D%E8%A7%81%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-03-06T03:59:41.656Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-06</time>
+        <a href="/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/" class="archive-article-date">
+  	<time datetime="2020-03-06T15:00:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-06</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="保护模式"><a href="#保护模式" class="headerlink" title="保护模式"></a>保护模式</h2><p>从80386开始，CPU有三种工作方式：<strong>实模式，保护模式和虚拟8086模式</strong>。在计算机刚启动时CPU处于实模式，然后通过切换机制再进入保护模式，所以现在的操作系统，都是运行在保护模式上。</p>
-<h2 id="为何要引入保护模式？"><a href="#为何要引入保护模式？" class="headerlink" title="为何要引入保护模式？"></a>为何要引入保护模式？</h2><p>在80286以前，CPU只有实模式，在这个模式下，所有的段都是可读，可写，可执行的；此时，系统程序和用户程序可以相互访问彼此的地址，用户稍有不慎就可能修改到系统程序段，影响系统程序的正常运行，导致系统崩溃。<a id="more"></a></p>
-<p>保护模式的引入提供了段间的保护机制，防止程序间胡乱访问地址带来的问题，同时也扩大了访问的内存空间（没整明白8086实模式的寻址方式，看结果，保护模式的确扩大了寻址空间）。</p>
-<h2 id="段、页机制"><a href="#段、页机制" class="headerlink" title="段、页机制"></a>段、页机制</h2><p>段，页机制均是CPU所提供的，操作系统利用CPU提供的段，页机制，实现对虚拟地址空间的管理，使得操作系统在保护模式上有序，”安全”的工作。</p>
+        <p>[TOC]</p>
+<h2 id="1-被忽视的ds"><a href="#1-被忽视的ds" class="headerlink" title="1. 被忽视的ds"></a>1. 被忽视的ds</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov dword ptr ds:[0x003f048], eax</span><br></pre></td></tr></table></figure>
+
+<p>在进行ring3逆向时，海哥让我们不去管ds寄存器的作用，只需要理解，这条语句的作用是将eax的值，写入0x003f048这个地址处即可；但是到了保护模式，这种说法就不再准确了，接下来一步步探寻ds的本质</p>
+<h2 id="2-段寄存器"><a href="#2-段寄存器" class="headerlink" title="2. 段寄存器"></a>2. 段寄存器</h2><p>ds 是 CPU 中的一个寄存器，这种寄存器称为<strong>段寄存器</strong>，除了ds，还有cs、es、ss、fs、gs 等。</p>
+<p>打开OllyDbg，任意附加一个.exe文件，可以在右侧窗口看到如下一块区域 <!----></p>
+<img src="/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segmentReg.png" class="" title="[]"> 
+
+<p>这些是OllyDbg调试器显示出当前程序运行时<strong>段寄存器</strong>的各部分属性的值。接下来分析这些值的来源和含义。</p>
+<h4 id="2-1-段寄存器的读写"><a href="#2-1-段寄存器的读写" class="headerlink" title="2.1 段寄存器的读写"></a>2.1 段寄存器的读写</h4><p>在后面的部分会经常用到段寄存器的读写，这里先说明一下：</p>
+<p>读：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov ax, fs</span><br></pre></td></tr></table></figure>
+
+<p>写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov ds, ax</span><br></pre></td></tr></table></figure>
+
+<p>段寄存器在<strong>读</strong>的时候，只读了<strong>16</strong>位，但是<strong>写</strong>的时候会写入<strong>96</strong>位。下面将逐步证明为何写入了96位。</p>
+<h2 id="3-段寄存器结构"><a href="#3-段寄存器结构" class="headerlink" title="3. 段寄存器结构"></a>3. 段寄存器结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct SegmentReg &#123;</span><br><span class="line">    WORD selector;</span><br><span class="line">    WORD attribute;</span><br><span class="line">    DWORD base;</span><br><span class="line">    DWORD limit;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由段寄存器的结构可知，段寄存器共96位，由16位的段选择子，16位的段属性，32位的base和32位的limit组成。</p>
+<img src="/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/dsRegValue.png" class="" title="[]">
+
+<p>打印ds寄存器的值，发现只能显示0x0023，也就是段选择子那16位。不是说好的共96位吗？实际上，剩下来80位是不可见的部分，只不过OD也展示出来了，接下来证明每个属性的存在。</p>
+<h4 id="3-1-段基址"><a href="#3-1-段基址" class="headerlink" title="3.1 段基址"></a>3.1 段基址</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov eax, dword ptr ds:[0]</span><br></pre></td></tr></table></figure>
+
+<p>理论上，上面这条语句是无法执行成功的，因为零地址是不允许访问的（因为没有给零地址挂物理页）</p>
+<img src="/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segRegBase.png" class="" title="[]">
+
+<p>但是上述程序可以成功执行（这里不使用ds，原因是vc6作者对ds做过优化，写成ds将编译不过去），说明了这里访问的不是零地址，而是其它地址，也就是说，段寄存器修改了写入数据的地址，证明了段基址的存在。</p>
+<p>这里真正的将数据写入eax的地址是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gs.base + 0x0</span><br></pre></td></tr></table></figure>
+
+<p>以下是常见段的基址</p>
+<table>
+<thead>
+<tr>
+<th>段寄存器</th>
+<th>Base</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ES</td>
+<td>0</td>
+</tr>
+<tr>
+<td>CS</td>
+<td>0</td>
+</tr>
+<tr>
+<td>SS</td>
+<td>0</td>
+</tr>
+<tr>
+<td>DS</td>
+<td>0</td>
+</tr>
+<tr>
+<td>FS</td>
+<td>0x7FFDE000</td>
+</tr>
+<tr>
+<td>GS</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p>由于将fs段的值赋给了gs段，因此写入eax寄存器的是0x7FFDE000地址上的值。</p>
+<h4 id="3-2-段属性"><a href="#3-2-段属性" class="headerlink" title="3.2 段属性"></a>3.2 段属性</h4><img src="/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segRegAttr_1.png" class="" title="[]">
+
+<img src="/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segRegAttr_2.png" class="" title="[]">
+
+<p>上面两段程序的差别仅仅在于插入的汇编的第一条指令，mov ax, cs 和 mov ax, ss。造成结果不同的原因是，ss段寄存器是可读、可写的，而cs段寄存器是可读、可执行，但是不可写；因此在试图向cs段寄存器所指向的基址+偏移（既[ ]内的值）是会发生访问违例的，这也说明了，不同的段寄存器，属性是不同的，证明了段属性的存在。</p>
+<h4 id="3-3-段限长"><a href="#3-3-段限长" class="headerlink" title="3.3 段限长"></a>3.3 段限长</h4><img src="/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segRegLimit.png" class="" title="[]">
+
+<p>又出现了访问违例的情况，此处var的值为0x1000，超过了fs段寄存器的Limit：0xFFF，所以此时已经不能通过fs段来访问fs.base+0x1000这个地址了，这说明段寄存器也有一定的管辖范围，超出这个范围，就没有权限访问了</p>
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4.总结"></a>4.总结</h2><p>这次的笔记主要探究了段寄存器的属性和结构，大致整理如下</p>
+<img src="/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segRegStruct.png" class="" title="[]">
+
+
+
+<table>
+<thead>
+<tr>
+<th>段寄存器</th>
+<th>段选择子</th>
+<th>属性</th>
+<th>基址</th>
+<th>限长</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ES</td>
+<td>0x0023</td>
+<td>RW</td>
+<td>0</td>
+<td>0xFFFFFFFF</td>
+</tr>
+<tr>
+<td>CS</td>
+<td>0x001B</td>
+<td>RX</td>
+<td>0</td>
+<td>0xFFFFFFFF</td>
+</tr>
+<tr>
+<td>SS</td>
+<td>0x0023</td>
+<td>RW</td>
+<td>0</td>
+<td>0xFFFFFFFF</td>
+</tr>
+<tr>
+<td>DS</td>
+<td>0x0023</td>
+<td>RW</td>
+<td>0</td>
+<td>0xFFFFFFFF</td>
+</tr>
+<tr>
+<td>FS</td>
+<td>0x003B</td>
+<td>RW</td>
+<td>0x7FFDE000</td>
+<td>0xFFF</td>
+</tr>
+<tr>
+<td>GS</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody></table>
 
       
 
@@ -236,7 +372,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/03/06/%E5%88%9D%E8%A7%81%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -250,18 +386,9 @@
   
 <nav id="article-nav">
   
-    <a href="/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          探究段寄存器
-        
-      </div>
-    </a>
   
-  
-    <a href="/blog/2020/03/06/HelloWorld/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">HelloWorld</div>
+    <a href="/blog/2020/03/06/%E5%88%9D%E8%A7%81%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">初见保护模式</div>
       <i class="icon-circle-right"></i>
     </a>
   
