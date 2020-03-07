@@ -23,7 +23,7 @@
 <meta property="og:image" content="http://yoursite.com/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segRegLimit.png">
 <meta property="og:image" content="http://yoursite.com/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segRegStruct.png">
 <meta property="article:published_time" content="2020-03-06T15:00:07.000Z">
-<meta property="article:modified_time" content="2020-03-07T01:05:20.445Z">
+<meta property="article:modified_time" content="2020-03-07T01:06:32.255Z">
 <meta property="article:author" content="cataLoc">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segmentReg.png">
@@ -31,7 +31,7 @@
     <link rel="alternative" href="/atom.xml" title="cataLoc&#39;s Blog" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/blog/img/favicon.ico">
   
   <link rel="stylesheet" type="text/css" href="/blog/./main.0cf68a.css">
   <style type="text/css">
@@ -55,7 +55,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="assets/profile.png" class="js-avatar show">
+			<img src="/blog/img/profile.png" class="js-avatar show">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/">cataLoc</a></h1>
@@ -113,7 +113,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="assets/profile.png" class="js-avatar">
+				<img src="/blog/img/profile.png" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author js-header-author">cataLoc</h1>
@@ -187,7 +187,7 @@
 
 <p>在进行ring3逆向时，海哥让我们不去管ds寄存器的作用，只需要理解，这条语句的作用是将eax的值，写入0x003f048这个地址处即可；但是到了保护模式，这种说法就不再准确了，接下来一步步探寻ds的本质</p>
 <h2 id="2-段寄存器"><a href="#2-段寄存器" class="headerlink" title="2. 段寄存器"></a>2. 段寄存器</h2><p>ds 是 CPU 中的一个寄存器，这种寄存器称为<strong>段寄存器</strong>，除了ds，还有cs、es、ss、fs、gs 等。</p>
-<p>打开OllyDbg，任意附加一个.exe文件，可以在右侧窗口看到如下一块区域 <!----></p>
+<p>打开OllyDbg，任意附加一个.exe文件，可以在右侧窗口看到如下一块区域 <a id="more"></a></p>
 <img src="/blog/2020/03/06/%E6%8E%A2%E7%A9%B6%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8/segmentReg.png" class="" title="[]"> 
 
 <p>这些是OllyDbg调试器显示出当前程序运行时<strong>段寄存器</strong>的各部分属性的值。接下来分析这些值的来源和含义。</p>
