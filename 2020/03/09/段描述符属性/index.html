@@ -51,7 +51,7 @@
 <li>S = 1：描述代码段或数据段</li>
 <li>S = 0： 描述系统段</li>
 </ul>
-<p>这里教大家一个小g巧，S位在第12位，P位在第15位，在Windows操作系统中，DPL只有可能是11或者00这两种情况，所以当第12~16位是值为1001(9)或1111(F)时，该段描述符一定是数据段或者代码段。</p>
+<p>这里教大家一个小g巧，S位在第12位，P位在第15位，在Windows操作系统中，DPL只有可能是11或者00这两种情况，所以当第12~16位是值为1001(9)或1111(F)时，该段描述符一定是数据段或者代码段。此外系统段大多数情况下值为1000(8)，因为代码段或者数据段很少拥有DPL值为0的权限。</p>
 <h2 id="Type域"><a href="#Type域" class="headerlink" title="Type域"></a>Type域</h2><p>Type域位于段描述符的第8~11位，不同段，每个位所含意义也不同</p>
 <h3 id="数据段"><a href="#数据段" class="headerlink" title="数据段"></a>数据段</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">S位 == 1 && 第11位 == 0</span><br></pre></td></tr></tbody></table></figure></div>
 
