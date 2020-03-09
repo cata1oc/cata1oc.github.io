@@ -109,7 +109,7 @@
 <p>这句话怎么理解，怎么又是16位的段描述符，又是GDT表的段描述符？首先，段的Base，Limit以及Attribute都是由GDT表的段描述符来决定的，那么到底是由哪个段描述符来决定的？为了确定这个段描述符，引入了段选择子这个结构，<strong>段选择子，指向了GDT表中某一个段描述符</strong>，这样就可以把该段描述符的数据写入到段寄存器内了。所以说，段选择子，是一个段描述符的描述符。下面是段选择子的结构。</p>
 <a href="/blog/2020/03/08/%E6%AE%B5%E6%8F%8F%E8%BF%B0%E7%AC%A6%E4%B8%8E%E6%AE%B5%E9%80%89%E6%8B%A9%E5%AD%90/segSelector.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/08/%E6%AE%B5%E6%8F%8F%E8%BF%B0%E7%AC%A6%E4%B8%8E%E6%AE%B5%E9%80%89%E6%8B%A9%E5%AD%90/segSelector.png"></a>
 
-<p>由图，结构非常简单，各个位的含义也比较好理解。这里有个小G巧，段选择子一共16位，由于Windows没有使用LDT表，所以TI位永远是0。请求特权级别一般也只有0和3，所以段选择子最后4位的值只有4种组合：0000, 0011, 1000, 1011</p>
+<p>由图，结构非常简单，各个位的含义也比较好理解。这里有个小g巧，段选择子一共16位，由于Windows没有使用LDT表，所以TI位永远是0。请求特权级别一般也只有0和3，所以段选择子最后4位的值只有4种组合：0000, 0011, 1000, 1011</p>
 <h2 id="加载段描述符至段寄存器"><a href="#加载段描述符至段寄存器" class="headerlink" title="加载段描述符至段寄存器"></a>加载段描述符至段寄存器</h2><p>除了MOV指令，我们还可以使用LES、LSS、LDS、LFS、LGS指令修改寄存器。</p>
 <p>CS不能通过上述的指令进行修改，CS为代码段，CS的改变会导致EIP的改变，要改CS，必须要保证CS与EIP一起改，以后的文章会说到。</p>
 <div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">les ecx,fword ptr ds:[buffer]          //取buffer高2个字节给es，低4个字节给ecx</span><br></pre></td></tr></tbody></table></figure></div>
