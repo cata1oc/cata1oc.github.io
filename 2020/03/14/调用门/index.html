@@ -59,8 +59,8 @@
 <a href="/blog/2020/03/14/%E8%B0%83%E7%94%A8%E9%97%A8/noPara.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/14/%E8%B0%83%E7%94%A8%E9%97%A8/noPara.png"></a>
 
 <p>由结果看，ESP，CS，SS均发生了切换，且CPL变为0，ESP的值也变为了一个高2G的数</p>
-<p>为了验证结果的正确性，我们可以通过中断再看一下0环的堆栈结构，将裸函数中的汇编代码清除，只留下int 3语句如下：</p>
-<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">_asm {</span><br><span class="line">	int 3</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></div>
+<p>为了验证结果的正确性，我们可以通过中断再看一下0环的堆栈结构，将裸函数中的汇编代码清除，只留下int 3和长返回语句如下：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">_asm {</span><br><span class="line">	int 3</span><br><span class="line">	retf</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></div>
 
 <p>然后重新执行，会中断到Windbg（为什么会从虚拟机中断到Windbg，这个到后面中断部分会详细讲解）查看栈顶部分内存</p>
 <a href="/blog/2020/03/14/%E8%B0%83%E7%94%A8%E9%97%A8/noPara_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/14/%E8%B0%83%E7%94%A8%E9%97%A8/noPara_1.png"></a>
