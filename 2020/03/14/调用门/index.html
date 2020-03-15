@@ -65,7 +65,7 @@
 <p>然后重新执行，会中断到Windbg（为什么会从虚拟机中断到Windbg，这个到后面中断部分会详细讲解）查看栈顶部分内存</p>
 <a href="/blog/2020/03/14/%E8%B0%83%E7%94%A8%E9%97%A8/noPara_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/14/%E8%B0%83%E7%94%A8%E9%97%A8/noPara_1.png"></a>
 
-<p>注意：这里的栈顶esp的值和刚刚不一样是因为程序重新执行了，进入0环时，<strong>ESP和SS是TSS给的，而TSS内的值是当前线程给的，因为代码修改了，所以重新执行程序，线程不一样了，所以0环的堆栈也就不一样了</strong>。但是3环的数据是没有变的（理论上也是会变的，这里没变是因为编译器的优化），对比刚刚手动读取的结果来看，3环的ESP，CS，SS完全一致，说明刚刚调用门的实验成功提权进入0环。</p>
+<p>注意：这里的栈顶esp的值和刚刚不一样是因为程序重新执行了，进入0环时，<strong>ESP和SS是TSS给的，而TSS内的值是当前线程给的，因为代码修改了，所以重新执行程序时，线程不一样了，所以0环的堆栈也就不一样了</strong>。但是3环的数据是没有变的（理论上也是会变的，这里没变是因为编译器的优化），对比刚刚手动读取的结果来看，3环的ESP，CS，SS完全一致，说明刚刚调用门的实验成功提权进入0环。</p>
 <h2 id="有参调用门"><a href="#有参调用门" class="headerlink" title="有参调用门"></a>有参调用门</h2><p>无参说完了，接下来是有参调用门，有参调用们和无参的区别在于仅仅是参数位的值会有所变动，栈里多了push进去的参数，其余和无参基本上相同。</p>
 <h3 id="构造调用门-1"><a href="#构造调用门-1" class="headerlink" title="构造调用门"></a>构造调用门</h3><a href="/blog/2020/03/14/%E8%B0%83%E7%94%A8%E9%97%A8/hasPara.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/14/%E8%B0%83%E7%94%A8%E9%97%A8/hasPara.png"></a>
 
