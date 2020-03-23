@@ -1,0 +1,140 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>中断与异常 | cataLoc's Blog</title><meta name="description" content="中断与异常"><meta name="keywords" content="Windows内核"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="中断与异常"><meta name="twitter:description" content="中断与异常"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="中断与异常"><meta property="og:url" content="http://cataloc.gitee.io/blog/2020/03/23/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="中断与异常"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cataloc.gitee.io/blog/2020/03/23/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/"><link rel="next" title="2-9-9-12分页" href="http://cataloc.gitee.io/blog/2020/03/22/2-9-9-12%E5%88%86%E9%A1%B5/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">23</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">4</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#中断"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">中断</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#什么是中断"><span class="toc_mobile_items-number">1.1.</span> <span class="toc_mobile_items-text">什么是中断</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#不可屏蔽中断"><span class="toc_mobile_items-number">1.2.</span> <span class="toc_mobile_items-text">不可屏蔽中断</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#可屏蔽中断"><span class="toc_mobile_items-number">1.3.</span> <span class="toc_mobile_items-text">可屏蔽中断</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#异常"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">异常</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#与中断的区别"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">与中断的区别</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#异常处理"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">异常处理</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#中断"><span class="toc-number">1.</span> <span class="toc-text">中断</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是中断"><span class="toc-number">1.1.</span> <span class="toc-text">什么是中断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不可屏蔽中断"><span class="toc-number">1.2.</span> <span class="toc-text">不可屏蔽中断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#可屏蔽中断"><span class="toc-number">1.3.</span> <span class="toc-text">可屏蔽中断</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常"><span class="toc-number">2.</span> <span class="toc-text">异常</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#与中断的区别"><span class="toc-number">2.1.</span> <span class="toc-text">与中断的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#异常处理"><span class="toc-number">2.2.</span> <span class="toc-text">异常处理</span></a></li></ol></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">中断与异常</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2020-03-23<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2020-03-23</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><p>段和页的主要知识，差不多就告一段落了，这篇文章简单介绍一下中断与异常的相关概念，结合之前学习的IDT表，形成一个整体的框架，在后续文章中，会再详细解析中断和异常的处理过程。</p>
+<h2 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h2><h3 id="什么是中断"><a href="#什么是中断" class="headerlink" title="什么是中断"></a>什么是中断</h3><ol>
+<li>中断通常是由CPU外部的输入输出设别（<strong>硬件</strong>）所触发的，供外部设备通知CPU“有事情需要处理”，因此又叫做中断请求（<strong>IRQ-Interrupt Request</strong>）</li>
+<li>中断请求的目的是希望CPU暂时停止执行当前<strong>正在执行</strong>的程序，转去执行中断请求所对应的中断处理例程（<strong>中断处理程序在哪由IDT表决定</strong>）</li>
+<li>80x86有两条中断请求线：<ul>
+<li>不可屏蔽中断线，称为<strong>NMI（NonMaskable Interrupt）</strong></li>
+<li>可屏蔽中断线，称为<strong>INTR（Interrupt Require）</strong></li>
+</ul>
+</li>
+</ol>
+<h3 id="不可屏蔽中断"><a href="#不可屏蔽中断" class="headerlink" title="不可屏蔽中断"></a>不可屏蔽中断</h3><table>
+<thead>
+<tr>
+<th>（IDT表）中断号</th>
+<th>NMI</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x2</td>
+<td>不可屏蔽中断</td>
+<td>80x86中固定为0x2</td>
+</tr>
+</tbody></table>
+<p>说明：</p>
+<ul>
+<li>当不可屏蔽中断产生时，CPU在执行完当前指令后会立即进入2号中断，执行相应中断处理程序</li>
+<li>不可屏蔽中断不受EFLAG寄存器中IF位的影响，一旦发生，CPU必须处理</li>
+</ul>
+<h3 id="可屏蔽中断"><a href="#可屏蔽中断" class="headerlink" title="可屏蔽中断"></a>可屏蔽中断</h3><p>在硬件级，可屏蔽中断是由一块专门的芯片来管理的，通常称为<strong>中断控制器</strong>。它负责分配中断资源和管理各个中断源发出的中断请求。为了便于标识各个中断请求，中断控制器通常用<strong>IRQ（Interrupt Request）</strong>后面加上数字来表示不同的中断。</p>
+<p>例如：在Windows中，时钟中断的IRQ编号为0，也就是：IRQ0</p>
+<a href="/blog/2020/03/23/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/time.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/23/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/time.png"></a>
+
+<table>
+<thead>
+<tr>
+<th>（IDT表）中断号</th>
+<th>IRQ</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x30</td>
+<td>IRQ0</td>
+<td>时钟中断</td>
+</tr>
+<tr>
+<td>0x31~0x3F</td>
+<td>IRQ1~IRQ15</td>
+<td>其它硬件设备的中断</td>
+</tr>
+</tbody></table>
+<p>说明：</p>
+<ul>
+<li>如果自己的程序执行时不希望CPU去处理这些中断，可以用<strong>CLI</strong>指令清空EFLAG寄存器中的IF位。与CLI指令相反，<strong>STI</strong>指令可以用来设置EFLAG寄存器中的IF位</li>
+<li>硬件中断与IDT表中的对应关系并且固定不变的，参见<strong>APIC</strong>（高级可编程中断控制器）</li>
+</ul>
+<a href="/blog/2020/03/23/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/APIC.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/23/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/APIC.png"></a>
+
+
+
+<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><p>聊完了中断，来看看异常。异常通常是CPU在执行指令时检测到的某些错误，比如除0、访问无效页面等。</p>
+<h3 id="与中断的区别"><a href="#与中断的区别" class="headerlink" title="与中断的区别"></a>与中断的区别</h3><ul>
+<li>中断来自于外部设备，是中断源（例如键盘）发起的，CPU是被动的。</li>
+<li>异常来自于CPU本身，是CPU主动产生的。</li>
+<li>INT N虽然被称为“软件中断”，但其本质是<strong>异常</strong>。因此<strong>不受EFLAG的IF位影响</strong>。</li>
+</ul>
+<h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><p>无论是由硬件设备触发的中断请求还是由CPU产生的异常，处理程序都在</p>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2020/03/23/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/">http://cataloc.gitee.io/blog/2020/03/23/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/Windows%E5%86%85%E6%A0%B8/">Windows内核    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/blog/2020/03/22/2-9-9-12%E5%88%86%E9%A1%B5/"><img class="next_cover lazyload" data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>2-9-9-12分页</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/blog/2020/03/08/段描述符与段选择子/" title="段描述符与段选择子"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-08</div><div class="relatedPosts_title">段描述符与段选择子</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/05/初见保护模式/" title="初见保护模式"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-05</div><div class="relatedPosts_title">初见保护模式</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/09/段描述符属性/" title="段描述符属性"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-09</div><div class="relatedPosts_title">段描述符属性</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/06/探究段寄存器/" title="探究段寄存器"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-06</div><div class="relatedPosts_title">探究段寄存器</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/11/段权限检查/" title="段权限检查（数据段）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-11</div><div class="relatedPosts_title">段权限检查（数据段）</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/13/代码跨段跳转/" title="代码跨段跳转（不提权）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-13</div><div class="relatedPosts_title">代码跨段跳转（不提权）</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
