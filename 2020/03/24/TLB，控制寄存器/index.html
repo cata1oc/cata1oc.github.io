@@ -1,0 +1,205 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>TLB，控制寄存器 | cataLoc's Blog</title><meta name="description" content="TLB，控制寄存器"><meta name="keywords" content="Windows内核"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="TLB，控制寄存器"><meta name="twitter:description" content="TLB，控制寄存器"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="TLB，控制寄存器"><meta property="og:url" content="http://cataloc.gitee.io/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="TLB，控制寄存器"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cataloc.gitee.io/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/"><link rel="next" title="中断与异常" href="http://cataloc.gitee.io/blog/2020/03/23/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">24</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">4</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#TLB"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">TLB</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#设计原因"><span class="toc_mobile_items-number">1.1.</span> <span class="toc_mobile_items-text">设计原因</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#TLB结构"><span class="toc_mobile_items-number">1.2.</span> <span class="toc_mobile_items-text">TLB结构</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#TLB种类"><span class="toc_mobile_items-number">1.3.</span> <span class="toc_mobile_items-text">TLB种类</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#TLB验证"><span class="toc_mobile_items-number">1.4.</span> <span class="toc_mobile_items-text">TLB验证</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#控制寄存器"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">控制寄存器</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Cr0寄存器"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">Cr0寄存器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Cr2寄存器"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">Cr2寄存器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Cr3寄存器"><span class="toc_mobile_items-number">2.3.</span> <span class="toc_mobile_items-text">Cr3寄存器</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#CPU缓存"><span class="toc_mobile_items-number">2.3.1.</span> <span class="toc_mobile_items-text">CPU缓存</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#PWT-Page-Write-Through"><span class="toc_mobile_items-number">2.3.2.</span> <span class="toc_mobile_items-text">PWT(Page Write Through)</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#PCD-Page-Cache-Disable"><span class="toc_mobile_items-number">2.3.3.</span> <span class="toc_mobile_items-text">PCD(Page Cache Disable)</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Cr4寄存器"><span class="toc_mobile_items-number">2.4.</span> <span class="toc_mobile_items-text">Cr4寄存器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#控制寄存器小节"><span class="toc_mobile_items-number">2.5.</span> <span class="toc_mobile_items-text">控制寄存器小节</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TLB"><span class="toc-number">1.</span> <span class="toc-text">TLB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#设计原因"><span class="toc-number">1.1.</span> <span class="toc-text">设计原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TLB结构"><span class="toc-number">1.2.</span> <span class="toc-text">TLB结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TLB种类"><span class="toc-number">1.3.</span> <span class="toc-text">TLB种类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TLB验证"><span class="toc-number">1.4.</span> <span class="toc-text">TLB验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#控制寄存器"><span class="toc-number">2.</span> <span class="toc-text">控制寄存器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Cr0寄存器"><span class="toc-number">2.1.</span> <span class="toc-text">Cr0寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cr2寄存器"><span class="toc-number">2.2.</span> <span class="toc-text">Cr2寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cr3寄存器"><span class="toc-number">2.3.</span> <span class="toc-text">Cr3寄存器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CPU缓存"><span class="toc-number">2.3.1.</span> <span class="toc-text">CPU缓存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PWT-Page-Write-Through"><span class="toc-number">2.3.2.</span> <span class="toc-text">PWT(Page Write Through)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PCD-Page-Cache-Disable"><span class="toc-number">2.3.3.</span> <span class="toc-text">PCD(Page Cache Disable)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cr4寄存器"><span class="toc-number">2.4.</span> <span class="toc-text">Cr4寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#控制寄存器小节"><span class="toc-number">2.5.</span> <span class="toc-text">控制寄存器小节</span></a></li></ol></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">TLB，控制寄存器</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2020-03-24<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2020-03-24</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><p>保护模式的内容接近尾声，这一篇文章补充一下琐碎的知识点，下面先从TLB开始</p>
+<h2 id="TLB"><a href="#TLB" class="headerlink" title="TLB"></a>TLB</h2><h3 id="设计原因"><a href="#设计原因" class="headerlink" title="设计原因"></a>设计原因</h3><ol>
+<li>假设我们通过一个线性地址访问一个物理页，想要去读取物理页上某个字节。但是实际过程中，并非只读了1个字节，我们需要先读取PDE，再读取PTE，最后再读取存放1个字节的物理页，读取的内容远远超过1个字节了。</li>
+<li>在2-9-9-12分页下，会多读24个字节，如果读取的内容跨页了（存在两个不同的物理页上），那多读的字节会更多</li>
+</ol>
+<p>为了提高效率，只能通过做记录来进行弥补。</p>
+<p>因此CPU内部设计了一个表，用来做记录；由于位于CPU内部，速度和寄存器一样快，当然，表也不能做的过大。这个表叫做<strong>TLB（Translation Lookaside Buffer）</strong>，用于<strong>地址解析</strong></p>
+<h3 id="TLB结构"><a href="#TLB结构" class="headerlink" title="TLB结构"></a>TLB结构</h3><table>
+<thead>
+<tr>
+<th>LA（线性地址）</th>
+<th>PA（物理地址）</th>
+<th>ATTR（属性）</th>
+<th>LRU（统计）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>xxxxxxxx</td>
+<td>xxxxxxxx</td>
+<td>xxxxxxxx</td>
+<td>xxxxxxxx</td>
+</tr>
+</tbody></table>
+<p>说明：</p>
+<ul>
+<li>ATTR（属性)：PAE分页，用PDPE&PDE&PTE。10-10-12分页则PDE&PTE</li>
+<li>不同CPU的TLB表大小不一样</li>
+<li>只要Cr3改变了（<strong>说明进程切换了</strong>），先前的TLB则会失效，换一套新的TLB，一核一套TLB</li>
+</ul>
+<p>由于操作系统中的高2G映射基本不变，如果Cr3改了，直接刷新TLB，对于重建高2G以上的对应关系很浪费，所PDE和PTE中有个标志位G位，<strong>刷新TLB时将不会刷新PDE/PTE的G位为1的页</strong>。若TLB满了，则CPU会根据统计信息将不常用的地址废弃，保留最近最常用的</p>
+<p>注意：只有当PDE的PS位为1时（即当前物理页为大页），G位才有效。</p>
+<h3 id="TLB种类"><a href="#TLB种类" class="headerlink" title="TLB种类"></a>TLB种类</h3><p>TLB在x86体系的CPU里的实际应用最早是从Intel的486CPU开始的，在x86的CPU里，一般都设有如下4组TLB：</p>
+<ul>
+<li>缓存一般页表（4K字节页面）的指令页表缓存（Instruction-TLB）</li>
+<li>缓存一般页表（4K字节页面）的数据页表缓存（Data-TLB）</li>
+<li>缓存大尺寸页表（2M/4M字节页面）的指令页表缓存（Instruction-TLB）</li>
+<li>缓存大尺寸页表（2M/4M字节页面）的数据页表缓存（Instruction-TLB）</li>
+</ul>
+<h3 id="TLB验证"><a href="#TLB验证" class="headerlink" title="TLB验证"></a>TLB验证</h3><p>呵呵，这个破实验花了我一下午，我真是太菜了，一个原因是0地址挂物理页，踩了好几次坑，第二个是VC6很多强转不支持，耽误了很多时间。给0地址挂物理页的步骤就不赘述了，这里采用的10-10-12分页，只是采用了代码挂物理页的方式，具体可以参考<a href="https://cataloc.gitee.io/blog/2020/03/20/基址小实验/">基址小实验</a>这一篇，这里就讲讲验证的过程。</p>
+<a href="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/addr1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/addr1.png"></a>
+
+<p>我们先给0地址挂上第一个地址（0x425000，这是我随便选的，选错了可能蓝屏）的物理页，然后取0地址的处的置，发现值为0。</p>
+<a href="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/addr2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/addr2.png"></a>
+
+<p>这时，我们注释掉给0地址挂第一个地址（0x425000）的物理页的代码，并给0地址挂第二个地址（0x426000）的物理页。这时再取0地址处的值，发现值为0x43，可以发现，这两个线性地址所对应的物理页上的值是不同的。</p>
+<p>这时我们把上面的注释拿掉，先给0地址挂第一个地址的物理页，然后再给0地址挂第二个地址的物理页，按照道理，这时我们取到的值应该是第二个地址对应物理页上的值，我们来查看结果：</p>
+<a href="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/tlb.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/tlb.png"></a>
+
+<p>神奇的事情发生了，我们取到的仍然是第一个地址对应物理页上的值，这其实就是TLB的作用。</p>
+<p>这时，我们增加一条语句</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">invlpg dword ptr ds:[0]</span><br></pre></td></tr></tbody></table></figure></div>
+
+<a href="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/invlpg.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/invlpg.png"></a>
+
+<p>再次运行程序发现，仅仅多了这一条语句，读取0地址的值，就变成了第二个地址对应物理页上的值，<strong>Invlpg是让指定页TLB无效化的指令</strong>，因此再次访问时，原先的TLB已经被废弃，就需要重新去物理页读取，此时0地址对应的物理页已经是第二个地址的物理页了。当然，除了使用Invlpg指令，修改Cr3也可以做到让TLB无效化。</p>
+<p>下面附上完整代码</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdafx.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string"><windows.h></windows.h></span></span></span><br><span class="line"></span><br><span class="line">DWORD phyAddr, phyAddr2, temp;</span><br><span class="line"></span><br><span class="line">__declspec(naked) Test() {</span><br><span class="line">	_asm {</span><br><span class="line">		pushad</span><br><span class="line">		pushfd</span><br><span class="line">	}	</span><br><span class="line">	phyAddr = (DWORD)(<span class="number">0xc0000000</span> + ((<span class="number">0x425000</span> >> <span class="number">0xa</span>) & <span class="number">0x3ffffc</span>));</span><br><span class="line">	phyAddr2 = (DWORD)(<span class="number">0xc0000000</span> + ((<span class="number">0x426000</span> >> <span class="number">0xa</span>) & <span class="number">0x3ffffc</span>));</span><br><span class="line"></span><br><span class="line">	_asm{</span><br><span class="line">		mov eax, phyAddr</span><br><span class="line">		mov eax, [eax]</span><br><span class="line">		mov dword ptr ds:[<span class="number">0xc0000000</span>], eax</span><br><span class="line">		mov eax, dword ptr ds:[<span class="number">0</span>]</span><br><span class="line">		mov temp, eax</span><br><span class="line"></span><br><span class="line"><span class="comment">//		invlpg dword ptr ds:[0]		无效化指定页的TLB</span></span><br><span class="line"><span class="comment">//		mov eax, cr3			 	切换Cr3来清空TLB</span></span><br><span class="line"><span class="comment">//		mov cr3, eax</span></span><br><span class="line">	</span><br><span class="line">		mov eax, phyAddr2</span><br><span class="line">		mov eax, [eax]</span><br><span class="line">		mov dword ptr ds:[<span class="number">0xc0000000</span>], eax</span><br><span class="line">		mov eax, dword ptr ds:[<span class="number">0</span>]</span><br><span class="line">		mov temp, eax</span><br><span class="line">	}</span><br><span class="line">	</span><br><span class="line">	_asm{</span><br><span class="line">		popfd</span><br><span class="line">		popad</span><br><span class="line">		retf</span><br><span class="line">	}</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">	<span class="keyword">char</span> <span class="built_in">buffer</span>[] = {<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0x4B</span>, <span class="number">0</span>};</span><br><span class="line">	_asm call fword ptr <span class="built_in">buffer</span></span><br><span class="line">	</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"temp: %x"</span>, temp);</span><br><span class="line">	getchar();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></div>
+
+
+
+<h2 id="控制寄存器"><a href="#控制寄存器" class="headerlink" title="控制寄存器"></a>控制寄存器</h2><p>说完了TLB，来说说控制寄存器。控制寄存器的作用主要是用于控制和确定CPU的操作模式。主要包括Cr0，Cr1，Cr2，Cr3，Cr4，其中Cr1保留。</p>
+<h3 id="Cr0寄存器"><a href="#Cr0寄存器" class="headerlink" title="Cr0寄存器"></a>Cr0寄存器</h3><p>Cr0寄存器，主要包括一些控制操作系统模式以及处理器状态的控制标志位。</p>
+<a href="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/cr0.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/cr0.png"></a>
+
+<p>这里介绍几个主要的标志位，其余位的描述可以参考Intel白皮书第三卷系统架构综述那章。</p>
+<ol>
+<li><p>PE：Cr0下标为0的位是启用保护（Protection Enable）标志。PE=1保护模式，PE=0实地址模式，<strong>这个标志仅开启段级保护，而并没有启用分页机制</strong>。若要启用分页机制，那么PE和PG标志都要置位。</p>
+</li>
+<li><p>PG：当设置该位时即开启了分页机制。在<strong>开启这个标志之前必须已经或者同时开启PE标志</strong>。</p>
+<ul>
+<li>PG=0且PE=0：处理器工作在实地址模式下</li>
+<li>PG=0且PE=1：处理器工作在没有开启分页机制的保护模式下（不存在这样的操作系统）</li>
+<li>PG=1且PE=0：在PE没有开启的情况下  无法开启PG</li>
+<li>PG=1且PE=1：处理器工作在开启了分页机制的保护模式下 </li>
+</ul>
+</li>
+<li><p>WP：对于Intel 80486或以上的CPU，CR0的位16是写保护（Write Proctect）标志，当设置该标志时，处理器会禁止超级用户程序（例如特权级0的程序）向用户级只读页面执行写操作。</p>
+<ul>
+<li>对于Ring0的特权级程序，如果WP=0，可以<strong>读写</strong>任意用户级物理页，只要线性地址有效</li>
+<li>对于Ring0的特权级程序，如果 WP=1 可以<strong>读取</strong>任意用户级物理页，但对于只读的物理页，则不能写</li>
+</ul>
+</li>
+</ol>
+<h3 id="Cr2寄存器"><a href="#Cr2寄存器" class="headerlink" title="Cr2寄存器"></a>Cr2寄存器</h3><p>Cr2寄存器，保存导致缺页异常的线性地址。</p>
+<a href="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/cr2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/cr2.png"></a>
+
+<p>之前在中断与异常中，简要概括了<a href="https://cataloc.gitee.io/blog/2020/03/23/中断与异常/#缺页异常（无时无刻不在发生）">缺页异常</a>，当CPU访问某个无效页面，会产生缺页异常，此时，CPU会将引起异常的线性地址存放在Cr2中，以便操作系统处理完缺页异常后，返回到原本执行的位置继续执行。</p>
+<h3 id="Cr3寄存器"><a href="#Cr3寄存器" class="headerlink" title="Cr3寄存器"></a>Cr3寄存器</h3><p>Cr3我们太熟悉了，在10-10-12分页是页目录表基址，在PAE分页下，则是页目录指针表基址</p>
+<a href="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/cr3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/cr3.png"></a>
+
+<p>这里有两个属性，PWT和PCD之前在页的部分一直没有讲，在介绍之前，先来了解一个概念，叫做CPU缓存</p>
+<h4 id="CPU缓存"><a href="#CPU缓存" class="headerlink" title="CPU缓存"></a>CPU缓存</h4><ol>
+<li>CPU缓存是位于CPU与物理内存之间的临时存储器，它的容量比内存小的多，但是交换速度远快于内存。</li>
+<li>CPU缓存可以做的很大，从几K，几十K，几百K，甚至上M。</li>
+<li>CPU缓存与TLB的区别：<ul>
+<li>TLB：线性地址 <—–> 物理地址</li>
+<li>CPU缓存： 物理地址 <—–> 内存</li>
+</ul>
+</li>
+</ol>
+<p>有了CPU缓存和TLB的概念后，就可以来讲讲PWT和PCD这俩属性了。</p>
+<h4 id="PWT-Page-Write-Through"><a href="#PWT-Page-Write-Through" class="headerlink" title="PWT(Page Write Through)"></a>PWT(Page Write Through)</h4><ul>
+<li>PWT = 1时，CPU向cache写入数据时，同时向memory也写一份，使cache和memory的数据保持一致。优点是简单，缺点是每次都要访问memory，速度比较慢，即Write Through。</li>
+<li>PWT = 0时，CPU向cache写入数据时，不将数据写入内存中，分为两种情况：<ol>
+<li>Post Write：CPU更新cache数据时，把更新的数据写入到一个更新缓冲器，在合适的时候才对memory进行更新。这样可以提高cache访问速度，但是，在数据连续被更新两次以上的时候，缓冲区将不够使用，被迫同时更新memory。</li>
+<li>Write Back：CPU更新cache时，只是把更新的cache区标记一下，并不同步更新memory。只是在cache区要被新进入的数据取代时，才更新memory。这样做的原因是考虑到很多时候cache存入的是中间结果，没有必要同步更新memory。优点是CPU执行的效率提高，缺点是实现起来技术比较复杂。</li>
+</ol>
+</li>
+</ul>
+<h4 id="PCD-Page-Cache-Disable"><a href="#PCD-Page-Cache-Disable" class="headerlink" title="PCD(Page Cache Disable)"></a>PCD(Page Cache Disable)</h4><ul>
+<li>PCD = 1时，禁止某个页写入缓存，直接写入内存。例如，做页表用的页，已经存储在TLB中了，可能不需要再缓存了。</li>
+<li>PCD = 0时，不限制页写入缓存，可以参考上面PWT的情况。</li>
+</ul>
+<h3 id="Cr4寄存器"><a href="#Cr4寄存器" class="headerlink" title="Cr4寄存器"></a>Cr4寄存器</h3><p>Cr2寄存器，保存了一组启用多种架构扩展的标志位</p>
+<a href="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/cr4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/cr4.png"></a>
+
+<p>这里简单概括一下PAE位和PSE位：</p>
+<ul>
+<li>PAE：置1时，是PAE分页；置0时，是10-10-12分页。之前在boot.ini中设置execute/noexecute的作用就是修改PAE位</li>
+<li>PSE：控制PDE中PS位的开关，当PSE置1时，PS位才有效。具体如下：</li>
+</ul>
+<a href="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/PSE.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/PSE.png"></a>
+
+
+
+<h3 id="控制寄存器小节"><a href="#控制寄存器小节" class="headerlink" title="控制寄存器小节"></a>控制寄存器小节</h3><p>除了上述介绍的，还有一个Cr8寄存器，仅仅在64位下才存在，这里就不作介绍了，其余寄存器总览如下：</p>
+<a href="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/cr.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/cr.png"></a>
+
+
+
+<p>参考文章1：<a href="https://blog.csdn.net/wyzxg/article/details/7254458" target="_blank" rel="noopener">https://blog.csdn.net/wyzxg/article/details/7254458</a></p>
+<p>参考文章2：<a href="https://blog.csdn.net/q1007729991/article/details/53000410" target="_blank" rel="noopener">https://blog.csdn.net/q1007729991/article/details/53000410</a></p>
+<p>参考教程：<a href="https://www.bilibili.com/video/BV1NJ411M7aE?p=33" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1NJ411M7aE?p=33</a></p>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/">http://cataloc.gitee.io/blog/2020/03/24/TLB%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/Windows%E5%86%85%E6%A0%B8/">Windows内核    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/blog/2020/03/23/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/"><img class="next_cover lazyload" data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>中断与异常</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/blog/2020/03/08/段描述符与段选择子/" title="段描述符与段选择子"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-08</div><div class="relatedPosts_title">段描述符与段选择子</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/05/初见保护模式/" title="初见保护模式"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-05</div><div class="relatedPosts_title">初见保护模式</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/09/段描述符属性/" title="段描述符属性"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-09</div><div class="relatedPosts_title">段描述符属性</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/06/探究段寄存器/" title="探究段寄存器"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-06</div><div class="relatedPosts_title">探究段寄存器</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/11/段权限检查/" title="段权限检查（数据段）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-11</div><div class="relatedPosts_title">段权限检查（数据段）</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/13/代码跨段跳转/" title="代码跨段跳转（不提权）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-13</div><div class="relatedPosts_title">代码跨段跳转（不提权）</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
