@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>线程结构体 | cataLoc's Blog</title><meta name="description" content="线程结构体"><meta name="keywords" content="Windows内核"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="线程结构体"><meta name="twitter:description" content="线程结构体"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="线程结构体"><meta property="og:url" content="http://cataloc.gitee.io/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="线程结构体"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cataloc.gitee.io/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/"><link rel="next" title="进程结构体" href="http://cataloc.gitee.io/blog/2020/03/28/%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">30</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">4</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#ETHREAD"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">ETHREAD</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#0x000-Tcb"><span class="toc_mobile_items-number">1.1.</span> <span class="toc_mobile_items-text">+0x000 Tcb</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#0x000-Header"><span class="toc_mobile_items-number">1.1.1.</span> <span class="toc_mobile_items-text">+0x000 Header</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#0x018-InitialStack-0x01c-StackLimit-0x028-KernelStack"><span class="toc_mobile_items-number">1.1.2.</span> <span class="toc_mobile_items-text">+0x018 InitialStack&#x2F;+0x01c StackLimit&#x2F;+0x028 KernelStack</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#0x020-Teb"><span class="toc_mobile_items-number">1.1.3.</span> <span class="toc_mobile_items-text">+0x020 Teb</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#0x02c-DebugActive"><span class="toc_mobile_items-number">1.1.4.</span> <span class="toc_mobile_items-text">+0x02c DebugActive</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#0x06c-BasePrioirty"><span class="toc_mobile_items-number">1.1.5.</span> <span class="toc_mobile_items-text">+0x06c BasePrioirty</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#0x070-WaitBlock"><span class="toc_mobile_items-number">1.1.6.</span> <span class="toc_mobile_items-text">+0x070 WaitBlock</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#0x0E0-ServiceTable"><span class="toc_mobile_items-number">1.1.7.</span> <span class="toc_mobile_items-text">+0x0E0 ServiceTable</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#0x134-TrapFrame"><span class="toc_mobile_items-number">1.1.8.</span> <span class="toc_mobile_items-text">+0x134 TrapFrame</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#0x140-PerviousMode"><span class="toc_mobile_items-number">1.1.9.</span> <span class="toc_mobile_items-text">+0x140 PerviousMode</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#0x1b0-ThreadListEntry"><span class="toc_mobile_items-number">1.1.10.</span> <span class="toc_mobile_items-text">+0x1b0 ThreadListEntry</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#APC相关（位于KTHREAD内）"><span class="toc_mobile_items-number">1.1.11.</span> <span class="toc_mobile_items-text">APC相关（位于KTHREAD内）</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#0x1ec-Cid"><span class="toc_mobile_items-number">1.2.</span> <span class="toc_mobile_items-text">+0x1ec Cid</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#0x220-ThreadProcess"><span class="toc_mobile_items-number">1.3.</span> <span class="toc_mobile_items-text">+0x220 ThreadProcess</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#0x22c-ThreadListEntry"><span class="toc_mobile_items-number">1.4.</span> <span class="toc_mobile_items-text">+0x22c ThreadListEntry</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ETHREAD"><span class="toc-number">1.</span> <span class="toc-text">ETHREAD</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x000-Tcb"><span class="toc-number">1.1.</span> <span class="toc-text">+0x000 Tcb</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x000-Header"><span class="toc-number">1.1.1.</span> <span class="toc-text">+0x000 Header</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x018-InitialStack-0x01c-StackLimit-0x028-KernelStack"><span class="toc-number">1.1.2.</span> <span class="toc-text">+0x018 InitialStack&#x2F;+0x01c StackLimit&#x2F;+0x028 KernelStack</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x020-Teb"><span class="toc-number">1.1.3.</span> <span class="toc-text">+0x020 Teb</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x02c-DebugActive"><span class="toc-number">1.1.4.</span> <span class="toc-text">+0x02c DebugActive</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x06c-BasePrioirty"><span class="toc-number">1.1.5.</span> <span class="toc-text">+0x06c BasePrioirty</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x070-WaitBlock"><span class="toc-number">1.1.6.</span> <span class="toc-text">+0x070 WaitBlock</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x0E0-ServiceTable"><span class="toc-number">1.1.7.</span> <span class="toc-text">+0x0E0 ServiceTable</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x134-TrapFrame"><span class="toc-number">1.1.8.</span> <span class="toc-text">+0x134 TrapFrame</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x140-PerviousMode"><span class="toc-number">1.1.9.</span> <span class="toc-text">+0x140 PerviousMode</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x1b0-ThreadListEntry"><span class="toc-number">1.1.10.</span> <span class="toc-text">+0x1b0 ThreadListEntry</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#APC相关（位于KTHREAD内）"><span class="toc-number">1.1.11.</span> <span class="toc-text">APC相关（位于KTHREAD内）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x1ec-Cid"><span class="toc-number">1.2.</span> <span class="toc-text">+0x1ec Cid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x220-ThreadProcess"><span class="toc-number">1.3.</span> <span class="toc-text">+0x220 ThreadProcess</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x22c-ThreadListEntry"><span class="toc-number">1.4.</span> <span class="toc-text">+0x22c ThreadListEntry</span></a></li></ol></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">线程结构体</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2020-03-29<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2020-03-30</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><p>Windows中每个进程会包含一个或多个线程，每个线程在0环都有一个对应的结构体：ETHREAD，这个结构体包含了线程所有重要的信息，下面来简单了解一下。</p>
+<h2 id="ETHREAD"><a href="#ETHREAD" class="headerlink" title="ETHREAD"></a>ETHREAD</h2><p>Windbg中，执行dt _ETHREAD可以看到这个完成的结构：</p>
+<a href="/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/ethread.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/ethread.png"></a>
+
+<h3 id="0x000-Tcb"><a href="#0x000-Tcb" class="headerlink" title="+0x000 Tcb"></a>+0x000 Tcb</h3><ul>
+<li>成员名：Tcb</li>
+<li>数据类型：_KTHREAD</li>
+<li>Windbg查询指令：dt _KTHREAD</li>
+<li>结构图：<a href="/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/kthread.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/kthread.png"></a></li>
+<li>说明：KTHREAD这个结构应该已经比较眼熟了，在API函数的调用过程（保存现场），就多次用到了KTHREAD结构里的成员。</li>
+</ul>
+<h4 id="0x000-Header"><a href="#0x000-Header" class="headerlink" title="+0x000 Header"></a>+0x000 Header</h4><ul>
+<li>成员名：Header</li>
+<li>数据类型：_DISPATCHER_HEADER</li>
+<li>说明：结构体内若包含_DISPATCHER_HEADER这个数据类型，说明这是一个可等待对象</li>
+<li>可等待对象：Mutex，Event都是<strong>可等待对象</strong>，可被作用于WaitForSingleObject这类函数</li>
+</ul>
+<h4 id="0x018-InitialStack-0x01c-StackLimit-0x028-KernelStack"><a href="#0x018-InitialStack-0x01c-StackLimit-0x028-KernelStack" class="headerlink" title="+0x018 InitialStack/+0x01c StackLimit/+0x028 KernelStack"></a>+0x018 InitialStack/+0x01c StackLimit/+0x028 KernelStack</h4><ul>
+<li>成员名：InitialStack/StackLimit/KernelStack</li>
+<li>数据类型：Ptr32 Void</li>
+<li>说明：这三个成员与线程切换有关。有印象的话，在分析KiFastCallEntry函数保存现场的过程中，曾有一行代码获取了InitialStack的值，并存到了ebp中。<a href="/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/initialStack.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/initialStack.png"></a>  更多关于这三个成员的用法，会在后面线程切换的地方再提到</li>
+</ul>
+<h4 id="0x020-Teb"><a href="#0x020-Teb" class="headerlink" title="+0x020 Teb"></a>+0x020 Teb</h4><ul>
+<li>成员名：Teb（Thread Environment Block），线程环境块</li>
+<li>数据类型：Ptr32 Void</li>
+<li>大小：4KB</li>
+<li>结构图：<a href="/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/teb.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/teb.png"></a></li>
+<li>说明：<ul>
+<li>0x20位置存着一个指向Teb结构的指针</li>
+<li>Teb是在3环用来描述线程的一个结构。</li>
+<li>0环时，FS:[0]指向KPCR；3环时，FS:[0]指向TEB</li>
+</ul>
+</li>
+</ul>
+<h4 id="0x02c-DebugActive"><a href="#0x02c-DebugActive" class="headerlink" title="+0x02c DebugActive"></a>+0x02c DebugActive</h4><ul>
+<li>成员名：DebugActive</li>
+<li>数据类型：UChar</li>
+<li>说明：在分析KiSystemService进行保存现场的过中遇到过，若这个位置的值不是-1，说明处于调试状态，程序会跳转到执行一个将Dr0~Dr7保存到_Trap_Frame里面的操作。从而衍生出了一个反调试手段，将这个位置的值置为-1，从而不能使用8个调试寄存器</li>
+</ul>
+<h4 id="0x06c-BasePrioirty"><a href="#0x06c-BasePrioirty" class="headerlink" title="+0x06c BasePrioirty"></a>+0x06c BasePrioirty</h4><ul>
+<li>成员名：BasePriority</li>
+<li>数据类型：Char</li>
+<li>说明：其初始值是所属进程的BasePrioirty值（KPROCESS->BasePriority），以后可以通过KeSetBasePriorityThread()函数重新设定</li>
+</ul>
+<h4 id="0x070-WaitBlock"><a href="#0x070-WaitBlock" class="headerlink" title="+0x070 WaitBlock"></a>+0x070 WaitBlock</h4><ul>
+<li>成员名：WaitBlock</li>
+<li>数据类型：[4]_KWAIT_BLOCK</li>
+<li>说明：当前线程，正在等待哪个可等待对象（WaitForSingleObject）这个可等待对象的信息就会被写入这个_KWAIT_BLOCK结构的数组里。</li>
+</ul>
+<h4 id="0x0E0-ServiceTable"><a href="#0x0E0-ServiceTable" class="headerlink" title="+0x0E0 ServiceTable"></a>+0x0E0 ServiceTable</h4><ul>
+<li>成员名：ServiceTable</li>
+<li>数据类型：Ptr32 Void</li>
+<li>说明：这个应该很熟悉了，指向系统服务表基址；通过系统服务表，可以找到函数地址表，根据系统服务号提供的偏移，就可以在函数地址表中找到3环API接口对应的0环内核函数</li>
+</ul>
+<h4 id="0x134-TrapFrame"><a href="#0x134-TrapFrame" class="headerlink" title="+0x134 TrapFrame"></a>+0x134 TrapFrame</h4><ul>
+<li>成员名：TrapFrame</li>
+<li>数据类型：Ptr32 _KTRAP_FRAME</li>
+<li>说明：这个也很熟悉了，进0环时，保存现场的原理就是填充寄存器及相关数据到TrapFrame结构中，最后更新TrapFrame位置的值，使其指向新保存的TrapFrame</li>
+</ul>
+<h4 id="0x140-PerviousMode"><a href="#0x140-PerviousMode" class="headerlink" title="+0x140 PerviousMode"></a>+0x140 PerviousMode</h4><ul>
+<li>成员名：PerviousMode</li>
+<li>数据类型：Char</li>
+<li>说明：在调用0环函数，保存现场的过程时，会<strong>将先前模式保存到TrapFrame结构中</strong>，以便根据先前模式，能够正确的返回到调用它的函数。</li>
+</ul>
+<h4 id="0x1b0-ThreadListEntry"><a href="#0x1b0-ThreadListEntry" class="headerlink" title="+0x1b0 ThreadListEntry"></a>+0x1b0 ThreadListEntry</h4><ul>
+<li>成员名：ThreadListEntry</li>
+<li>数据类型：_LIST_ENTRY</li>
+<li>说明：<ul>
+<li>双向链表，一个进程所有的线程，都挂在一个链表中，挂的就是这个位置</li>
+<li><strong>链表头位于KPROCESS+0x50的位置</strong>，相当于ThreadListEntry的PsThreadListHead</li>
+<li>一共有两个这样的链表</li>
+</ul>
+</li>
+</ul>
+<h4 id="APC相关（位于KTHREAD内）"><a href="#APC相关（位于KTHREAD内）" class="headerlink" title="APC相关（位于KTHREAD内）"></a>APC相关（位于KTHREAD内）</h4><table>
+<thead>
+<tr>
+<th>成员位置</th>
+<th>成员名</th>
+<th>数据类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x034</td>
+<td>ApcState</td>
+<td>_KAPC_STATE</td>
+</tr>
+<tr>
+<td>+0x0e8</td>
+<td>ApcQueueLock</td>
+<td>Uint4B</td>
+</tr>
+<tr>
+<td>+0x138</td>
+<td>ApcStatePointer</td>
+<td>[2] Ptr32 _KAPC_STATE</td>
+</tr>
+<tr>
+<td>+0x14c</td>
+<td>SavedApcState</td>
+<td>_KAPC_STATE</td>
+</tr>
+</tbody></table>
+<ul>
+<li>说明：这些均为与APC相关的结构，具体到APC章节再做分析，这里仅作了解</li>
+</ul>
+<h3 id="0x1ec-Cid"><a href="#0x1ec-Cid" class="headerlink" title="+0x1ec Cid"></a>+0x1ec Cid</h3><ul>
+<li>成员名：Cid</li>
+<li>数据类型：_CLIENT_ID</li>
+<li>说明：共八字节，包含两个值，当前进程的PID和当前线程的CID</li>
+</ul>
+<h3 id="0x220-ThreadProcess"><a href="#0x220-ThreadProcess" class="headerlink" title="+0x220 ThreadProcess"></a>+0x220 ThreadProcess</h3><ul>
+<li>成员名：ThreadProcess</li>
+<li>数据类型：Ptr32 _EPROCESS</li>
+<li>说明：<strong>指向自己所属进程</strong></li>
+</ul>
+<h3 id="0x22c-ThreadListEntry"><a href="#0x22c-ThreadListEntry" class="headerlink" title="+0x22c ThreadListEntry"></a>+0x22c ThreadListEntry</h3><ul>
+<li>成员名：ThreadListEntry</li>
+<li>数据类型：_LIST_ENTRY</li>
+<li>说明：<ul>
+<li>双向链表，一个进程所有的线程，都挂在一个链表中，挂的就是这个位置</li>
+<li><strong>链表头位于KPROCESS+0x50的位置</strong>，相当于ThreadListEntry的PsThreadListHead</li>
+<li>一共有两个这样的链表</li>
+<li>这个双向链表的内容和0x1b0位置的完全一样，构建2个双向链表主要是为了方便，一个位于KPROCESS内，一个位于EPROCESS内</li>
+</ul>
+</li>
+<li>结构图：<a href="/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/threadListEntry.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/threadListEntry.png"></a></li>
+</ul>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/">http://cataloc.gitee.io/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/Windows%E5%86%85%E6%A0%B8/">Windows内核    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/blog/2020/03/28/%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/"><img class="next_cover lazyload" data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>进程结构体</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/blog/2020/03/08/段描述符与段选择子/" title="段描述符与段选择子"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-08</div><div class="relatedPosts_title">段描述符与段选择子</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/05/初见保护模式/" title="初见保护模式"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-05</div><div class="relatedPosts_title">初见保护模式</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/09/段描述符属性/" title="段描述符属性"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-09</div><div class="relatedPosts_title">段描述符属性</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/06/探究段寄存器/" title="探究段寄存器"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-06</div><div class="relatedPosts_title">探究段寄存器</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/11/段权限检查/" title="段权限检查（数据段）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-11</div><div class="relatedPosts_title">段权限检查（数据段）</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/13/代码跨段跳转/" title="代码跨段跳转（不提权）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-13</div><div class="relatedPosts_title">代码跨段跳转（不提权）</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
