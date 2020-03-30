@@ -209,7 +209,7 @@ function activateLightMode(){
 <li>结构图：<a href="/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/threadListEntry.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[]" data-src="/blog/2020/03/29/%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93/threadListEntry.png"></a></li>
 </ul>
 <h2 id="关于断链"><a href="#关于断链" class="headerlink" title="关于断链"></a>关于断链</h2><p>在进程结构体中，我们通过断链实现了简单的进程隐藏，其原理在于，任务管理器在查询进程便是通过遍历ActiveProcessLink实现的。尽管进程已经不在活动进程链表上，但是仍然可以运行，原因是<strong>Windows执行的基本单位是线程，而不是进程</strong>，所以才有从进程链表上摘除自身进程的隐藏方法，这虽然从进程链表上摘除了自身，但不会影响操作系统的调度，所以不影响程序运行。</p>
-<p>当然，线程就不一样了，不过这里没能完成线程断链的实验，原因可能在于VMware虚拟机的指令问题，Windbg无法中断操作系统时间过长，所以经常实验到一半，就无法继续执行指令了，只能重启虚拟机，后续到驱动章节会此实验作为练习补上。</p>
+<p>不过这里没能完成线程断链的实验，原因可能在于VMware虚拟机的指令问题，Windbg无法中断操作系统时间过长，所以经常实验到一半，就无法继续执行指令了，只能重启虚拟机，后续到驱动章节会此实验作为练习补上。</p>
 <p>参考教程：<a href="https://www.bilibili.com/video/BV1NJ411M7aE?p=44" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1NJ411M7aE?p=44</a></p>
 <p>参考文章：<a href="https://blog.csdn.net/emaste_r/article/details/8916786" target="_blank" rel="noopener">https://blog.csdn.net/emaste_r/article/details/8916786</a></p>
 <p>参考笔记：张嘉杰的笔记</p>
