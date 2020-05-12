@@ -1,0 +1,170 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>Android程序分析入门（破解程序） | cataLoc's Blog</title><meta name="description" content="Android程序分析入门（破解程序）"><meta name="keywords" content="Android逆向"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/galar.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Android程序分析入门（破解程序）"><meta name="twitter:description" content="Android程序分析入门（破解程序）"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="Android程序分析入门（破解程序）"><meta property="og:url" content="http://cataloc.gitee.io/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="Android程序分析入门（破解程序）"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cataloc.gitee.io/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/"><link rel="next" title="Frida简要安装教程（Windows）" href="http://cataloc.gitee.io/blog/2020/05/11/frida%E5%AE%89%E8%A3%85%EF%BC%88Windows%EF%BC%89/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">56</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">5</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#前言"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">前言</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#破解入手"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">破解入手</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#反编译"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">反编译</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#程序分析"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">程序分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#修改Smali文件"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">修改Smali文件</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#重新编译并签名"><span class="toc_mobile_items-number">6.</span> <span class="toc_mobile_items-text">重新编译并签名</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#小结"><span class="toc_mobile_items-number">7.</span> <span class="toc_mobile_items-text">小结</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考资料"><span class="toc_mobile_items-number">8.</span> <span class="toc_mobile_items-text">参考资料</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#破解入手"><span class="toc-number">2.</span> <span class="toc-text">破解入手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反编译"><span class="toc-number">3.</span> <span class="toc-text">反编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#程序分析"><span class="toc-number">4.</span> <span class="toc-text">程序分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改Smali文件"><span class="toc-number">5.</span> <span class="toc-text">修改Smali文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重新编译并签名"><span class="toc-number">6.</span> <span class="toc-text">重新编译并签名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">7.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">8.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">Android程序分析入门（破解程序）</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2020-05-11<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2020-05-12</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在<a href="https://cataloc.gitee.io/blog/2020/05/03/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8A/">前面的篇章</a>中做好了Android程序分析的准备工作，编写了一个可以用来破解的入门程序，配置了右键命令行的快捷键以及逆向分析需要用到的工具Apktool和AndroidKiller。本篇就来用这些工具对Android程序进行一次简单的破解。</p>
+<h2 id="破解入手"><a href="#破解入手" class="headerlink" title="破解入手"></a>破解入手</h2><p>我们之前编写的程序是一个简单的注册的页面程序，没有后台的，可以专门用来破解上手。也算是比较基础的破解类型。在正式破解之前，我们先捋一捋破解思路。如果有过Windows平台逆向破解经验的小伙伴就会这样想：</p>
+<ol>
+<li>将程序拖进OllyDbg</li>
+<li>注册程序 -> 注册失败，并留意注册失败时弹出的字符串</li>
+<li>在OllyDbg中搜索相关字符串</li>
+<li>找到分支执行语句并修改执行流程</li>
+<li>完成暴破</li>
+</ol>
+<p>这的确是一个非常连贯且合理的思路，但是Android程序并不像Windows上的exe程序一样，可以直接拖进调试器进行调试并修改。所以在对Android程序破解时步骤会有所变化：</p>
+<ol>
+<li>对apk文件进行反编译</li>
+<li>分析apk文件</li>
+<li>修改Smali文件</li>
+<li>将修改后的程序重新编译，并签名</li>
+</ol>
+<p>下面，我们就按照这些步骤，对程序进行逆向破解吧。</p>
+<h2 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h2><ol>
+<li><p>首先找到我们之前的apk文件，在我们编写好的Android程序项目中的地址位于：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">项目名\app\build\outputs\apk\debug</span><br></pre></td></tr></tbody></table></figure></div>
+
+<a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/apk_debug.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/apk_debug.png"></a>
+</li>
+<li><p>右键在当前目录打开命令行，输入如下指令</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apktool d app-debug.apk -o outdir_dbg</span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>这时apktool会将apk文件进行反编译，并输出到outdir_dbg文件中，如图所示 <a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/outdir_dbg.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/outdir_dbg.png"></a>  <a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/outdir_dbg2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/outdir_dbg2.png"></a></p>
+</li>
+<li><p>这样，我们反编译部分的工作就完成了</p>
+</li>
+</ol>
+<h2 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析"></a>程序分析</h2><ol>
+<li><p>这里首先我们需要下载一个工具，git bash，这部分在前一篇忘记提了，不过安装过程也很简单，进入<a href="https://gitforwindows.org/" target="_blank" rel="noopener">官网</a>下载后自行安装。一般情况下安装时它会要求添加到右键快捷键的，如果没有的话，就按照添加右键命令行的方法添加到注册表即可。</p>
+</li>
+<li><p>根据编写程序时的运行结果来看 <a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/Runtime.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/Runtime.png"></a> 我们需要搜索Register Failed字符串，然后找到其在程序中的所在位置，接着向上回溯，找到条件分支语句的地方，进行修改，便可完成暴破</p>
+</li>
+<li><p>有了思路后，开始实践，根据Android程序的特性，通常情况下，字符串硬编码到源码中，也可能引用自res/values目录下的string.xml文件中，所以我们决定对整个目录进行搜索，查找”Register Failed”字符串出现的位置，在对apk进行反汇编的目录中，右键Git Bash Here，键入如下指令：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -r "Register Failed" outdir_dbg/</span><br></pre></td></tr></tbody></table></figure></div>
+
+<a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/analyze_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/analyze_1.png"></a>  可以发现，仅有一处，并且的确位于res/values目录下的string.xml文件中
+</li>
+<li><p>根据结果我们可以发现“Register Failed”这个字符串的值对应的Id是unsuccess，可以推测unsuccess有可能作为引用出现在反汇编代码中的某一处，所以接下来输入指令：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -r "unsuccess" outdir_dbg/</span><br></pre></td></tr></tbody></table></figure></div>
+
+<a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/analyze_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/analyze_2.png"></a>  结果显示有3处出现unsuccess，其中一处是第三步出现的；另外两处可以看出unsuccess只不过是个变量名，其值为0x7f0b002b。所以这个值，就有可能会是代码中引用代表"Register Failed"的值。
+</li>
+<li><p>根据上一步的推测，继续搜索0x7f0b002b的值，输入如下指令：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -r "0x7f0b002b" outdir_dbg/</span><br></pre></td></tr></tbody></table></figure></div>
+
+<a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/analyze_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/analyze_3.png"></a>  根据结果，发现“0x7f0b002b”这个值出现了3次，值得关注的一处位于MainActivity$MyListener.smali这个文件中，有点Android正向开发经验都知道，一般来说MainActivity.java用于一个Android程序的主体功能的实现，而smali文件对应的就是Java文件编译完再反编译回来的文件。下面一个部分，将主要关注该文件。
+
+
+
+</li>
+</ol>
+<h2 id="修改Smali文件"><a href="#修改Smali文件" class="headerlink" title="修改Smali文件"></a>修改Smali文件</h2><ol>
+<li><p>找到MainActivity$MyListener.smali文件，路径位于：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">项目名\app\build\outputs\apk\debug\outdir_dbg\smali\com\droider\crackme_0x1</span><br></pre></td></tr></tbody></table></figure></div>
+
+<a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/smaliSits.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/smaliSits.png"></a>
+</li>
+<li><p>用AndroidKiller打开该文件（也可以用别的文本编译器，例如010Editor），并定位到指令</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">smali</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight smali"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const v7, 0x7f0b002b</span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>的位置，观察前后程序  <a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/smaliAnalyze.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/smaliAnalyze.png"></a> 我们可以发现，0x7f0b002b这个代表着“Register Failed”这个字符串的语句位于cond_1这个执行分支中，并且该执行分支，会将该参数传入Toast.makeText函数中执行，可以猜测，这部分就属于执行失败时要执行的地方。向上观察，有一个条件判断语句</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">smali</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight smali"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if-ne v6, v1,<span class="keyword"> :cond_1</span></span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>该语句当条件判断成立时会跳转到cond_1执行，也就是执行失败的分支。这就是突破口，我们可以修改这行条件判断语句，改为</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">smali</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight smali"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if-eq v6, v1,<span class="keyword"> :cond_1</span></span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>这样语句判断的条件相反，也就不那么容易跳转到执行失败的分支了，修改后代码如下：</p>
+<a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/smaliModify.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/smaliModify.png"></a>
+
+<p>修改完Smali文件后，这时就只剩下最后一步了</p>
+</li>
+</ol>
+<h2 id="重新编译并签名"><a href="#重新编译并签名" class="headerlink" title="重新编译并签名"></a>重新编译并签名</h2><ol>
+<li><p>修改完smali文件后，回退到最初反编译的那个文件夹，右键进入命令行，输入如下指令：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apktool b outdir_dbg</span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>这里是通过apktool将我们修改后的文件夹重新编译成apk文件，编译后生成的文件位于目录：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">outdir_dbg\dist</span><br></pre></td></tr></tbody></table></figure></div>
+
+<a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/recompile.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/recompile.png"></a>
+
+<p>这里有一个<strong>很大的坑</strong>，我之前最早进行实验的时候，就是<strong>重新编译时总是失败</strong>，<strong>主要原因是apktool的版本不对</strong>，我的电脑<strong>Java的版本是13.0.1</strong>，<strong>apktool版本是2.4.1</strong>，在这个条件下是<strong>可以重新编译成功</strong>的，其它情况就不一定了。</p>
+</li>
+<li><p>在重新编译完后，生成了app-debug.apk文件，此时该文件是不能拖进Android虚拟机运行的，原因是我们修改了原本的apk文件，需要重新签名。这时我们利用AndroidKiller进行签名就行了。</p>
+<p>步骤是：打开AndroidKiller -> 工具 -> APK签名 -> 将app-debug拖入 -> 选择签名AndroidKiller -> 执行</p>
+<p>执行结束后效果如下： <a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/signed.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/signed.png"></a>  此时在刚刚的文件夹中会生成一个新的文件apk-debug_sign.apk，这是已经签名过的程序，可以拖入虚拟机中运行</p>
+</li>
+<li><p>我们将apk-debug_sign.apk文件拖进虚拟机安装并运行，这时可以发现，无论我们输入什么用户名和校验码时，都会 弹出”Register Succeed”，原因是我们修改了程序的执行流程，使得在原本执行打印”Register Failed”情况变成了相反的情况。 <a href="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/Modified.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/Modified.png"></a></p>
+</li>
+<li><p>至此，便完成了此次程序的整个的破解流程</p>
+</li>
+</ol>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本篇结束，Android逆向算是开了一个头，然而接下来的更新却可能遥遥无期。首先Windows内核部分，在驱动篇结束后，将和Android逆向部分穿插更新，接下来要到APC机制了，APC机制非常繁琐，而且需要逆向大量函数，这一篇章花费一个月都更不完也是有可能的。另一个，最近公司有Python开发的需求，加上最近使用Frida进行hook时，需要用到Python和JavaScript，虽说以前用过一段时间，也很久没用了，最近需要花点时间复习下，也会顺便更新几期Python以及JavaScript相关的内容。再之后，可能才轮到Android的Smali语法部分的更新，总的来说，5月接下来会更加忙碌了。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>《Android软件安全权威指南》 —— 丰生强</p>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/">http://cataloc.gitee.io/blog/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/Android%E9%80%86%E5%90%91/">Android逆向    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/blog/2020/05/11/frida%E5%AE%89%E8%A3%85%EF%BC%88Windows%EF%BC%89/"><img class="next_cover lazyload" data-src="https://gitee.com/cataloc/blog/raw/master/2020/05/11/frida%E5%AE%89%E8%A3%85%EF%BC%88Windows%EF%BC%89/cover0x04.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>Frida简要安装教程（Windows）</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/blog/2020/05/03/Android程序分析入门-上/" title="Android程序分析入门（准备工作）"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/42392f3edc1a2655014965c5df39b93ce55b7e2c/2020/05/03/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8A/cover0x01.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-05-03</div><div class="relatedPosts_title">Android程序分析入门（准备工作）</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/05/11/frida安装（Windows）/" title="Frida简要安装教程（Windows）"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/05/11/frida%E5%AE%89%E8%A3%85%EF%BC%88Windows%EF%BC%89/cover0x04.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-05-11</div><div class="relatedPosts_title">Frida简要安装教程（Windows）</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
