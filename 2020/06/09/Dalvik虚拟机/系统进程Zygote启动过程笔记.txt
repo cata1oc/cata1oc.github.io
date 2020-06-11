@@ -1,0 +1,42 @@
+1. Android系统基于Linux内核
+2. Linux系统：所有进程都是init进程的子孙进程，即由init进程fork出来，包括zygote
+3. 系统启动时，init进程创建Zygote进程
+4. 系统启动脚本位于system/core/rootdir/init.rc文件中 （https://blog.csdn.net/luoshengyang/article/details
+/6768304）
+5. Zygote要执行的程序是system/bin/app_process
+6. 最终会执行app_process.main函数中的语句runtime.start("com.android.internal.os.ZygoteInit", startSystem
+Server)
+7. startSystemServer为true，表示要启动SystemServer，由于AppRuntime未实现自己的start函数，则执行其父类
+的AndroidRuntime的start函数
+8. AndroidRuntime的start函数做了3件事：
+	1）调用函数startVM启动虚拟机 
+	2）调用函数startReg注册JNI方法
+	3）调用了com.android.internal.os.ZygoteInit类的main函数
+9. ZygoteInit的main函数做了3件事
+	1）调用registerZygoteSocket函数创建了一个socket接口，用来和ActivityManagerService通讯
+	2）调用startSystemServer函数来启动SystemServer函数来启动SystemServer组件
+	3）调用runSelectLoopMode函数进入一个无限循环在前面创建的socket接口等待ActivityManagerServ
+	ice请求创建新的应用程序进程
+10. ZygoteInit.registerZygoteSocket
+11. ZygoteInit.startSystemServer通过Zygote.forkSystemServer函数来创建一个新的进程来启动SystemServer组
+件，如果得到的返回值pid等于0，则新创建的进程会执行handleSystemServerProcess函数
+12. ZygoteInit.handleSystemServerProcess，调用closeServerSocket函数关闭继承来的父进程创建的Socket文
+件描述符。调用RuntimeInit.zygoteInit函数来进一步执行启动SystemServer组件的操作
+13. RuntimeInit.zygoteInit，该函数会执行两个操作：
+	1）调用zygoteInitNative函数来执行一个Binder进程间通信机制的初始化工作，这个工作完成之后，这
+	个进程中的Binder对象就可以方便地进行进程间通信了
+	2）另一个是调用前面（11）传进来的com.android.server.SystemServer类的main函数
+14. RuntimeInit.zygoteInitNative，该函数是一个Native函数，执行完这一步后，这个进程的Binder进程间通信
+机制基础设置就准备好了
+15. SystenServer.main内部会创建一个ServerThread线程对象来执行一些系统关键服务的启动操作，例如Package
+ManagerService和ActivityManagerService
+16. ZygoteInit.runSelectLoopMode该函数等待ActivityManagerService来链接Socket，然后调用ZygoteConnect
+ion.runOnce函数来创建新的应用程序
+17. 至此，Zygote进程启动完成
+18. 总结：
+	1）系统启动时init进程会创建Zygote进程，Zygote进程负责后续Android应用程序框架层的其它进程的
+	创建和启动工作。
+	2）Zygote进程会首先创建一个SystemServer进程，SystemServer进程负责启动系统的关键服务，如包
+	管理服务PackageManagerService和应用程序组件管理服务ActivityManagerService
+	3）当我们需要启动一个Android应用程序时，ActivityManagerService会通过Socket进程间通信机制，
+	通知Zygote进程为这个应用程序创建一个新的进程。
