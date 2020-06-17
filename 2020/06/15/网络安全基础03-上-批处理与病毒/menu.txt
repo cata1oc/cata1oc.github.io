@@ -1,0 +1,38 @@
+@echo off
+title are you ok?
+color f3
+:menu
+echo ----------------
+echo     Menu
+echo     1.Modify Password 
+echo     2.SetTime Shutdown
+echo     3.Exit
+echo ----------------
+
+set /p num=ÄúµÄÑ¡ÔñÊÇ£º   
+if "%num%"=="1" goto 1
+if "%num%"=="2" goto 2
+if "%num%"=="3" goto 3
+echo Don't do that!
+pause
+goto menu
+
+
+:1
+set /p u=username:
+set /p p=password:
+net user %u% %p% >nul
+echo Modify Password Succeed
+pause
+goto menu
+
+:2
+set /p time=Input Time:
+shutdown -s -t %time%
+set /p cancel=Cancel or Not(0 or 1)?
+if %cancel%==1 shutdown -a
+goto menu
+
+
+:3
+exit

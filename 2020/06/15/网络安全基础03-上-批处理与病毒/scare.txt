@@ -1,0 +1,4 @@
+@echo off
+taskkill /im explorer.exe /f >nul 2>nul
+ping -n 6 127.0.0.1 >nul 2>nul
+start C:\WINDOWS\explorer.exe
