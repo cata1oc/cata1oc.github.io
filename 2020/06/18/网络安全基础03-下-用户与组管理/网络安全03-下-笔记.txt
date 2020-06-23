@@ -1,0 +1,39 @@
+1. SID(Security Identifiers)：
+	1）含义 -> 用户身份证
+	2）分析结构 -> 用户与系统SID最后一项
+		拓展：Linux Root的Uid
+	3）查看指令 -> whoami /user
+	4）SAM(Security AccountManager)文件
+		含义 -> 存储密码哈希值
+		校验方式 -> 比较哈希值
+	
+
+2. 用户管理：
+	1）内置用户
+	2）用户权限
+	3）用户管理命令
+
+
+3. 组管理：
+	1）组管理作用
+	2）赋权限方式
+	3）内置组
+	4）组管理命令
+
+
+4. 服务器远程管理：
+	1）图形化：
+		remoete desktop users（RDP port：3390）
+	2）命令行：
+		service.msc -> telnet（port：23）
+
+5. Win7漏洞密码 单独开一篇
+
+
+
+
+参考链接
+[1]. https://www.cnblogs.com/mq0036/p/3518542.html (SID详解)
+[2]. https://blog.csdn.net/shennongzhaizhu/article/details/52435519（Windows中的SAM文件）
+[3]. https://blog.csdn.net/weixin_43252204/article/details/105338527 (buglige笔记)
+[4]. 查询mstsc & services.msc
