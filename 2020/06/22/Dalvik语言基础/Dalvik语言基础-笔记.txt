@@ -1,0 +1,46 @@
+1. Dalvik可执行指令格式
+	1）位描述：
+		如何看懂指令格式
+	2）指令格式标识：
+		指定指令的格式编码
+
+	3）语法约定
+
+2. DEX反汇编工具
+	1）dexdump(v命名法)
+	2）baksmali(p命名法)：
+		1>生成smali语法格式的反汇编文件
+		2>smali反汇编文件内的指令是Dalvik指令
+
+3. Dalvik寄存器
+	1）映射到Arm寄存器上
+	2）通过调用栈进行"虚拟"
+		1> 作略微拓展，简述Arm栈帧寄存器fp
+	3）总共支持v0~v65535
+
+4. 寄存器命名法
+	1）v命名法
+	2）p命名法（N个参数，M个局部变量）
+		1> 局部变量寄存器：v0~vM-1
+		2> 参数寄存器：p0~pN-1
+		3> 举例，对于foo()函数：
+			A. p0-Hello对象引用，p1, p2-传入的参数
+			B. v0, v1-局部变量
+
+5. Dalvik字节码
+	1）类型：
+		1> Dalvik字节码类型描述符
+		2> 对“J”和“[”简要分析		
+	2）方法：
+		1> 格式（例子）
+	3）字段：
+		1> 格式，与方法的区别
+		2> 表现形式
+
+
+
+参考链接：
+1. https://blog.csdn.net/p312011150/article/details/80501724 （CSDN-dex文件格式）
+2. https://source.android.com/devices/tech/dalvik/instruction-formats （官方文档-Dalvik可执行指令格式）
+3. https://source.android.com/devices/tech/dalvik/dalvik-bytecode#instructions （官方文档-Dalvik字节码）
+4. https://source.android.com/devices/tech/dalvik/dex-format （官方文档-可执行文件格式）
