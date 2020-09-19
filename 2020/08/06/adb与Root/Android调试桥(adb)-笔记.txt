@@ -1,0 +1,14 @@
+1. 介绍Android调式桥
+2. 用Android Studio模拟器测试adb
+3. 用夜神模拟器测试adb失败，并分析原因
+4. 用夜神模拟器完成实验
+
+
+参考链接：
+1. https://developer.android.google.cn/studio/command-line/adb?hl=zh-cn  （官方文档-adb）
+2. https://www.jianshu.com/p/fd39ec466e88 （简书-Android模拟器获取Root权限）
+3. https://www.jianshu.com/p/d5f42f0320c2（简书-Android Studio模拟器的root权限）
+4. https://www.jianshu.com/p/cfcfd856ae6a （简书-adb install安装失败一例 INSTALL_FAILED_TEST_ONLY）
+5. https://blog.csdn.net/vfush/article/details/80320596（CSDN-INSTALL_FAILED_TEST_ONLY的原因）
+6. https://blog.csdn.net/wuzuyu365/article/details/53939422 （CSDN-apk安装失败提示INSTALL_FAILED_INVALID_URI）
+7. https://jingyan.baidu.com/article/19192ad86494bfa53e5707b3.html （夜深模拟器-实现adb操作）
