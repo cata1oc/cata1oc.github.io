@@ -1,0 +1,4 @@
+参考链接：
+1. https://bitbucket.org/JesusFreke/smali/downloads/?tab=downloads  smali以及baksmali工具下载
+2. https://www.jianshu.com/p/7ca677fea8c3  Android Smali汇编动态调试环境搭建
+3. https://www.ucloud.cn/yun/14011.html 关于如何使用smali
