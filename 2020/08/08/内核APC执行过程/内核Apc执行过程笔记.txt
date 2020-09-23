@@ -1,0 +1,21 @@
+KiDeliverApc（内核Apc部分）:
+	1. 获取CurrentThread
+	2. 获取TrapFrame
+	3. 获取养父母（Process）
+	4. 获取排队自旋锁
+	5. 判断内核Apc队列是否有Apc：
+		a. 有则跳转至此
+		b. 获取Kapc结构首地址
+		c. 如果NormalRoutine的值不为0，则跳转：
+			I. 判断KernelApcInProgress的值
+			II. 判断KernelApcDisable的值
+			III. 若均放行，则将Apc从队列中摘除
+			IV. 释放排队自旋锁
+			V. 将之前传递的局部变量压栈
+			VI. 调用KernelRoutine释放Kapc结构体
+			VII. push相应参数，调用内核APC函数NormalRoutine
+			VIII. 获取排队自旋锁
+			IX. 跳转回5
+		d. 将Apc从队列中摘除
+		e. 跳转回5
+	6. 没有就继续判断用户Apc队列是否有Apc	
