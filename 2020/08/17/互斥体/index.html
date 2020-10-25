@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>互斥体 | cataLoc's Blog</title><meta name="description" content="互斥体"><meta name="keywords" content="Windows内核"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="互斥体"><meta name="twitter:description" content="互斥体"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="互斥体"><meta property="og:url" content="http://cataloc.gitee.io/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="互斥体"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cataloc.gitee.io/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/"><link rel="next" title="信号量" href="http://cataloc.gitee.io/blog/2020/08/16/%E4%BF%A1%E5%8F%B7%E9%87%8F/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">80</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">7</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#前言"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">前言</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#为什么要有互斥体"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">为什么要有互斥体</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#等待对象被遗弃问题"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">等待对象被遗弃问题</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#重入问题"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">重入问题</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#互斥体的创建与信号设置"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">互斥体的创建与信号设置</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#互斥体结构"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">互斥体结构</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#CreateMutex函数"><span class="toc_mobile_items-number">3.2.</span> <span class="toc_mobile_items-text">CreateMutex函数</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#ReleaseMutex函数"><span class="toc_mobile_items-number">3.3.</span> <span class="toc_mobile_items-text">ReleaseMutex函数</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#如何解决重入问题"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">如何解决重入问题</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#OwnerThread的作用"><span class="toc_mobile_items-number">4.1.</span> <span class="toc_mobile_items-text">OwnerThread的作用</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#KeWaitForSingleObject分析"><span class="toc_mobile_items-number">4.2.</span> <span class="toc_mobile_items-text">KeWaitForSingleObject分析</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#如何解决等待对象被遗弃问题"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">如何解决等待对象被遗弃问题</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#关于禁用内核APC"><span class="toc_mobile_items-number">6.</span> <span class="toc_mobile_items-text">关于禁用内核APC</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考资料"><span class="toc_mobile_items-number">7.</span> <span class="toc_mobile_items-text">参考资料</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要有互斥体"><span class="toc-number">2.</span> <span class="toc-text">为什么要有互斥体</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#等待对象被遗弃问题"><span class="toc-number">2.1.</span> <span class="toc-text">等待对象被遗弃问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重入问题"><span class="toc-number">2.2.</span> <span class="toc-text">重入问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#互斥体的创建与信号设置"><span class="toc-number">3.</span> <span class="toc-text">互斥体的创建与信号设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#互斥体结构"><span class="toc-number">3.1.</span> <span class="toc-text">互斥体结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CreateMutex函数"><span class="toc-number">3.2.</span> <span class="toc-text">CreateMutex函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ReleaseMutex函数"><span class="toc-number">3.3.</span> <span class="toc-text">ReleaseMutex函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何解决重入问题"><span class="toc-number">4.</span> <span class="toc-text">如何解决重入问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OwnerThread的作用"><span class="toc-number">4.1.</span> <span class="toc-text">OwnerThread的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KeWaitForSingleObject分析"><span class="toc-number">4.2.</span> <span class="toc-text">KeWaitForSingleObject分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何解决等待对象被遗弃问题"><span class="toc-number">5.</span> <span class="toc-text">如何解决等待对象被遗弃问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于禁用内核APC"><span class="toc-number">6.</span> <span class="toc-text">关于禁用内核APC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">7.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">互斥体</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2020-08-17<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2020-10-25</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前一篇文章学习了信号量（Semaphore），信号量的引出是为了解决事件（Event）解决不了的同步问题，例如生产者消费者问题。本篇将要学习的互斥体（Mutant），同样是为了解决信号量与事件解决不了的事情而诞生的。</p>
+<h2 id="为什么要有互斥体"><a href="#为什么要有互斥体" class="headerlink" title="为什么要有互斥体"></a>为什么要有互斥体</h2><h3 id="等待对象被遗弃问题"><a href="#等待对象被遗弃问题" class="headerlink" title="等待对象被遗弃问题"></a>等待对象被遗弃问题</h3><p>互斥体（Mutant）与事件（Event）和信号量（Semaphore）一样，都可以用来进行线程的同步控制。但需要指出的是，这几个对象<strong>都是内核对象</strong>，这就意味着，通过这些对象<strong>可以进行跨进程的线程同步控制</strong>，比如：</p>
+<a href="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/reason_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/reason_1.png"></a>
+
+<p>观察上图，X和Y分别属于不同进程中的线程，它们都要用到等待对象Z，正常情况下，通过事件或者信号量便可以完成同步控制。但是在极端情况下，<strong>如果B进程的Y线程还没有来得及调用修改SignalState的函数（例如SetEvent）就挂掉了，那么等待对象Z将被遗弃，这也就意味着X线程将永远等下去！</strong>在等待对象被遗弃的情况下，事件或信号量将无法继续维持线程的同步，而互斥体可以解决此类问题。</p>
+<h3 id="重入问题"><a href="#重入问题" class="headerlink" title="重入问题"></a>重入问题</h3><p>事件只允许同一时间有一个线程进入临界区，信号量允许同一时间有多个线程进入临界区。考虑一种特殊情况</p>
+<a href="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/reason_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/reason_2.png"></a>
+
+<p>上图中，由于代码设计的问题，在WaitForSingleObject等待A对象后，内部代码又调用了WaitForMultipleObjects等待A对象。这种情况被称作<strong>重入</strong>，当调用一次WaitForSingleObject后，A对象的SignalState变为了0，此时已经没有信号了，当调用WaitForMultipleObjects时，由于被等待对象A是没有信号的，因此代码会永远困在该函数内部。这种情况叫做<strong>死锁</strong>。事件和信号量面对重入问题都显得无能为力，而<strong>互斥体可以解决重入问题，避免死锁的情况发生。</strong></p>
+<h2 id="互斥体的创建与信号设置"><a href="#互斥体的创建与信号设置" class="headerlink" title="互斥体的创建与信号设置"></a>互斥体的创建与信号设置</h2><p>前面提到，互斥体（Mutant）可以解决信号量（Semaphore）和事件（Event）解决不了的问题，这里就从结构，用法等方面开始了解互斥体。</p>
+<h3 id="互斥体结构"><a href="#互斥体结构" class="headerlink" title="互斥体结构"></a>互斥体结构</h3><p>首先来看互斥体结构，它所包含的字段较多</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">_KMUTANT						</span><br><span class="line">   +0x000 Header           : _DISPATCHER_HEADER	</span><br><span class="line">   	+0x000 Type					</span><br><span class="line">   	+0x001 Absolute</span><br><span class="line">   	+0x002 Size</span><br><span class="line">   	+0x003 Inserted</span><br><span class="line">   	+0x004 SignalState				</span><br><span class="line">   	+0x008 WaitListHead</span><br><span class="line">   +0x010 MutantListEntry  : _LIST_ENTRY	</span><br><span class="line">   +0x018 OwnerThread      : Ptr32 _KTHREAD   </span><br><span class="line">   +0x01c Abandoned        : UChar		</span><br><span class="line">   +0x01d ApcDisable       : UChar</span><br></pre></td></tr></tbody></table></figure></div>
+
+<ul>
+<li>Type：互斥体的Type值为2。</li>
+<li>SignalState：互斥体的信号通过两个函数进行设置：<ul>
+<li>互斥体创建函数CreateMutex。</li>
+<li>互斥体信号设置函数ReleaseMutex。</li>
+</ul>
+</li>
+<li>MutantListEntry：<strong>在KThread+0x10处有一个MutantListHead字段，指向链表头，链表圈着所有该线程拥有的互斥体线程，这个MutantListEntry就是挂在链表的位置</strong>（例如Kapc的ApcListEntry其结构就是挂在APC链表的位置，因此通过APC链表取的Kapc首地址时需要,减去ApcListEntry在结构体中的偏移）</li>
+<li>OwnerThread：正在拥有互斥体的线程；由CreateMutex函数第二个参数决定。</li>
+<li>Abandoned：是否已经被放弃不用。</li>
+<li>ApcDisable：是否禁用内核APC。</li>
+</ul>
+<h3 id="CreateMutex函数"><a href="#CreateMutex函数" class="headerlink" title="CreateMutex函数"></a>CreateMutex函数</h3><p>CreateMutex是用来创建互斥体的函数，函数原型如下，其中第二个参数比较重要。</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HANDLE CreateMutex(</span><br><span class="line">	LPSECURITY_ATTRIBUTE SlpMutexAttributes,	// 指向安全属性的指针</span><br><span class="line">	BOOL bInitialOwner, 				// 初始化互斥对象的所有者</span><br><span class="line">	LPCTSTR lpName 					// 指向互斥对象名的指针</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">CreateMutex -> NtCreateMutant(内核函数) -> KeInitializeMutant(内核函数)</span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>创建互斥体，就是对互斥体结构进行初始化，大致如下：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">初始化Mutant结构体：</span><br><span class="line">	MUTANT.Header.Type = 2;</span><br><span class="line">	MUTANT.Header.SignalState = bInitialOwner?0:1;</span><br><span class="line">	MUTANT.OwnerThread = 当前线程/NULL;</span><br><span class="line">	MUTANT.Abandoned = 0;</span><br><span class="line">	MUTANT.ApcDisable = 0;</span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>该函数最重要的是第二个参数bInitialOwner，它对互斥体结构中的两个字段都有影响：</p>
+<ul>
+<li>SignalState：<ul>
+<li>bInitialOwner=TRUE：SignalState <- 0。</li>
+<li>bInitialOwner=FALSE：SignalState <- 1。</li>
+</ul>
+</li>
+<li>OwnerThread：<ul>
+<li>bInitialOwner=TRUE：<strong>OwnerThread存的当前线程（创建互斥体的这个线程）的地址。同时，将自己0x10处（MutantListEntry）的地址挂到当前线程MutantListHead（KThread+0x10）指向的链表上。</strong></li>
+<li>bInitialOwner=FALSE：OwnerThread值为NULL。</li>
+</ul>
+</li>
+</ul>
+<h3 id="ReleaseMutex函数"><a href="#ReleaseMutex函数" class="headerlink" title="ReleaseMutex函数"></a>ReleaseMutex函数</h3><p>ReleaseMutex函数用于设置互斥体的信号（类似事件的SetEvent，信号量的ReleaseSemaphore）</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">BOOL WINAPI ReleaseMutex(HANDLE hMutex);</span><br><span class="line"></span><br><span class="line">ReleaseMutex -> NtReleaseMutant(内核函数) -> KeReleaseMutant(内核函数)</span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>正常调用时：Mutant._DISPATCHER_HEADER.SignalState++。</p>
+<p><strong>如果SignalState=1，说明其它进程可以使用这个互斥体了，此时互斥体会从线程链表（KThread+0x10，MutantListHead指向的那个链表）中移除</strong>。这句话不好理解，需要结合代码分析，它可以用来解决 “等待对象被遗弃问题” 。 </p>
+<h2 id="如何解决重入问题"><a href="#如何解决重入问题" class="headerlink" title="如何解决重入问题"></a>如何解决重入问题</h2><p>前面提到，重入问题是事件（Event）与信号量（Semaphore）解决不了的，只有互斥体（Mutant）可以解决，这里就简单分析一下解决重入问题的过程。</p>
+<h3 id="OwnerThread的作用"><a href="#OwnerThread的作用" class="headerlink" title="OwnerThread的作用"></a>OwnerThread的作用</h3><a href="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/reentrant_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/reentrant_1.png"></a>
+
+<p>回顾互斥体结构_KMUTANT，有一个字段OwnerThread，它就是解决重入的关键。</p>
+<p><strong>若一个互斥体被创建时，它的OwnerThread字段不为空，创建它的线程即为互斥体的所属线程。此时，初始化的互斥体SignalState字段被设置为0，也就是没有信号，这个时候别的线程是没法使用这个互斥体的。但是创建它的线程仍然可以使用</strong>。并且可以重复使用0x8000000次，这也是为什么互斥体可以重入的原因，因为<strong>创建它的线程可以在没有信号的情况下使用互斥体</strong>。至于为何创建它的线程在互斥体没有信号的情况下也可以使用，来看下面对KeWaitForSingleObject的分析。</p>
+<h3 id="KeWaitForSingleObject分析"><a href="#KeWaitForSingleObject分析" class="headerlink" title="KeWaitForSingleObject分析"></a>KeWaitForSingleObject分析</h3><p>这个函数可以说是同步系列的核心函数了，事件，信号量，互斥体都会调用它。</p>
+<a href="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/reentrant_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/reentrant_2.png"></a>
+
+<ul>
+<li>首先定位到紫色方框部分，这里是开头，会先<strong>判断等待对象类型</strong>，若是互斥体，就接着执行；若是信号量或者事件，就跳转。</li>
+<li>然后到橙色方框这里，会根据SignalState的值<strong>判断是否有信号</strong>，如果有信号，就跳转。</li>
+<li>如果没有信号，会先到红色方框这里，<strong>判断当前线程与互斥体所属线程是否相同</strong>。<strong>如果相同，就会跳到和有信号时一样的地方。</strong>也就是说，即使没有信号，互斥体也可以被它的所属线程使用。这样，对于拥有互斥体的线程，就可以重入该互斥体。那么究竟可以重入多少次呢？接着分析。</li>
+<li>跳转后，会先<strong>判断SignalState的值是否与0x80000000相等</strong>，也就是说，只要不等于0x80000000，就可以继续执行，执行到蓝色方框的时候，会给<strong>SignalState的值减去1</strong>。这里要分两种情况：<ul>
+<li>SignalState有信号：说明此时SignalState值大于0，任一线程可以等待这个互斥体，且没有重入。</li>
+<li>SignalState无信号： 此时的SignalState值为小于等于0，执行到这一步，说明当前线程一定拥有该互斥体，此时SignalState仍会减1，最多可以减少至0x80000000。</li>
+</ul>
+</li>
+</ul>
+<p><strong>结论：</strong>由于互斥体进入激活条件有2个（SignalState有信号，线程拥有该互斥体），满足任何一种情况，均可进入激活状态， 从而解决了重入的问题。</p>
+<h2 id="如何解决等待对象被遗弃问题"><a href="#如何解决等待对象被遗弃问题" class="headerlink" title="如何解决等待对象被遗弃问题"></a>如何解决等待对象被遗弃问题</h2><p>接下来是另一个问题，关于如何解决等待对象被遗弃的问题，就像文章开篇提到的情况，当一个线程还没有设置等待对象的信号（例如SetEvent），那么另一个对象就只能一直等待下去了。来看看互斥体是如何解决这个问题的。</p>
+<a href="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/abandon_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/abandon_1.png"></a>
+
+<p>互斥体定义了MutantListEntry和Abandoned两个字段，在处理等待对象遗弃的情况时会用到。</p>
+<p>当一个线程异常 “死亡” 时，系统会调用内核函数<code>MmUnloadSystemImage</code>处理后事，它会根据 “死亡线程” 0x10位置指向的链表头，找到它所拥有的所有互斥体。将这些互斥体Abandoned字段值设置为1，并对它们调用<code>KeReleaseMutant(X, Y, Abandon, Z)</code>函数（ReleaseMutant的内核函数）。</p>
+<p>KeReleaseMutant函数的逻辑如下：</p>
+<a href="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/abandon_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/abandon_2.png"></a>
+
+<p>前面提到，正常情况下（Abandon=FALSE），该函数仅对SignalState作加1的操作。<strong>如果出现，互斥体所属线程突然死亡的情况（Abandon=TRUE），该函数会将SignalState直接设置为1，并且将互斥体所属线程设置为NULL，同时把自己从死亡线程的互斥体链表中移除。</strong>这样互斥体便可再为其它线程所使用，从而解决了等待对象被遗弃问题。</p>
+<h2 id="关于禁用内核APC"><a href="#关于禁用内核APC" class="headerlink" title="关于禁用内核APC"></a>关于禁用内核APC</h2><p>前面的介绍里，互斥体仍有一个字段未被解释清楚，就是最后这个ApcDisable（KMUTANT+0x1d）</p>
+<a href="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/ban_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/ban_1.png"></a>
+
+<p>互斥体分为2种，一种是用户用的，另一种是内核用的，区别如下：</p>
+<ul>
+<li>用户互斥体<ul>
+<li>结构名：Mutant（在3环被创建）</li>
+<li>对应内核函数：NtCreateMutant</li>
+<li>ApcDisable：0</li>
+</ul>
+</li>
+<li>内核互斥体<ul>
+<li>结构名：Mutex（在0环被创建）</li>
+<li>对应内核函数：NtCreateMutex</li>
+<li>ApcDisable：1</li>
+</ul>
+</li>
+</ul>
+<p>用户互斥体与内核互斥体结构名不同，但是结构体相同，<strong>主要的区别在于ApcDisable字段。用户互斥体是允许内核APC执行的，但是内核互斥体是不允许内核APC进行执行的。</strong>另一个细节是，互斥体只是一个内核对象，它是如何限制线程的执行（内核APC的执行）的呢？</p>
+<a href="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/ban_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/ban_2.png"></a>
+
+<p>在KeWaitForSingleObject中有如上的代码，可以根据ApcDisable的值修改KThread.KernelApcDisable（正在使用互斥体的线程），<strong>若ApcDisable值为0，则KernelApcDisable的值不会发生改变。若ApcDisable值为1，则KernelApcDisable的值将会减1，此时KernelApcDisable将会是一个不为0的值</strong>，内核APC将会被禁用（根据<a href="https://cataloc.gitee.io/blog/2020/08/08/%E5%86%85%E6%A0%B8APC%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/#%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90">内核APC执行过程</a>，若KernelApcDisable的值不为0，内核APC将会被禁用）。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>参考教程：</p>
+<ul>
+<li>海哥中级预习班教程</li>
+</ul>
+<p>参考链接：</p>
+<ol>
+<li><a href="https://blog.csdn.net/weixin_42052102/article/details/83473993" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42052102/article/details/83473993</a> （CSDN-My classmates学习笔记）</li>
+<li><a href="https://blog.csdn.net/qq_41988448/article/details/104895544" target="_blank" rel="noopener">https://blog.csdn.net/qq_41988448/article/details/104895544</a> （CSDN-lzyddf学习笔记）</li>
+</ol>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/">http://cataloc.gitee.io/blog/2020/08/17/%E4%BA%92%E6%96%A5%E4%BD%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/Windows%E5%86%85%E6%A0%B8/">Windows内核    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/blog/2020/08/16/%E4%BF%A1%E5%8F%B7%E9%87%8F/"><img class="next_cover lazyload" data-src="https://gitee.com/cataloc/blog/raw/master/2020/08/16/%E4%BF%A1%E5%8F%B7%E9%87%8F/cover0x1B.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>信号量</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/blog/2020/03/08/段描述符与段选择子/" title="段描述符与段选择子"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-08</div><div class="relatedPosts_title">段描述符与段选择子</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/05/初见保护模式/" title="初见保护模式"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-05</div><div class="relatedPosts_title">初见保护模式</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/09/段描述符属性/" title="段描述符属性"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-09</div><div class="relatedPosts_title">段描述符属性</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/06/探究段寄存器/" title="探究段寄存器"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-06</div><div class="relatedPosts_title">探究段寄存器</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/11/段权限检查/" title="段权限检查（数据段）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-11</div><div class="relatedPosts_title">段权限检查（数据段）</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/13/代码跨段跳转/" title="代码跨段跳转（不提权）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-13</div><div class="relatedPosts_title">代码跨段跳转（不提权）</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
