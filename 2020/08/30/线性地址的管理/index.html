@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>线性地址的管理 | cataLoc's Blog</title><meta name="description" content="线性地址的管理"><meta name="keywords" content="Windows内核"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="线性地址的管理"><meta name="twitter:description" content="线性地址的管理"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="线性地址的管理"><meta property="og:url" content="http://cataloc.gitee.io/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="线性地址的管理"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cataloc.gitee.io/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/"><link rel="next" title="未处理异常" href="http://cataloc.gitee.io/blog/2020/08/28/%E6%9C%AA%E5%A4%84%E7%90%86%E5%BC%82%E5%B8%B8/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">91</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">7</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#前言"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">前言</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#进程空间的地址划分"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">进程空间的地址划分</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#内核空间的地址管理"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">内核空间的地址管理</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#用户空间的地址管理"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">用户空间的地址管理</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#搜索二叉树"><span class="toc_mobile_items-number">4.1.</span> <span class="toc_mobile_items-text">搜索二叉树</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#MMVAD"><span class="toc_mobile_items-number">4.2.</span> <span class="toc_mobile_items-text">_MMVAD</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#CONTROL-AREA"><span class="toc_mobile_items-number">4.3.</span> <span class="toc_mobile_items-text">_CONTROL_AREA</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#MMVAD-FLAGS"><span class="toc_mobile_items-number">4.4.</span> <span class="toc_mobile_items-text">_MMVAD_FLAGS</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#总结"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">总结</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考资料"><span class="toc_mobile_items-number">6.</span> <span class="toc_mobile_items-text">参考资料</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程空间的地址划分"><span class="toc-number">2.</span> <span class="toc-text">进程空间的地址划分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内核空间的地址管理"><span class="toc-number">3.</span> <span class="toc-text">内核空间的地址管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用户空间的地址管理"><span class="toc-number">4.</span> <span class="toc-text">用户空间的地址管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#搜索二叉树"><span class="toc-number">4.1.</span> <span class="toc-text">搜索二叉树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MMVAD"><span class="toc-number">4.2.</span> <span class="toc-text">_MMVAD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CONTROL-AREA"><span class="toc-number">4.3.</span> <span class="toc-text">_CONTROL_AREA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MMVAD-FLAGS"><span class="toc-number">4.4.</span> <span class="toc-text">_MMVAD_FLAGS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">6.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">线性地址的管理</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2020-08-30<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2020-11-07</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇开始，进一步学习与物理页相关的内存管理知识。关于页的知识，在介绍段、页时已学习过一部分<strong>基础</strong>，可以参考以下链接：</p>
+<ul>
+<li><a href="https://cataloc.gitee.io/blog/2020/03/18/10-10-12%E5%88%86%E9%A1%B5/">10-10-12分页</a></li>
+<li><a href="https://cataloc.gitee.io/blog/2020/03/19/PDE-PTE%E5%B1%9E%E6%80%A7/">PDE-PTE属性</a></li>
+<li><a href="https://cataloc.gitee.io/blog/2020/03/20/%E9%A1%B5%E7%9B%AE%E5%BD%95%E8%A1%A8%E3%80%81%E9%A1%B5%E8%A1%A8%E5%9F%BA%E5%9D%80/">页目录表、页表基址</a></li>
+<li><a href="https://cataloc.gitee.io/blog/2020/03/20/%E5%9F%BA%E5%9D%80%E5%B0%8F%E5%AE%9E%E9%AA%8C/">基址小实验(10-10-12)</a></li>
+<li><a href="https://cataloc.gitee.io/blog/2020/03/21/%E9%80%86%E5%90%91%E5%88%86%E6%9E%90MmIsAddressValid/">逆向分析MmIsAddressValid(10-10-12)</a></li>
+<li><a href="https://cataloc.gitee.io/blog/2020/03/22/2-9-9-12%E5%88%86%E9%A1%B5/">2-9-9-12分页</a></li>
+</ul>
+<h2 id="进程空间的地址划分"><a href="#进程空间的地址划分" class="headerlink" title="进程空间的地址划分"></a>进程空间的地址划分</h2><p>进程空间地址的划分这个我们已经比较熟悉了，以<strong>x86</strong>为例，就是对4GB内存空间的划分，可以参考下面两张图：</p>
+<a href="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/divide_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" title="[该图取自My classmates博客]" data-src="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/divide_1.png"></a>
+
+<a href="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/divide_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/divide_2.png"></a>
+
+<p>说明：</p>
+<ul>
+<li>线性地址有4GB，但未必都能访问。这个之前也学习过，<strong>由于一些地址没有挂物理页，因此无法访问</strong>。</li>
+<li>有些地址可以访问，有些不能访问，有些具有特定权限才能访问，这些性质都需要被记录，那么Windows系统是如何分配，管理这些内存的呢？这就本篇要学习的主题，线性地址的管理。</li>
+</ul>
+<h2 id="内核空间的地址管理"><a href="#内核空间的地址管理" class="headerlink" title="内核空间的地址管理"></a>内核空间的地址管理</h2><p>内核空间，也就是我们常说的高2G，<strong>内核空间的地址是通过链表串起来的</strong>，遍历链表便可以找到各片地址的属性。之所以使用链表，主要是依据不同进程的高2G地址往往是相同的，因此高2G的地址变化较少，使用链表足矣。相比之下，用户空间的地址管理就较为复杂，这也是本篇主要讨论的内容。</p>
+<h2 id="用户空间的地址管理"><a href="#用户空间的地址管理" class="headerlink" title="用户空间的地址管理"></a>用户空间的地址管理</h2><h3 id="搜索二叉树"><a href="#搜索二叉树" class="headerlink" title="搜索二叉树"></a>搜索二叉树</h3><p>与内核空间的地址使用链表串起来所不同的是，<strong>用户空间的地址通过一颗搜索二叉树来记录。它里面的每一个节点都记录了一块被占用的线性地址空间。</strong></p>
+<p>在Windows XP（32位）系统中任意打开一个进程，本篇以打开Dbgview为例。</p>
+<a href="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/tree_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/tree_1.png"></a>
+
+<p>找到Dbgview对应的<strong>EPROCESS结构体</strong>，定位到<strong>+0x11c处，有一个VadRoot</strong>成员，这个成员就是<strong>记录当前进程线性地址空间的搜索二叉树</strong>。其对应的地址，则是二叉树根节点的地址。</p>
+<h3 id="MMVAD"><a href="#MMVAD" class="headerlink" title="_MMVAD"></a>_MMVAD</h3><p>_MMVAD是搜索二叉<strong>树节点的数据类型</strong>，根据MMVAD中的成员（ReactOS与Xp有所不同），可以对这个节点所对应的线性地址区域有个整体上的认识，以根节点为例：</p>
+<a href="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/MMVAD_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/MMVAD_1.png"></a>
+
+<p>这里介绍部分本篇中涉及到的成员：</p>
+<ul>
+<li>StartingVpn：当前节点对应的内存的线性地址起始位置（以页为单位），本例中为0xab0000。</li>
+<li>EndingVpn：当前节点对应的内存的线程地址结束位置（以页为单位），本例中为0xab0000。说明当前节点对应的内存大小为1个物理页，从线性地址0xab0000开始到线性地址0xab0fff结束。</li>
+<li>Parent：父节点地址，本例中根节点没有父节点，所以为空。</li>
+<li>LeftChild：左子树地址。</li>
+<li>RightChild：右子树地址。</li>
+<li>u：用于标识内存属性。</li>
+<li>ControlArea：控制区域。</li>
+</ul>
+<p>在知道左子树或右子树地址后，就可以通过</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kd> dt _MMVWAD 0x????????(左子树或右子树地址)</span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>一层一层找到所有的节点，不过这样就略显麻烦了，因此Windbg提供了一个指令</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kd> !vad 0x????????(进程根节点地址)</span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>通常运行该指令，就可以列出所指进程内线性地址的记录情况。</p>
+<a href="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/vad.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/vad.png"></a>
+
+<h3 id="CONTROL-AREA"><a href="#CONTROL-AREA" class="headerlink" title="_CONTROL_AREA"></a>_CONTROL_AREA</h3><p>根据列出的二叉树的内容，除了Start、End这种前面介绍的用于描述线性地址区间的属性，还有Level记录了当前节点位于二叉树的层数（depth），还有一些属性会逐个进行介绍，这一部分，介绍Private/Mapped这一列。</p>
+<p>在介绍MMVAD时，它内部有一个ControlArea成员，这个成员也是一个结构体，以根节点为例：</p>
+<a href="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/private.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/private.png"></a>
+
+<p>这里需要关注的是<strong>FilePointer字段，当这个值为空的时候，这块内存是private类型</strong>，也就是进程自己VirutalAlloc申请出来的内存。</p>
+<a href="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/mapped.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/mapped.png"></a>
+
+<p><strong>如果FilePointer这个字段不为空，则这块内存是mapped类型，也就是说它映射了其它类型（dll, exe, nls等）的文件到内存中</strong>。此时FilePointer会指向一个_FILE_OBJECT文件对象结构，这个文件对象结构可以看到被映射文件的相关描述性信息。</p>
+<h3 id="MMVAD-FLAGS"><a href="#MMVAD-FLAGS" class="headerlink" title="_MMVAD_FLAGS"></a>_MMVAD_FLAGS</h3><p>_MMVAD中有一个成员u，其实指的是一个union共同体，这个共同体结构如下：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> {</span><br><span class="line">    ULONG_PTR LongFlags;</span><br><span class="line">    MMVAD_FLAGS VadFlags;	<span class="comment">//通常只使用这个成员</span></span><br><span class="line">}u;</span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>尽管有两个成员，通常来说，只使用VadFlags这个成员。其结构如下：</p>
+<a href="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/vadFlags.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/vadFlags.png"></a>
+
+<p>这里主要介绍几个比较重要的字段：</p>
+<ul>
+<li><p>CommitCharge：最大可提供物理页的数目。</p>
+</li>
+<li><p>ImageMap：若值为1，则说明是映射（Mapped）了镜像文件（通常是.exe），若为0则不是。</p>
+</li>
+<li><p>Protection：表示当前_MMVAD节点描述的内存块的属性，取值如下：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//1:READONLY	2:EXECUTE	3:EXECUTE _READ	</span><br><span class="line">//4:READWRITE	5:WRITECOPY	6:EXECUTE_READWRITE</span><br><span class="line">//7:EXECUTE_WRITECOPY</span><br></pre></td></tr></tbody></table></figure></div>
+
+
+
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本篇，主要对用户空间的地址管理及其相关结构的进行简要介绍，部分结构的关系可以参考下图：</p>
+<a href="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/relationship.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/relationship.png"></a>
+
+<p>部分没有介绍到的，会在之后的篇章再作讨论。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>参考书籍：</p>
+<ul>
+<li>《Windows内核原理与实现》p243 —— 潘爱民</li>
+</ul>
+<p>参考教程：</p>
+<ul>
+<li>海哥逆向中级预习班课程</li>
+</ul>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://blog.csdn.net/weixin_42052102/article/details/83722047" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42052102/article/details/83722047</a> （My classmates-线性地址的管理学习笔记）</li>
+</ul>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/">http://cataloc.gitee.io/blog/2020/08/30/%E7%BA%BF%E6%80%A7%E5%9C%B0%E5%9D%80%E7%9A%84%E7%AE%A1%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/Windows%E5%86%85%E6%A0%B8/">Windows内核    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/blog/2020/08/28/%E6%9C%AA%E5%A4%84%E7%90%86%E5%BC%82%E5%B8%B8/"><img class="next_cover lazyload" data-src="https://gitee.com/cataloc/blog/raw/master/2020/08/28/%E6%9C%AA%E5%A4%84%E7%90%86%E5%BC%82%E5%B8%B8/cover0x25.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>未处理异常</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/blog/2020/03/08/段描述符与段选择子/" title="段描述符与段选择子"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-08</div><div class="relatedPosts_title">段描述符与段选择子</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/05/初见保护模式/" title="初见保护模式"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-05</div><div class="relatedPosts_title">初见保护模式</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/09/段描述符属性/" title="段描述符属性"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-09</div><div class="relatedPosts_title">段描述符属性</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/06/探究段寄存器/" title="探究段寄存器"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-06</div><div class="relatedPosts_title">探究段寄存器</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/11/段权限检查/" title="段权限检查（数据段）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-11</div><div class="relatedPosts_title">段权限检查（数据段）</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/13/代码跨段跳转/" title="代码跨段跳转（不提权）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-13</div><div class="relatedPosts_title">代码跨段跳转（不提权）</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
