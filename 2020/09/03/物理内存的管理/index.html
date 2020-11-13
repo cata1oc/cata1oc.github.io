@@ -1,0 +1,228 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>物理内存的管理 | cataLoc's Blog</title><meta name="description" content="物理内存的管理"><meta name="keywords" content="Windows内核"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="物理内存的管理"><meta name="twitter:description" content="物理内存的管理"><meta name="twitter:image" content="https://gitee.com/cataloc/blog/raw/master/2020/09/02/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/cover0x29.png"><meta property="og:type" content="article"><meta property="og:title" content="物理内存的管理"><meta property="og:url" content="http://cataloc.gitee.io/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="物理内存的管理"><meta property="og:image" content="https://gitee.com/cataloc/blog/raw/master/2020/09/02/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/cover0x29.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cataloc.gitee.io/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/"><link rel="prev" title="缺页异常" href="http://cataloc.gitee.io/blog/2020/09/05/%E7%BC%BA%E9%A1%B5%E5%BC%82%E5%B8%B8/"><link rel="next" title="Mapped Memory" href="http://cataloc.gitee.io/blog/2020/09/01/Mapped-Memory/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">96</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">7</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#前言"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">前言</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#认识物理内存"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">认识物理内存</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#最大物理内存"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">最大物理内存</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#操作系统限制"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">操作系统限制</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#实际物理内存"><span class="toc_mobile_items-number">2.3.</span> <span class="toc_mobile_items-text">实际物理内存</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#空闲页的管理"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">空闲页的管理</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#全局数组"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">全局数组</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#数组成员"><span class="toc_mobile_items-number">3.2.</span> <span class="toc_mobile_items-text">数组成员</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#物理页状态（空闲）"><span class="toc_mobile_items-number">3.3.</span> <span class="toc_mobile_items-text">物理页状态（空闲）</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#查询链表实验"><span class="toc_mobile_items-number">3.4.</span> <span class="toc_mobile_items-text">查询链表实验</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#小结"><span class="toc_mobile_items-number">3.5.</span> <span class="toc_mobile_items-text">小结</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#活动页的管理"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">活动页的管理</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考资料"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">参考资料</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#认识物理内存"><span class="toc-number">2.</span> <span class="toc-text">认识物理内存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#最大物理内存"><span class="toc-number">2.1.</span> <span class="toc-text">最大物理内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#操作系统限制"><span class="toc-number">2.2.</span> <span class="toc-text">操作系统限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实际物理内存"><span class="toc-number">2.3.</span> <span class="toc-text">实际物理内存</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#空闲页的管理"><span class="toc-number">3.</span> <span class="toc-text">空闲页的管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#全局数组"><span class="toc-number">3.1.</span> <span class="toc-text">全局数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数组成员"><span class="toc-number">3.2.</span> <span class="toc-text">数组成员</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#物理页状态（空闲）"><span class="toc-number">3.3.</span> <span class="toc-text">物理页状态（空闲）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查询链表实验"><span class="toc-number">3.4.</span> <span class="toc-text">查询链表实验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#小结"><span class="toc-number">3.5.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#活动页的管理"><span class="toc-number">4.</span> <span class="toc-text">活动页的管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://gitee.com/cataloc/blog/raw/master/2020/09/02/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/cover0x29.png)"><div id="post-info"><div id="post-title"><div class="posttitle">物理内存的管理</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2020-09-03<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2020-11-13</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前面3篇文章，以线性地址的角度认识了地址空间的管理与分配；本篇则以物理内存的角度来看地址的管理情况，在介绍段、页时，学习了不少关于页的知识，也有必要作为参考：</p>
+<ul>
+<li><a href="https://cataloc.gitee.io/blog/2020/03/18/10-10-12%E5%88%86%E9%A1%B5/">10-10-12分页</a></li>
+<li><a href="https://cataloc.gitee.io/blog/2020/03/19/PDE-PTE%E5%B1%9E%E6%80%A7/">PDE-PTE属性</a></li>
+<li><a href="https://cataloc.gitee.io/blog/2020/03/20/%E9%A1%B5%E7%9B%AE%E5%BD%95%E8%A1%A8%E3%80%81%E9%A1%B5%E8%A1%A8%E5%9F%BA%E5%9D%80/">页目录表、页表基址</a></li>
+<li><a href="https://cataloc.gitee.io/blog/2020/03/20/%E5%9F%BA%E5%9D%80%E5%B0%8F%E5%AE%9E%E9%AA%8C/">基址小实验(10-10-12)</a></li>
+<li><a href="https://cataloc.gitee.io/blog/2020/03/21/%E9%80%86%E5%90%91%E5%88%86%E6%9E%90MmIsAddressValid/">逆向分析MmIsAddressValid(10-10-12)</a></li>
+<li><a href="https://cataloc.gitee.io/blog/2020/03/22/2-9-9-12%E5%88%86%E9%A1%B5/">2-9-9-12分页</a></li>
+</ul>
+<h2 id="认识物理内存"><a href="#认识物理内存" class="headerlink" title="认识物理内存"></a>认识物理内存</h2><h3 id="最大物理内存"><a href="#最大物理内存" class="headerlink" title="最大物理内存"></a>最大物理内存</h3><ul>
+<li>10-10-12分页：最多可识别物理内存为4GB</li>
+<li>2-9-9-12分页：最多可识别物理内存为64GB</li>
+</ul>
+<h3 id="操作系统限制"><a href="#操作系统限制" class="headerlink" title="操作系统限制"></a>操作系统限制</h3><p>为什么在XP中，明明是2-9-9-12分页，却仍然无法超越4GB呢？</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/ExVerifySuite.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/ExVerifySuite.png"></a>
+
+<p>在内核函数中，有一个函数MmAddPhysicalMemoryEx，它调用了一个ExVerifySuite函数，这个ExVerifySuite限制了操作系统无法识别超过4GB，这里不展开，感兴趣可以自行分析它。（网上有补丁可以突破4GB的限制，原理也就是对这个函数做手脚）</p>
+<h3 id="实际物理内存"><a href="#实际物理内存" class="headerlink" title="实际物理内存"></a>实际物理内存</h3><p>如何来看实际的物理内存的大小。它可以通过任务管理器来查看，如图：</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/Total_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/Total_2.png"></a>
+
+<p>可以看到，这里的值是523696（10进制），单位是KB，这是操作系统实际管理出来的物理内存。</p>
+<p>还有另一种方式，通过全局变量MmNumberOfPhysicalPages，如下图所示：</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/Total_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/Total_3.png"></a>
+
+<p><strong>全局变量MmNumberOfPhysicalPages记录了物理页的总数，单位是4KB</strong>，通过运算，可以看到，刚好就是任务管理器中查询到的值。</p>
+<h2 id="空闲页的管理"><a href="#空闲页的管理" class="headerlink" title="空闲页的管理"></a>空闲页的管理</h2><p>学习物理内存的管理，分为两个角度，一是空闲页的管理，另一个是活动状态页的管理。这部分主要介绍空闲页的管理机制。</p>
+<h3 id="全局数组"><a href="#全局数组" class="headerlink" title="全局数组"></a>全局数组</h3><p>在操作系统中，有一个全局数组，数组中的成员记录了所有的物理页的信息（包括空闲页与正在使用的页），描述如下：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">数组指针：_MMPFN* MmPfnDatabase</span><br><span class="line">数组长度：MmNumberOfPhysicalPages</span><br></pre></td></tr></tbody></table></figure></div>
+
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/GlobalArray_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/GlobalArray_1.png"></a>
+
+<p>如图，框住的地址指向一个MMPFN结构，<strong>MMPFN是一个用来描述物理页的信息的结构</strong>，其大小为0x1C（或者0x18，因系统环境不同可能会变化），不过MMPFN结构本身并没有记录自己描述的是哪个物理页的信息，那么如何找到某个MMPFN描述的是哪个物理页呢？</p>
+<p>微软用了一种很巧妙的办法解决了这个问题。前面提到MmNumberOfPhysicalPages存的物理页的总数，而每个MMPFN用来描述一个物理页，因此就让每个物理页与全局数组中每个MMPFN按照顺序一一对应起来。以图中的MMPFN为例：</p>
+<ul>
+<li>0x80c8600+0x1c*0：指向全局数组中第一个MMPFN，描述所有物理页中第一个物理页（0x0000~0x0fff）</li>
+<li>0x80c8600+0x1c*1：指向全局数组中第二个MMPFN，描述所有物理页中第二个物理页（0x1000~0x1fff）</li>
+<li>0x80c8600+0x1c*2：指向全局数组中第三个MMPFN，描述所有物理页中第三个物理页（0x2000~0x2fff）</li>
+<li>……以此类推</li>
+</ul>
+<h3 id="数组成员"><a href="#数组成员" class="headerlink" title="数组成员"></a>数组成员</h3><p>前面一直提到全局数组中的成员——<strong>MMPFN结构，它被用来描述一个物理页的信息</strong>，现在来看看这个结构各个字段的含义：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">kd> dt _MMPFN</span><br><span class="line">nt!_MMPFN</span><br><span class="line">   +<span class="number">0x000</span> u1               : __unnamed</span><br><span class="line">   +<span class="number">0x004</span> PteAddress       : Ptr32 _MMPTE</span><br><span class="line">   +<span class="number">0x008</span> u2               : __unnamed</span><br><span class="line">   +<span class="number">0x00c</span> u3               : __unnamed</span><br><span class="line">   +<span class="number">0x010</span> OriginalPte      : _MMPTE</span><br><span class="line">   +<span class="number">0x018</span> u4               : __unnamed</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">MMPFN</span></span></span><br><span class="line"><span class="class">{</span></span><br><span class="line">    <span class="keyword">union</span></span><br><span class="line">    {</span><br><span class="line">        PFN_NUMBER Flink;</span><br><span class="line">        ULONG WsIndex;			<span class="comment">//该页面在进程工作集链表中的索引</span></span><br><span class="line">        PKEVENT Event;</span><br><span class="line">        NTSTATUS ReadStatus;</span><br><span class="line">        SINGLE_LIST_ENTRY NextStackPfn;</span><br><span class="line">        SWAPENTRY SwapEntry;</span><br><span class="line">    } u1;</span><br><span class="line">    PMMPTE PteAddress;			<span class="comment">//执行此页面的PTE的虚拟地址</span></span><br><span class="line">    <span class="keyword">union</span></span><br><span class="line">    {</span><br><span class="line">        PFN_NUMBER Blink;</span><br><span class="line">        ULONG_PTR ShareCount;		<span class="comment">//指向该页面的PTE数量</span></span><br><span class="line">    } u2;</span><br><span class="line">    <span class="keyword">union</span></span><br><span class="line">    {</span><br><span class="line">        <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">        {</span></span><br><span class="line">            USHORT ReferenceCount;	<span class="comment">//代表这个页面必须要保留在内存中的引用计数</span></span><br><span class="line">            MMPFNENTRY e1;</span><br><span class="line">        };</span><br><span class="line">        <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">        {</span></span><br><span class="line">            USHORT ReferenceCount;</span><br><span class="line">            USHORT ShortFlags;</span><br><span class="line">        } e2;</span><br><span class="line">    } u3;</span><br><span class="line">    <span class="keyword">union</span></span><br><span class="line">    {</span><br><span class="line">        MMPTE OriginalPte;		<span class="comment">//包含了指向此页面的PTE的原始内容</span></span><br><span class="line">        LONG AweReferenceCount;</span><br><span class="line">        PMM_RMAP_ENTRY RmapListHead;</span><br><span class="line">    };</span><br><span class="line">    <span class="keyword">union</span></span><br><span class="line">    {</span><br><span class="line">        ULONG_PTR EntireFrame;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">        {</span></span><br><span class="line">            ULONG_PTR PteFrame:<span class="number">25</span>;</span><br><span class="line">            ULONG_PTR InPageError:<span class="number">1</span>;</span><br><span class="line">            ULONG_PTR VerifierAllocation:<span class="number">1</span>;</span><br><span class="line">            ULONG_PTR AweAllocation:<span class="number">1</span>;</span><br><span class="line">            ULONG_PTR Priority:<span class="number">3</span>;</span><br><span class="line">            ULONG_PTR MustBeCached:<span class="number">1</span>;</span><br><span class="line">        };</span><br><span class="line">    } u4;				<span class="comment">//指向该页面的PTE所在的页表页面的物理页帧编号,以及一些标志位</span></span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>由于MMPFN结构包含了4个共用体，每个共用体又包含多个成员，以至于<strong>在不同状态下，该结构成员的含义也有所不同。</strong>接下来就来看看物理页有哪些状态。</p>
+<h3 id="物理页状态（空闲）"><a href="#物理页状态（空闲）" class="headerlink" title="物理页状态（空闲）"></a>物理页状态（空闲）</h3><p>_MMPFN.u3.e1处的结构是一个位段，其结构如下：</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/condition_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/condition_1.png"></a>
+
+<p>其中<strong>PageLocation这个成员标识了当前物理页的状态，每一种状态对应一个链表，该链表串着所有当前状态的物理页</strong>，具体参考下表：</p>
+<table>
+<thead>
+<tr>
+<th>取值</th>
+<th>对应的全局链表</th>
+<th>状态类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>MmZeroedPageListHead</td>
+<td>零化</td>
+</tr>
+<tr>
+<td>1</td>
+<td>MmFreePageListHead</td>
+<td>空闲</td>
+</tr>
+<tr>
+<td>2</td>
+<td>MmStandbyPageListHead</td>
+<td>备用</td>
+</tr>
+<tr>
+<td>3</td>
+<td>MmModifiedPageListHead</td>
+<td>修改</td>
+</tr>
+<tr>
+<td>4</td>
+<td>MmModifiedNoWritePageListHead</td>
+<td>已修改但不写出</td>
+</tr>
+<tr>
+<td>5</td>
+<td>MmBadPageListHead</td>
+<td>损坏</td>
+</tr>
+</tbody></table>
+<p>下面来解释每种状态及其对应链表的含义：</p>
+<ul>
+<li>坏状态（bad）：页面产生硬件错误，系统不再使用这样的页面。</li>
+<li>零化状态（zero）：页面是空闲的，不属于任何一个工作集，<strong>零化链表串着的每个物理页的内容已经被全部清零</strong>。</li>
+<li>空闲状态（free）：页面是空闲的，不属于任何一个工作集，但是<strong>物理页包含了不确定的数据</strong>，系统空闲时有专门的线程从这个队列摘取物理页，加以<strong>清零后再挂入零化链表中</strong>。</li>
+<li>备用状态（standby）：这种页面原来属于某个进程或系统工作集，但现在<strong>已经从工作集中移除。这种页面包含的数据对于原来的工作集仍然是有效的</strong>，原来工作集中的PTE仍然指向该页面，但是已被标记成正在转移的无效PTE。是导致缺页异常的主要因素之一。</li>
+<li>已修改状态（modified）：类似于备用状态，已经从原来的工作集中移除，但是<strong>页面包含的内容已经被修改过</strong>。原来工作集中的PTE仍然指向物理页面，但是已被标记成正在转移的无效PTE。<strong>如果系统要把这种页面回收作它用，则必须将其中的内容写到磁盘上。</strong></li>
+<li>已修改但不写出（modified no-write）：类似于已修改状态，但区别在于，内存管理器不会将它的内容写到磁盘上。</li>
+</ul>
+<h3 id="查询链表实验"><a href="#查询链表实验" class="headerlink" title="查询链表实验"></a>查询链表实验</h3><p>我们现在知道了，所有物理页，都在一个全局数组里，每个物理页对应一个MMPFC物理页描述结构，空闲的物理页有6种状态，每种状态对应一个全局链表，那么如何把这些知识点串起来呢，下面以一个实验来巩固以上知识，<strong>以零化链表为例</strong>，查询该链表上所有物理页：</p>
+<ol>
+<li><p>首先根据全局变量，找到描述物理页信息的MMPFN全局数组</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/query_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/query_1.png"></a>
+
+<p>框住的就是所有物理页中第一个物理页对应的MMPFN。通过该地址+0x1c*下标，可以找到任一物理页。</p>
+</li>
+<li><p>然后通过全局变量MmZeroedPageListHead查找零化链表</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/query_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/query_2.png"></a>
+
+<p>这个零化链表怎么看呢，这要参考下面这个关于各个状态的链表结构（注意，这里是各个状态对应的链表结构，不是各个状态对应的MMPFN结构，来源自WRK）</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MMPFNLIST MmZeroedPageListHead = {<span class="number">0</span>, ZeroedPageList, LIST_HEAD, LIST_HEAD};</span><br><span class="line">MMPFNLIST MmFreePageListHead = {<span class="number">0</span>, FreePageList, LIST_HEAD, LIST_HEAD};</span><br><span class="line">MMPFNLIST MmStandbyPageListHead = {<span class="number">0</span>, StandbyPageList, LIST_HEAD, LIST_HEAD};</span><br><span class="line">MMPFNLIST MmModifiedPageListHead = {<span class="number">0</span>, ModifiedPageList, LIST_HEAD, LIST_HEAD};</span><br><span class="line">MMPFNLIST MmModifiedNoWritePageListHead = {<span class="number">0</span>, ModifiedNoWritePageList, LIST_HEAD, LIST_HEAD};</span><br><span class="line">MMPFNLIST MmBadPageListHead = {<span class="number">0</span>, BadPageList, LIST_HEAD, LIST_HEAD};</span><br><span class="line">MMPFNLIST MmRomPageListHead = {<span class="number">0</span>, StandbyPageList, LIST_HEAD, LIST_HEAD};</span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>这个是WRK中定义的各个链表的结构，我们这里关注<strong>零化链表</strong>，可以注意到，<strong>它的第三个成员和第四个成员都是LIST_HEAD，区别在于，一个是从前往后数，另一个是从后往前数</strong>。</p>
+</li>
+<li><p>以第三个成员为例，将其代入，观察下图：</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/query_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/query_3.png"></a>
+
+<p>这个图是理解各个状态链表如何将物理页串起来的核心，看懂了就都明白了。它很复杂，我第一遍看的时候也是半天没搞懂，这里把关键的要素都框住了，看上去会方便很多，下面来逐个进行讲解：</p>
+<ul>
+<li><p>首先来看红色方框，<strong>第一个红框是全局数组的首地址</strong>（指向第一个物理页对应的MMPFN结构），<strong>第二个红框是零化链表中第一个零化物理页对应的MMPFN结构的下标</strong>，这个如何理解呢，需要结合橙色方框来看。</p>
+</li>
+<li><p>看到第一个橙色方框，这里用<strong>全局数组首地址+第一个零化物理页下标*MMPFC结构的大小。得到的就是第一个零化物理页对应的MMPFN结构。</strong>现在就可以理解了，零化链表中<strong>LIST_HEAD</strong>是什么含义，它<strong>就是当前零化物理页的MMPFN结构在全局数组中的下标</strong>。该下标*4KB，得到是就是该零化物理页对应的地址了。</p>
+</li>
+<li><p>前两步，都好理解，到了蓝色方框，这里使用了第二个橙色方框的值，作为下标进行运算。要解释这一步，需要重新审视MMPFN结构。</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/query_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/query_4.png"></a>
+
+<p>观察MMPFN，前面说过由于MMPFN使用了大量的共用体，导致它在不同状态下，所代表的含义也是不同的，而此时，<strong>当MMPFN指向一个零化物理页时，u1与u2共用体采用的值分别是Flink与Blink，分别指向前一个零化物理页在全局数组中的下标与后一个零化物理页在全局数组中的下标</strong>。按照前一张图中的规律，就可以得出下图：</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/query_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/query_5.png"></a>
+
+<p>这张图就可以很好的描述全局数组，零化链表与MMPFN的对应关系。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>至此，以一个零化链表的查询例子，了解了<strong>全局数组，零化链表与其对应的MMPFN之间的关系</strong>，但是仅限用于零化状态的物理页，其余状态的物理页与MMPFN的对应关系如下：</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/conclusion_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/conclusion_1.png"></a>
+
+<p>当然这里面也包括了活动状态页对应的MMPFN。</p>
+<h2 id="活动页的管理"><a href="#活动页的管理" class="headerlink" title="活动页的管理"></a>活动页的管理</h2><p>这部分海哥讲到的不多，可以参考《Windows内核原理与实现》p286~293，简单说一下吧。</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/active_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/active_1.png"></a>
+
+<p>这张图是Windows10系统任务管理器中查看到的，在性能一栏，打开资源监视器，可以看到有<strong>工作集</strong>这么一栏，这里<strong>记录的是进程实际使用的物理页总大小</strong>。</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/active_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/active_2.png"></a>
+
+<p>任意打开一个进程，定位到进程结构体0x1f8的位置，有一个Vm成员，是MMSUPPORT结构</p>
+<a href="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/active_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/active_3.png"></a>
+
+<p>MMSUPPORT结构体中，VmWorkingSetList记录了与当前进程相关的工作集信息。VmWorkingSetList对应的结构体MMWSL内部还有一个Wsle成员，用来描述一个有效页面。这部分具体参考《Windows内核原理与实现》p286~287。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>参考书籍：</p>
+<ul>
+<li>《Windows内核原理与实现》p265~293 —— 潘爱民</li>
+</ul>
+<p>参考教程：</p>
+<ul>
+<li>海哥逆向中级预习班</li>
+</ul>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://blog.csdn.net/weixin_42052102/article/details/83751896" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42052102/article/details/83751896</a> （My classmates-物理内存的管理学习笔记）</li>
+</ul>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/">http://cataloc.gitee.io/blog/2020/09/03/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/Windows%E5%86%85%E6%A0%B8/">Windows内核    </a></div><div class="post_share"><div class="social-share" data-image="https://gitee.com/cataloc/blog/raw/master/2020/09/02/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86/cover0x29.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/blog/2020/09/05/%E7%BC%BA%E9%A1%B5%E5%BC%82%E5%B8%B8/"><img class="prev_cover lazyload" data-src="https://gitee.com/cataloc/blog/raw/master/2020/09/03/%E7%BC%BA%E9%A1%B5%E5%BC%82%E5%B8%B8/cover0x2A.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Previous Post</div><div class="prev_info"><span>缺页异常</span></div></a></div><div class="next-post pull_right"><a href="/blog/2020/09/01/Mapped-Memory/"><img class="next_cover lazyload" data-src="https://gitee.com/cataloc/blog/raw/master/2020/09/01/Mapped-Memory/0x28.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>Mapped Memory</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/blog/2020/03/08/段描述符与段选择子/" title="段描述符与段选择子"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-08</div><div class="relatedPosts_title">段描述符与段选择子</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/05/初见保护模式/" title="初见保护模式"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-05</div><div class="relatedPosts_title">初见保护模式</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/09/段描述符属性/" title="段描述符属性"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-09</div><div class="relatedPosts_title">段描述符属性</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/06/探究段寄存器/" title="探究段寄存器"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-06</div><div class="relatedPosts_title">探究段寄存器</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/11/段权限检查/" title="段权限检查（数据段）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-11</div><div class="relatedPosts_title">段权限检查（数据段）</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/03/13/代码跨段跳转/" title="代码跨段跳转（不提权）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-13</div><div class="relatedPosts_title">代码跨段跳转（不提权）</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
