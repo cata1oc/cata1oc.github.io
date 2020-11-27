@@ -112,7 +112,7 @@ function activateLightMode(){
 <li><p>DbgkForwardException内部最终会调用DbgkpSendApiMessage，在<a href="https://cataloc.gitee.io/blog/2020/09/13/%E8%B0%83%E8%AF%95%E4%BA%8B%E4%BB%B6%E7%9A%84%E9%87%87%E9%9B%86/#%E8%B0%83%E8%AF%95%E4%BA%8B%E4%BB%B6%E5%86%99%E5%85%A5%E5%87%BD%E6%95%B0">调试事件的采集</a>一篇中分析过，它是将调试事件发送给调试对象的函数。</p>
 <a href="/blog/2020/09/17/%E8%BD%AF%E4%BB%B6%E6%96%AD%E7%82%B9/flowpath_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/17/%E8%BD%AF%E4%BB%B6%E6%96%AD%E7%82%B9/flowpath_2.png"></a>
 </li>
-<li><p>进入DbgkpSendApiMessage，刚开始会判断第二个参数的值，若该值不为0，则<strong>调用DbgkpSuspendProcess将当前进程（被调试进程）挂起，像本例的INT3引起的异常就会挂起</strong>。</p>
+<li><p>进入DbgkpSendApiMessage，刚开始会判断第二个参数的值，若该值不为0，则<strong>调用DbgkpSuspendProcess将本进程（被调试进程）内除自己外的其它进程挂起，像本例的INT3引起的异常就会挂起</strong>。</p>
 <a href="/blog/2020/09/17/%E8%BD%AF%E4%BB%B6%E6%96%AD%E7%82%B9/flowpath_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/17/%E8%BD%AF%E4%BB%B6%E6%96%AD%E7%82%B9/flowpath_3.png"></a>
 </li>
 <li><p>挂起进程后，调试事件会被发送到调试对象中，调试器将会在循环中取出调试事件，并根据异常调试事件结构体列出相应信息（当前寄存器的值，内存情况），接下来便交由用户处理。</p>
