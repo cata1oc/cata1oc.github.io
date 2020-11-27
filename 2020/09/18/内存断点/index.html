@@ -117,6 +117,8 @@ function activateLightMode(){
 <p>后面的处理逻辑，与<a href="https://cataloc.gitee.io/blog/2020/09/17/%E8%BD%AF%E4%BB%B6%E6%96%AD%E7%82%B9/#%E8%BD%AF%E4%BB%B6%E6%96%AD%E7%82%B9%E7%9A%84%E5%A4%84%E7%90%86%EF%BC%88%E8%B0%83%E8%AF%95%E5%99%A8%E8%A7%92%E5%BA%A6%EF%BC%89">软件断点</a>的差别不大。这里主要看第一个部分，在ExceptionRecord结构体中，有一个数组</p>
 <a href="/blog/2020/09/18/%E5%86%85%E5%AD%98%E6%96%AD%E7%82%B9/ExceptionRecord_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/18/%E5%86%85%E5%AD%98%E6%96%AD%E7%82%B9/ExceptionRecord_1.png"></a>
 
+<a href="/blog/2020/09/18/%E5%86%85%E5%AD%98%E6%96%AD%E7%82%B9/ExceptionRecord_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/18/%E5%86%85%E5%AD%98%E6%96%AD%E7%82%B9/ExceptionRecord_2.png"></a> 
+
 <p>根据MSDN，其<strong>第一个成员指明异常是因为什么原因导致的</strong>（0：有线程试图去读，1：有线程试图去写）。<strong>第二个成员标识了虚拟地址在哪</strong>，即产生异常的地址是哪里。<strong>由于内存断点是对整个物理页下断，因此断下的地方可能并不是我们下断的地方，所以这里取地址判断是否为下断处，若不是则直接放过执行，若是则进行处理。</strong></p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>参考笔记：</p>
 <ul>
