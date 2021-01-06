@@ -1,0 +1,251 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>网路安全基础05-上-DHCP | cataLoc's Blog</title><meta name="description" content="网路安全基础05-上-DHCP"><meta name="keywords" content="网络安全"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="网路安全基础05-上-DHCP"><meta name="twitter:description" content="网路安全基础05-上-DHCP"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="网路安全基础05-上-DHCP"><meta property="og:url" content="http://cataloc.gitee.io/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="网路安全基础05-上-DHCP"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cataloc.gitee.io/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/"><link rel="next" title="实验：利用PE破解系统密码(待更新)" href="http://cataloc.gitee.io/blog/2020/09/24/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E5%AE%9E%E9%AA%8C/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">113</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">7</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#什么是DHCP"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">什么是DHCP</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#DHCP作用"><span class="toc_mobile_items-number">1.1.</span> <span class="toc_mobile_items-text">DHCP作用</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#DHCP相关概念"><span class="toc_mobile_items-number">1.2.</span> <span class="toc_mobile_items-text">DHCP相关概念</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#DHCP优点"><span class="toc_mobile_items-number">1.3.</span> <span class="toc_mobile_items-text">DHCP优点</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#DHCP原理"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">DHCP原理</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#租约过程"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">租约过程</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#续约过程"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">续约过程</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#DHCP攻击与防御"><span class="toc_mobile_items-number">2.3.</span> <span class="toc_mobile_items-text">DHCP攻击与防御</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#DHCP实验（Windows）"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">DHCP实验（Windows）</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#安装DHCP服务"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">安装DHCP服务</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#部署DHCP服务器"><span class="toc_mobile_items-number">3.2.</span> <span class="toc_mobile_items-text">部署DHCP服务器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#用户获取IP地址"><span class="toc_mobile_items-number">3.3.</span> <span class="toc_mobile_items-text">用户获取IP地址</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#地址保留"><span class="toc_mobile_items-number">3.4.</span> <span class="toc_mobile_items-text">地址保留</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#备份与还原"><span class="toc_mobile_items-number">3.5.</span> <span class="toc_mobile_items-text">备份与还原</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#选项优先级"><span class="toc_mobile_items-number">3.6.</span> <span class="toc_mobile_items-text">选项优先级</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#小结"><span class="toc_mobile_items-number">3.7.</span> <span class="toc_mobile_items-text">小结</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考资料"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">参考资料</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是DHCP"><span class="toc-number">1.</span> <span class="toc-text">什么是DHCP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DHCP作用"><span class="toc-number">1.1.</span> <span class="toc-text">DHCP作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DHCP相关概念"><span class="toc-number">1.2.</span> <span class="toc-text">DHCP相关概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DHCP优点"><span class="toc-number">1.3.</span> <span class="toc-text">DHCP优点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DHCP原理"><span class="toc-number">2.</span> <span class="toc-text">DHCP原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#租约过程"><span class="toc-number">2.1.</span> <span class="toc-text">租约过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#续约过程"><span class="toc-number">2.2.</span> <span class="toc-text">续约过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DHCP攻击与防御"><span class="toc-number">2.3.</span> <span class="toc-text">DHCP攻击与防御</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DHCP实验（Windows）"><span class="toc-number">3.</span> <span class="toc-text">DHCP实验（Windows）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装DHCP服务"><span class="toc-number">3.1.</span> <span class="toc-text">安装DHCP服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署DHCP服务器"><span class="toc-number">3.2.</span> <span class="toc-text">部署DHCP服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用户获取IP地址"><span class="toc-number">3.3.</span> <span class="toc-text">用户获取IP地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#地址保留"><span class="toc-number">3.4.</span> <span class="toc-text">地址保留</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#备份与还原"><span class="toc-number">3.5.</span> <span class="toc-text">备份与还原</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#选项优先级"><span class="toc-number">3.6.</span> <span class="toc-text">选项优先级</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#小结"><span class="toc-number">3.7.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">网路安全基础05-上-DHCP</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2020-09-25<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2021-01-06</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="什么是DHCP"><a href="#什么是DHCP" class="headerlink" title="什么是DHCP"></a>什么是DHCP</h2><h3 id="DHCP作用"><a href="#DHCP作用" class="headerlink" title="DHCP作用"></a>DHCP作用</h3><p>DHCP（Dynamic Host Configuration Protocol）动态主机配置协议，是一个局域网的网络协议。作用是自动分配IP地址。</p>
+<h3 id="DHCP相关概念"><a href="#DHCP相关概念" class="headerlink" title="DHCP相关概念"></a>DHCP相关概念</h3><p>地址池：在Windows系统中又被称作<strong>作用域</strong>，其包含所有可分配的IP，并<strong>记录了已分配IP的相关信息（IP地址，子网掩码，网关，DNS，租期）</strong></p>
+<p>端口号：UDP 67，68</p>
+<h3 id="DHCP优点"><a href="#DHCP优点" class="headerlink" title="DHCP优点"></a>DHCP优点</h3><p>自动分配IP，减少工作量，避免IP冲突（人工配置IP），提高地址利用率。通常一家公司需要两台DHCP服务器，防止其中一台宕机后，出现无法上网的情况。</p>
+<h2 id="DHCP原理"><a href="#DHCP原理" class="headerlink" title="DHCP原理"></a>DHCP原理</h2><h3 id="租约过程"><a href="#租约过程" class="headerlink" title="租约过程"></a>租约过程</h3><p>DHCP原理，也称为租约过程，分为如下4个步骤：</p>
+<ol>
+<li><p><strong>客户机发送DHCP Discovery广播包</strong></p>
+<p>客户机广播请求IP地址（包含客户机的MAC地址）</p>
+</li>
+<li><p><strong>服务器响应DHCP Offer广播包</strong></p>
+<p>服务器响应并提供一个IP地址（<strong>不包含</strong>子网掩码，网关等参数）</p>
+</li>
+<li><p><strong>客户机发送DHCP Request广播包</strong></p>
+<p>客户机选择IP（即确认使用哪个IP）</p>
+</li>
+<li><p><strong>服务器发送DHCP ACK广播包</strong></p>
+<p>服务器确认租约，并提供网卡详细参数IP地址、子网掩码、网关、DNS、租期等 。</p>
+</li>
+</ol>
+<p>以上为DHCP租约过程，即客户机如何通过DHCP服务器获取到IP地址的过程。为了方便理解，以租房作为类比来概括这个过程：</p>
+<ol>
+<li>例如一个打工人，相当于客户机，在北京打工，需要租房，即客户机需要IP地址，于是他在一个租房的论坛里发送了一条消息，说我要租房，这就是发送DHCP Discovery广播包，并留下自己的手机号，就是客户机的MAC地址。</li>
+<li>此时，会有多个房东找它，告诉打工人，说我这里有房，并告知房子的地址，即服务器响应DHCP Offer包，由于是广播包，则有多个DHCP服务器会收到，只要它们的地址池有余，都会回复客户机，提供一个IP地址。</li>
+<li>打工人收到很多房东的回应，但是第一个回应的才最有诚意，因此他只会选择第一个回应消息的房东，并去看房，看看房子环境怎样，是否卫生，距离公司远不远等等，即客户机确认使用哪个IP的过程，但一定会选择第一个。由于不是蛋壳公寓，打工人自然会满意，并在论坛回复房东说房子我租了，其它房东看到后，不再理睬打工人。即客户机发送DHCP Request广播包，告知提供IP地址的DHCP服务器，我使用你那个IP地址，其它DHCP服务器看到后，不再回复客户机。</li>
+<li>最后提供房源的房东，会联系上打工人，并提供电卡，水卡，家门钥匙等重要物品。即服务器回复一个ACK广播包，包含了详细参数。</li>
+</ol>
+<h3 id="续约过程"><a href="#续约过程" class="headerlink" title="续约过程"></a>续约过程</h3><p>前面是租约过程，租约自然是有时限的，总不能租个房子租个几十年吧，通常都是半年至一年，因此也就有了续约。以NBA为例，续约一些明星球员，都会选择在合约进行到一半的时候续约，否则到了最后一年，万一这类球员跳槽到别的球队了，损失可就大了；房东亦是如此，也希望租客可以提早续约，否则就可能便宜了别的房东。<strong>因此，当租约时间超过50%以后，客户机会再次发送DHCP Request包，进行续约，即进行租约过程的后两步，当客户机收到服务器发送的ACK包后，租约时间会被设置为包中约定的时间，而不是累加在先前的时间上</strong>；如果服务器无响应，则继续使用并在租约时间达到87.5%，再次发送DHCP Request包，进行续约，若服务器仍 无响应，则释放IP地址，并重新发送DHCP Discovery广播包来获取IP地址，即重复一遍完整的租约过程。若无任何服务器响应Discovery广播包，则自动分配一个形如<code>169.254.x.x/16</code>的IP地址，该地址为全球统一无效地址，用于临时内网通信。</p>
+<h3 id="DHCP攻击与防御"><a href="#DHCP攻击与防御" class="headerlink" title="DHCP攻击与防御"></a>DHCP攻击与防御</h3><p>在DHCP协议诞生后，自然会衍生出基于其原理的攻击手段，这里简要介绍其二，以及对应的防御措施：</p>
+<ul>
+<li><p><strong>攻击DHCP服务器</strong>：频繁发送伪造DHCP请求（伪造MAC地址），直至将DHCP地址池资源耗尽。</p>
+<p>防御措施：在交换机端口上做动态MAC地址绑定。这是<strong>管理型交换机</strong>才具备的功能，将端口与MAC地址<strong>动态绑定</strong>，这样从该端口发送出来的其它MAC地址的请求就不会被转发至DHCP服务器。</p>
+</li>
+<li><p><strong>伪装成DHCP服务器进行攻击</strong>：黑客通过将自己的设备部署为DHCP服务器，为客户提供非法IP。致使用户无法上网。</p>
+<p>防御措施：同样需要<strong>管理型交换机</strong>，除合法的DHCP服务器所在的接口外，全部设置为禁止发送DHCP Offer包。</p>
+</li>
+</ul>
+<h2 id="DHCP实验（Windows）"><a href="#DHCP实验（Windows）" class="headerlink" title="DHCP实验（Windows）"></a>DHCP实验（Windows）</h2><p>下面来进行DHCP相关实验，DHCP服务器部署可在不同平台上实现，本实验仅演示Windows平台，在之后的文章会演示Linux平台上DHCP服务器的部署。<strong>本次实验的环境为：服务器Windows 2003，客户机Windows XP</strong>。下面进入实验：</p>
+<h3 id="安装DHCP服务"><a href="#安装DHCP服务" class="headerlink" title="安装DHCP服务"></a>安装DHCP服务</h3><ol>
+<li><p>开始->控制面板->管理工具，此时并没有DHCP服务，因此首先需要安装DHCP服务</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_1.png"></a>
+</li>
+<li><p>开始->控制面板->添加或删除程序，单机添加/删除Windows组件，会进入Windows组件向导</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_2.png"></a>
+</li>
+<li><p>找到网络服务，选择详细信息</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_3.png"></a>
+</li>
+<li><p>找到动态主机配置协议，选中，点击确定，然后下一步。会进入安装过程</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_4.png"></a>
+
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_4_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_4_1.png"></a>
+</li>
+<li><p>安装完毕后，开始->控制面板->管理工具，便可找到DHCP服务</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_5.png"></a>
+</li>
+<li><p>此时进入命令行执行指令<code>netstat -an</code>，可以看到会多出2个UDP端口，67与68，这便是DHCP服务所使用的端口</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/install_6.png"></a>
+
+</li>
+</ol>
+<h3 id="部署DHCP服务器"><a href="#部署DHCP服务器" class="headerlink" title="部署DHCP服务器"></a>部署DHCP服务器</h3><ol>
+<li><p>这部分进行部署DHCP服务器的实验，首先<strong>给服务器配置IP</strong>，如下图所示：</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_1.png"></a>
+</li>
+<li><p>接下来，打开之前安装的DHCP服务，选择当前主机，创建作用域（即地址池）</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_2.png"></a>
+</li>
+<li><p>名称与描述随意填写即可</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_3.png"></a>
+</li>
+<li><p>设置可分配的<strong>地址范围</strong>以及子网掩码，通常开头与末尾会保留一部分IP地址用于额外功能。<strong>这里地址范围所在的网段必须要与服务器本身的IP地址在同一个网段，实验才可成功。</strong>想要创建不同网段的作用域，需要之后进一步学习DHCP中继相关的知识才可进行。</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_4.png"></a>
+</li>
+<li><p>接下来添加排除位于分配范围中，不想要分配的地址。在起始IP地址中输入，或者输入一个范围，并添加</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_5.png"></a>
+</li>
+<li><p>接下来是租约期限，即租约过程中约定的时间长短，通常不宜设置太长</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_6.png"></a>
+</li>
+<li><p>前面配置完地址池选项后，下面是DHCP相关选项，可以选择稍后配置</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_7.png"></a>
+</li>
+<li><p>由于服务器设置了<code>10.1.1.1</code>作为IP，因此这里网关设置为<code>10.1.1.254</code>，当然也可以设置为别的，不影响</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_8.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_8.png"></a>
+</li>
+<li><p>父域属于上古时期概念，这里不填。只需填写DNS服务器的IP，查询所在城市的DNS服务器即可，然后再添加一个通用的DNS服务器，例如<code>114.114.114.114</code></p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_9.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_9.png"></a>
+</li>
+<li><p>WINS服务是Windows系统自己弄的一个类似DNS功能的老掉牙玩意，DNS诞生后就不再用了，直接跳过。</p>
+</li>
+<li><p>然后激活该作用域（地址池）</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_11.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_11.png"></a>
+</li>
+<li><p>这时可以很方便看到地址池的相应信息</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_12.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/configure_12.png"></a>
+
+</li>
+</ol>
+<h3 id="用户获取IP地址"><a href="#用户获取IP地址" class="headerlink" title="用户获取IP地址"></a>用户获取IP地址</h3><p>配置好DHCP服务器后，就可以让用户机获取IP地址了（<strong>该实验需要关闭防火墙，否则67，68端口是不被放行的</strong>）。在命令行中通过如下指令释放/获取IP：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ipconfig /release	//释放IP(取消租约指令；手动配置IP时，也会取消租约)，相当于对本地连接禁用</span><br><span class="line">ipconfig /renew		//重新获取IP(有IP时，发送Request包续约；无IP时，发送Discovery包获取)，即对本地连接重新启用</span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>然后使用上述指令，释放后重新获取IP，并观察结果</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_1.png"></a>
+
+<p>发现，获取的IP仍然是原先释放的IP，并没有从DHCP服务器上获取到地址池中的IP，这是为何呢？在做这个实验前，我们已经将两台虚拟机放在同一个局域网VMnet1上，意味着它们之间是可以ping通的。但是在这个局域网内，仍然<strong>可能存在着其它DHCP服务器</strong>，当客户机发送Discovery广播包后，其它DHCP反应更快，立刻就发送了Offer包，所以客户机最终使用的是其它DHCP服务器提供的IP。因此，为了实验能成功，我们需要关闭其它的DHCP服务器，操作如下：</p>
+<ol>
+<li><p>切换到客户机虚拟机，点击左上角菜单中的编辑->虚拟网络编辑器</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_2.png"></a>
+</li>
+<li><p>发现该虚拟机的DHCP服务是启用的，我们要关闭它，选择下方的更改设置</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_3.png"></a>
+</li>
+<li><p>找到当前主机，将使用本地DHCP服务将IP地址分配给虚拟机这个选项关闭，这样下次获取IP时就会从我们部署的DHCP服务器获取了。</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_4.png"></a>
+</li>
+<li><p>此时，再通过指令释放并重新获取IP，就可以成功从我们先前部署的DHCP服务器的地址池中获取IP地址</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_5.png"></a>
+</li>
+<li><p>这时，回到DHCP服务器，查看地址租约，就可以看到刚刚获取IP的客户机，注意这个唯一ID，实际上就是客户机的MAC地址。</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_6.png"></a>
+</li>
+<li><p>下面回到客户机验证一下 </p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/getip_7.png"></a>
+
+</li>
+</ol>
+<h3 id="地址保留"><a href="#地址保留" class="headerlink" title="地址保留"></a>地址保留</h3><p>什么是地址保留呢？例如在公司，老板希望自己的笔记本有一个独特的IP地址，别人都不能使用，只能自己使用，比如<code>10.1.1.168</code>，这种需求可以通过手工配置IP来解决，但问题是，一旦这个笔记本被带回家，那就无法上网了，因为在公司的网段与家里路由器的网段通常是不一样的。如果回家后想上网，又得再手动配置一次，回到单位后同样如此，这样反复发配置显得异常麻烦，因此，DHCP服务提供了<strong>地址动态保留</strong>的功能，让部分电脑每次申请IP时都分配固定的IP地址。具体操作如下：</p>
+<ol>
+<li><p>找到保留，右键新建保留</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/reserve_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/reserve_1.png"></a>
+</li>
+<li><p>需要填写部分信息，以及要分配的IP地址，其中MAC地址是判断客户机主要方式，回到客户机，查询MAC地址</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/reserve_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/reserve_2.png"></a>
+
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/reserve_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/reserve_3.png"></a>
+</li>
+<li><p>然后完善保留信息</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/reserve_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/reserve_4.png"></a>
+</li>
+<li><p>完成后，可以看到保留选项下多了一个条目。回到客户机，重新获取IP，即可获取到保留的地址</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/reserve_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/reserve_5.png"></a>
+
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/reserve_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/reserve_6.png"></a>
+
+</li>
+</ol>
+<h3 id="备份与还原"><a href="#备份与还原" class="headerlink" title="备份与还原"></a>备份与还原</h3><p>接下来要介绍的就是备份与还原，一个DHCP服务器可能会包含多个作用域（地址池），一旦服务器宕机，就会有大量的用户受到影响，因此需要对作用域进行备份，若此时有一台正常运行的服务器，只需要将备份的内容还原到该服务器上，即可恢复之前所有受影响用户的IP使用情况。具体备份还原的操作如下：</p>
+<ol>
+<li><p>选择当前服务器，右键->备份</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/backup_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/backup_1.png"></a>
+</li>
+<li><p>新建一个文件夹，用来备份DHCP配置，这里在C盘新建了一个dhcp_backup文件夹，选择并确定</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/backup_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/backup_2.png"></a>
+</li>
+<li><p>进入dhcp_backup文件夹，可以看到，存储着相应的配置文件信息。</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/backup_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/backup_3.png"></a>
+</li>
+<li><p>这时我们先<strong>删除掉原先的作用域</strong>，此时只剩下一个空壳（这里注意不要删成服务器了，服务器删了只是暂时不显示了，进入命令行可以看到67，68端口号依旧是开着，重新打开DHCP，服务依旧在，若删了作用域，那才是真的删了）</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/backup_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/backup_4.png"></a>
+</li>
+<li><p>右键服务器，选择还原，并选择刚刚备份的文件夹，确定。这样就可以恢复原先的地址池配置了，原先的数据也都还在。这里注意左上角服务器的小图标还是红色的，但实际上服务器已经打开了，这时选择右键刷新即可。</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/backup_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/backup_5.png"></a>
+
+</li>
+</ol>
+<h3 id="选项优先级"><a href="#选项优先级" class="headerlink" title="选项优先级"></a>选项优先级</h3><p>关于选项优先级，这里顺带提一嘴</p>
+<a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/priority_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/priority_1.png"></a>
+
+<p>由图，这里创建了两个作用域，假设均未配置作用域选项，在这种<strong>有多个作用域的情况下，可以直接在服务器选项中配置DNS，这样每个作用域选项中的DNS也会继承服务器选项中的DNS</strong>，一台DHCP服务器的几个作用域共享一个DNS是没有问题的。如果想让某些作用域使用特定的DNS，方可在作用域选项中进行配置，这样就会替换掉原先继承的服务器选项中配置的DNS。以上仅限于DNS的配置，网关的配置依旧要单独在各个作用域中配置。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>本篇实验均在Windows2003上实现，Windows2008上原理类似，自行实现以作练习。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>参考课程：</p>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1i7411G7vm?p=26" target="_blank" rel="noopener">千峰网安公开课</a></li>
+</ul>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://blog.csdn.net/weixin_43252204/article/details/105338995" target="_blank" rel="noopener">beglage学习笔记</a></li>
+<li><a href="https://jingyan.baidu.com/article/c85b7a64ab5169003aac9572.html" target="_blank" rel="noopener">Windows2003DHCP服务器配置</a></li>
+</ul>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/">http://cataloc.gitee.io/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/blog/2020/09/24/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E5%AE%9E%E9%AA%8C/"><img class="next_cover lazyload" data-src="https://gitee.com/cataloc/blog/raw/master/2020/09/24/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E5%AE%9E%E9%AA%8C/cover0x3B.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>实验：利用PE破解系统密码(待更新)</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/blog/2020/03/07/浅谈对称加密传输/" title="浅谈对称加密传输"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-07</div><div class="relatedPosts_title">浅谈对称加密传输</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/01/网络安全基础01-配置虚拟机/" title="网络安全基础01：配置虚拟机"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/01/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8001-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9F%E6%9C%BA/cover0x08.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-01</div><div class="relatedPosts_title">网络安全基础01：配置虚拟机</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/02/网络安全基础02-IP地址-Dos命令/" title="网络安全基础02：IP地址&Dos命令"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8002-IP%E5%9C%B0%E5%9D%80-Dos%E5%91%BD%E4%BB%A4/cover0x09.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-02</div><div class="relatedPosts_title">网络安全基础02：IP地址&Dos命令</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/15/网络安全基础03-上-批处理与病毒/" title="网络安全基础03(上)：批处理与病毒"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/15/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E4%B8%8A-%E6%89%B9%E5%A4%84%E7%90%86%E4%B8%8E%E7%97%85%E6%AF%92/cover0xC.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-15</div><div class="relatedPosts_title">网络安全基础03(上)：批处理与病毒</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/18/网络安全基础03-下-用户与组管理/" title="网络安全基础03(下)：用户与组管理"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/18/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E4%B8%8B-%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86/cover0xD.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-18</div><div class="relatedPosts_title">网络安全基础03(下)：用户与组管理</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/29/网路安全基础03-实验/" title="网路安全基础03(实验)：破解Win7登录密码"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/29/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E5%AE%9E%E9%AA%8C/cover0xF.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-29</div><div class="relatedPosts_title">网路安全基础03(实验)：破解Win7登录密码</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2021 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
