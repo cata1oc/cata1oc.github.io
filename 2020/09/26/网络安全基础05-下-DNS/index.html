@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>网络安全基础05(下)：DNS | cataLoc's Blog</title><meta name="description" content="网络安全基础05(下)：DNS"><meta name="keywords" content="网络安全"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="网络安全基础05(下)：DNS"><meta name="twitter:description" content="网络安全基础05(下)：DNS"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="网络安全基础05(下)：DNS"><meta property="og:url" content="http://cataloc.gitee.io/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="网络安全基础05(下)：DNS"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cataloc.gitee.io/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/"><link rel="next" title="网路安全基础05(上)：DHCP" href="http://cataloc.gitee.io/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">114</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">7</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#DNS"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">DNS</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#域名"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">域名</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#端口"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">端口</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#DNS解析"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">DNS解析</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#DNS转发器"><span class="toc_mobile_items-number">4.1.</span> <span class="toc_mobile_items-text">DNS转发器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#正向-反向解析"><span class="toc_mobile_items-number">4.2.</span> <span class="toc_mobile_items-text">正向&#x2F;反向解析</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#DNS实验"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">DNS实验</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#安装DNS服务"><span class="toc_mobile_items-number">5.1.</span> <span class="toc_mobile_items-text">安装DNS服务</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#正向解析"><span class="toc_mobile_items-number">5.2.</span> <span class="toc_mobile_items-text">正向解析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#别名"><span class="toc_mobile_items-number">5.3.</span> <span class="toc_mobile_items-text">别名</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#反向解析"><span class="toc_mobile_items-number">5.4.</span> <span class="toc_mobile_items-text">反向解析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#转发器"><span class="toc_mobile_items-number">5.5.</span> <span class="toc_mobile_items-text">转发器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#辅助DNS服务器"><span class="toc_mobile_items-number">5.6.</span> <span class="toc_mobile_items-text">辅助DNS服务器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#虚拟机上真实网"><span class="toc_mobile_items-number">5.7.</span> <span class="toc_mobile_items-text">虚拟机上真实网</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#综合实验"><span class="toc_mobile_items-number">5.8.</span> <span class="toc_mobile_items-text">综合实验</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#关于DNS攻击"><span class="toc_mobile_items-number">6.</span> <span class="toc_mobile_items-text">关于DNS攻击</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#端口小结"><span class="toc_mobile_items-number">7.</span> <span class="toc_mobile_items-text">端口小结</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考资料"><span class="toc_mobile_items-number">8.</span> <span class="toc_mobile_items-text">参考资料</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS"><span class="toc-number">1.</span> <span class="toc-text">DNS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#域名"><span class="toc-number">2.</span> <span class="toc-text">域名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#端口"><span class="toc-number">3.</span> <span class="toc-text">端口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS解析"><span class="toc-number">4.</span> <span class="toc-text">DNS解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS转发器"><span class="toc-number">4.1.</span> <span class="toc-text">DNS转发器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正向-反向解析"><span class="toc-number">4.2.</span> <span class="toc-text">正向&#x2F;反向解析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS实验"><span class="toc-number">5.</span> <span class="toc-text">DNS实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装DNS服务"><span class="toc-number">5.1.</span> <span class="toc-text">安装DNS服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正向解析"><span class="toc-number">5.2.</span> <span class="toc-text">正向解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#别名"><span class="toc-number">5.3.</span> <span class="toc-text">别名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#反向解析"><span class="toc-number">5.4.</span> <span class="toc-text">反向解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#转发器"><span class="toc-number">5.5.</span> <span class="toc-text">转发器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#辅助DNS服务器"><span class="toc-number">5.6.</span> <span class="toc-text">辅助DNS服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#虚拟机上真实网"><span class="toc-number">5.7.</span> <span class="toc-text">虚拟机上真实网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#综合实验"><span class="toc-number">5.8.</span> <span class="toc-text">综合实验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于DNS攻击"><span class="toc-number">6.</span> <span class="toc-text">关于DNS攻击</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#端口小结"><span class="toc-number">7.</span> <span class="toc-text">端口小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">8.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">网络安全基础05(下)：DNS</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2020-09-26<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2021-02-10</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h2><p>DNS全称Domain Name Service，<strong>域名服务</strong>，作用是<strong>为客户机提供域名解析服务</strong>。</p>
+<p>通常对于DNS的学习通常是从客户角度，学习DNS服务器提供域名解析服务的过程。本篇则从搭建的角度来学习DNS，由于大部分公司通常都有自己的DNS服务器，不直接使用运营商的，因此除了需要理解DNS的执行过程，也需要了解其搭建与维护的过程。</p>
+<h2 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h2><p>通常我们会认为<code>www.sina.com.cn</code>是一个域名，但从严格意义上来说<code>sina.com.cn</code>才被称为域名（全球唯一），而<code>www</code>是主机名，<code>主机名.域名</code>的格式称为完全限定域名（FQDN）。</p>
+<p>一个域名下可以有多个主机，例如<a href="https://www.sina.com.cn/" target="_blank" rel="noopener">www.sina.com.cn</a>可以进入新浪网的首页，<a href="https://mail.sina.com.cn/" target="_blank" rel="noopener">mail.sina.com.cn</a>则可以进入新浪邮箱的首页。</p>
+<p>关于域名级的划分，简要概括如下，具体可以参考维基百科关于<a href="https://en.wikipedia.org/wiki/Top-level_domain" target="_blank" rel="noopener">顶级域名</a>与<a href="https://en.wikipedia.org/wiki/Second-level_domain" target="_blank" rel="noopener">二级域名</a>的介绍：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">www.	zhihu.	com	.</span><br><span class="line">三级域	二级域	顶级域	根域</span><br><span class="line"></span><br><span class="line">www.	zhihu.	com.	cn.	.</span><br><span class="line">四级域	三级域	二级域	顶级域	根域</span><br></pre></td></tr></tbody></table></figure></div>
+
+
+
+<h2 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h2><p><strong>TCP53,  UDP53</strong></p>
+<h2 id="DNS解析"><a href="#DNS解析" class="headerlink" title="DNS解析"></a>DNS解析</h2><h3 id="DNS转发器"><a href="#DNS转发器" class="headerlink" title="DNS转发器"></a>DNS转发器</h3><p>通常，每个网段中都会有一个本地DNS服务器，大部分公司也会自己配置一个DNS服务器，它们通常会内置一个DNS转发器，在收到DNS解析请求后，它们会先查看自己能否处理，<strong>若不能处理，则通过转发器转发给运营商的DNS服务器去处理</strong>。在收到运营商DNS服务器解析的结果后，会返回给用户，并将该结果缓存在本地DNS服务器中。</p>
+<h3 id="正向-反向解析"><a href="#正向-反向解析" class="headerlink" title="正向/反向解析"></a>正向/反向解析</h3><p><strong>正向解析</strong>，是将域名解析成IP地址，进而访问对应网站。通常采用的是递归查询，图示如下：</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse.png"></a>
+
+<p>例如，在命令行中可以通过指令<code>nslookup 域名</code>的形式，像DNS服务器发送请求解析域名，例如解析百度的域名：</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse_2.png"></a>
+
+<p><strong>反向解析</strong>，顾名思义，即通过IP去查询域名的过程。</p>
+<h2 id="DNS实验"><a href="#DNS实验" class="headerlink" title="DNS实验"></a>DNS实验</h2><p><strong>实验准备</strong>：2台Windows2003虚拟机（服务器），1台WindowsXP虚拟机（客户机）。</p>
+<h3 id="安装DNS服务"><a href="#安装DNS服务" class="headerlink" title="安装DNS服务"></a>安装DNS服务</h3><ol>
+<li><p>与安装DHCP服务相同，开始->控制面板->添加或删除程序，进入后选择添加/删除Windows组件，在网络服务中，找到域名系统（DNS），将其勾上并确定，即完成DNS服务的安装。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_1.png"></a>
+</li>
+<li><p>在安装服务之前，先做一个观察，进入命令行，查看当前已打开的端口：</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_2.png"></a>
+</li>
+<li><p>安装的时候，会发现，这个DNS服务本地没有，需要从Service Pack 2 CD-ROM上面拷贝，那这个Service Pack 2 CD-ROM是什么呢？其实<strong>就是安装Windows2003系统时所用的镜像文件</strong>，只不过在安装时，一些必要的服务都没有安装上去，因此需要通过镜先文件重新安装，对于早年的操作系统，通常都是如此。具体操作为：右键当前虚拟机->设置->CD/DVD（IDE）->连接->使用ISO映像文件，并选择当前操作系统对应的镜像文件。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_3.png"></a>
+</li>
+<li><p>这里需要注意，<strong>一定要把设备状态里的选项给勾上，否则镜像将无法成功插入系统</strong>，并会出现 “在系统启动时至少有一个服务或驱动程序产生错误” 这样的错误提示。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_4.png"></a>
+</li>
+<li><p>若按照上述步骤，就可以看到可移动存储设备变成如下所示</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_5.png"></a>
+</li>
+<li><p>点击它，选择安装可选的Windows组件，按照第一步，找到DNS并安装。安装后，再次查看已打开的端口。会发现53端口已经打开。即已开启DNS服务。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_6.png"></a>
+
+
+
+</li>
+</ol>
+<h3 id="正向解析"><a href="#正向解析" class="headerlink" title="正向解析"></a>正向解析</h3><p>正向解析，也就是域名解析成IP。接下来，通过配置Windows 2003系统上的一台服务器，演示DNS服务器如何实现正向解析的功能：</p>
+<ol>
+<li><p><strong>打开DNS服务->主机->正向查找区域，右键新建区域，选择主要区域</strong>，主要区域相当于公司的主服务器，通常而言公司会有两台DNS服务器，另一个<strong>作为备份使用，创建时会选择辅助区域</strong>。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_1.png"></a>
+</li>
+<li><p>接下来填写<strong>区域名称</strong>，这里填的其实就是域名。这里选择填写baidu.com。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_2.png"></a>
+
+<p>这么做的话，就相当于<strong>声明了该服务器就是baidu.com这个域名的权威DNS服务器</strong>。权威服务器意味着，解析出的结果一定真实可靠。例如先前真实机中试图解析域名时，访问的是非权威服务器。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse_2.png"></a>
+</li>
+<li><p>下一步会创建一个新文件，名为baidu.com.dns，这里不作修改。再接下来<strong>选择不允许动态更新</strong>（其它选项在域时才会用到）。接着创建完成后，会生成两个文件：</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_3.png"></a>
+
+<ul>
+<li>第一个是SOA类型文件，它用来说明该域名（baidu.com）的权威服务器是谁，这里显示的是当前这台主机的主机名。</li>
+<li>第二个是NS类型文件，用来记录所有可以解析这个域名（baidu.com）的服务器，目前只有当前主机。在之后有了备份服务器，则会增加<strong>创建辅助区域的主机名称</strong>。</li>
+</ul>
+</li>
+<li><p>用于正向解析时，这里选择<strong>右键新建主机</strong>记录，主机记录又称<strong>A记录</strong>。名称一栏填写主机名即可，此处填写www，FQDN一栏则会生成相应的完整域名。然后填写域名对应的IP地址，这里将域名的IP拟作4.4.4.4，然后选择添加主机。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_4.png"></a>
+</li>
+<li><p>经过上述操作后，（baidu.com）这个域名下多了一条记录。此时，<strong>www这个主机名所对应的当前域名的完全限定域名而言</strong>，已经可以通过当前DNS服务进行<strong>权威</strong>解析了。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_5.png"></a>
+</li>
+<li><p>下面进行验证，进入客户机Windows XP，<strong>将XP系统指向的DNS服务器设置为先前配置好的2003系统的IP地址</strong>。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_6.png"></a>
+</li>
+<li><p>此时在XP中进入命令行，通过<code>nslookup</code>指令解析<code>www.baidu.com</code>这个域名的地址。可以发现，我们指向的是IP地址为10.1.1.1DNS服务器，得到的结果也确实先前设置的4.4.4.4。这样，就完成了一个简单的正向解析实验。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_7.png"></a>
+</li>
+<li><p>最后在这里补充一些，如果我们想再增加一个完全限定域名的正向解析，只需按照上述过程再新建一条主机记录。这里要注意一点，我们知道在新增记录完成之前，试图解析该域名，是无法解析成功的；但是在新增记录完成后，仍可能解析失败。主要原因是<strong>XP系统存在DNS缓存机制</strong>，短时间内缓存记录的仍是上一次查询的结果。此时需要通过指令<code>ipconfig /flushdns</code>刷新缓存，再次解析，便能成功。通过指令<code>ipconfig /displaydns</code>可以显示当前的DNS缓存。</p>
+</li>
+</ol>
+<h3 id="别名"><a href="#别名" class="headerlink" title="别名"></a>别名</h3><p>别名这个实验比较简单就不做了，简单说一下吧，<strong>在正向查找区域中新建一个别名(CNAME)</strong>，设置别名，并<strong>指定目标主机的FQDN（从现有的记录中选择）</strong>。这样通过别名或者原本的FQDN，访问的网址是相同的。</p>
+<h3 id="反向解析"><a href="#反向解析" class="headerlink" title="反向解析"></a>反向解析</h3><ol>
+<li><p>反向解析，就是用IP地址去查询域名，观察先前的查询实验，会发现服务器名是UnKnown，出现这种情况的原因是像服务器寻求域名解析时会<strong>先问服务器域名是什么</strong>，但是服务器没有应答，因此被设置成了UnKnown。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_1.png"></a>
+</li>
+<li><p>为了解决上述情况，就要利用到反向解析。这里，和正向解析一样，先<strong>在正向查找区域新建一个主机记录</strong>，这里将主机名设置为<code>dns1.baidu.com</code>。与正向解析步骤不同的是，这里要将<strong>创建相关的指针(PTR)记录</strong>给勾上。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_2.png"></a>
+</li>
+<li><p>然后<strong>在反向查找区域中新建一个区域</strong>，这里的网络ID写的是网段，我们的主机IP地址为10.1.1.1，因此这里填写10.1.1</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_3.png"></a>
+
+<p>其它的默认下一步就行。创建完反向查找区域后，情况如下。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_4.png"></a>
+</li>
+<li><p>接着<strong>在反向查找区域中新建指针(PTR)</strong>，在主机IP号这里补充完整的IP地址。<strong>主机名</strong>，则游览文件，<strong>选择第二步中在正向查找区域中新建的主机记录</strong>。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_5.png"></a>
+
+<p>确定后，反向查找区域中会增加一条记录。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_6.png"></a>
+</li>
+<li><p>接下来，回到客户机上，进行验证。可以看到通过<code>nslookup</code>指令解析域名时，可以看到服务器本身的域名了。不再是UnKnown。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_7.png"></a>
+
+
+
+</li>
+</ol>
+<h3 id="转发器"><a href="#转发器" class="headerlink" title="转发器"></a>转发器</h3><ol>
+<li><p>转发器，简单来说，就是<strong>自己解析不了，转发给别的DNS服务器帮忙解析</strong>。我们需要<strong>配置另一台</strong>Windows 2003作为DNS服务器。首先，<strong>设置该服务器的IP地址为10.1.1.2</strong>，然后将其<strong>挂入</strong>与第一台Windows 2003系统（10.1.1.1）以及XP客户机<strong>同一个局域网</strong>中，本次实验为VMnet1上（在设置中将多台虚拟机配置为同一个网络适配器，即可实现虚拟机位于同一个局域网中）。并将用于安装DNS服务的Windows 2003 <strong>ISO镜像插入虚拟机</strong>。接着<strong>安装DNS服务</strong>，参考上文。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_1.png"></a>
+</li>
+<li><p>第二步，与正向解析相同，在新的DNS服务器<strong>创建一个正向查找区域</strong>，并<strong>新建一个主要区域</strong>，区域名称为qq.com，完成后在该区域中<strong>新建一条主机记录</strong>，设置<strong>主机名为www的完全限定域名的IP地址为6.7.8.9</strong>。完成后效果如下。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_2.png"></a>
+</li>
+<li><p>这个时候回到客户机XP上，<strong>试图解析刚刚设置的域名</strong>，发现不行，原因是我们设置的DNS服务器是10.1.1.1，而刚刚设置的域名记录在10.1.1.2这台DNS服务器。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_3.png"></a>
+</li>
+<li><p>这个时候就要利用转发器了，<strong>进入第一台DNS服务器</strong>，右键主机，进入属性。找到转发器，<strong>将第二台DNS服务器的IP地址添加进入转发器的IP地址列表</strong>。确定。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_4.png"></a>
+</li>
+<li><p>接下来，回到客户机XP上，再次试图解析域名时，便成功了。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_5.png"></a>
+
+
+
+</li>
+</ol>
+<h3 id="辅助DNS服务器"><a href="#辅助DNS服务器" class="headerlink" title="辅助DNS服务器"></a>辅助DNS服务器</h3><ol>
+<li><p>在一开始，我们创建的区域都是主要区域，而辅助DNS服务器就要用到辅助区域，它的主要作用是备份，当一台服务器宕机后，可以有另一台服务器临时接管。例如，我们要备份主DNS服务器上baidu.com这个区域，操作如下：<strong>右键该区域名->属性->区域复制->勾上允许区域复制</strong>，这里有3个选项，通常选择只允许到下列服务器，这样最安全，并<strong>添加备用DNS服务器的IP地址</strong>。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_1.png"></a>
+</li>
+<li><p>接下来进入备份DNS服务器，在正向查找区域中，<strong>新建区域</strong>，这里<strong>选择辅助区域</strong>。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_2.png"></a>
+</li>
+<li><p><strong>区域名称填写baidu.com</strong>，与主DNS服务器一样。然后将主DNS服务器的IP地址添加进入想要复制区域的DNS服务器地址列表。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_3.png"></a>
+</li>
+<li><p>点击确定后，<strong>此次实验</strong>就完成了对主DNS服务器正向查找区域内容的备份</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_4.png"></a>
+
+
+
+</li>
+</ol>
+<h3 id="虚拟机上真实网"><a href="#虚拟机上真实网" class="headerlink" title="虚拟机上真实网"></a>虚拟机上真实网</h3><p>首先，简单说明一下原理。通常来说，一个局域网中的设备都是通过网线连在交换机或者路由器上，从而访问外网。在虚拟机中，是没法直接访问外网的，但是可以将虚拟机所在的VMnet设置为相同，使得不同虚拟机连上相同的虚拟交换机，从而将不同的虚拟机放入同一个局域网中，这样可以保证虚拟机之间可以互相ping通。其中VMnet0比较特殊，它可以看作是连入现实路由器的一款交换机，通过对VMnet0进行设置，就可以实现虚拟机上真实网。下面开始实验（<strong>本次实验以Windows XP作为实验环境</strong>）：</p>
+<ol>
+<li><p>在操作之前，先<strong>确定</strong>一下<strong>网卡的型号</strong>。如下所示</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_1.png"></a>
+</li>
+<li><p>在虚拟机左上角选择编辑，<strong>进入虚拟网络编辑器</strong>，选择更改设置</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_2.png"></a>
+</li>
+<li><p>选择VMnet0，找到桥接模式，并<strong>将桥接对象设置为第一步中确定的网卡型号</strong>。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_3.png"></a>
+</li>
+<li><p>最后，将XP所在网络适配器<strong>设置为VMnet0</strong></p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_4.png"></a>
+</li>
+<li><p>此时还没完，由于在前一篇DHCP的实验中，给XP客户机分配了特定的IP地址，此时需要<strong>重置一下IP</strong>。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_5.png"></a>
+</li>
+<li><p>可以看到，此时分配到的新IP所在网段与已经与真实机的相同。最后<strong>把DNS服务器再设置为自动获取</strong>。</p>
+<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_6.png"></a>
+
+
+
+</li>
+</ol>
+<h3 id="综合实验"><a href="#综合实验" class="headerlink" title="综合实验"></a>综合实验</h3><p>综合实验这里就不展开了，实验建立在<strong>每台虚拟机能上真实网</strong>的情况下，假设将一台DNS服务器中的配置全部删除（清理缓存，删除记录，删除转发器等），此时将XP指向的DNS服务器设置为这台仅能上网，但是已经清空数据的DNS服务器。问，XP是否能够上网？</p>
+<p>答：能上。这个涉及到对DNS的原理的理解，尽管DNS服务器没有进行任何配置，但是它能够上网，因此会将请求转发给更上层的DNS服务器。最终还是可以得到域名解析的结果。因此，XP最终能够上网。</p>
+<h2 id="关于DNS攻击"><a href="#关于DNS攻击" class="headerlink" title="关于DNS攻击"></a>关于DNS攻击</h2><p>基于DNS的攻击方式，主要分为DNS劫持和DNS污染这两类：</p>
+<p>先说DNS劫持，主要是通过<strong>攻击用户正在使用的DNS服务器</strong>或者<strong>伪造一个DNS服务器让用户使用</strong>，<strong>将域名解析为其它的IP地址</strong>，例如先前的实验中，将baidu.com的域名任意设定，用户就无法正常访问该域名对应的网站。</p>
+<p>DNS污染的<strong>核心原理与DNS劫持</strong>是<strong>一样</strong>的，都是将域名解析为其它IP地址，造成用户无法正常访问。但是DNS污染，主要是针对DNS服务器的缓存进行投毒，先前的实验中，我们会通过ipconfig /flushdns对DNS缓存进行刷新，防止之前查询的数据造成干扰，但是这个刷新缓存仅仅是针对当前主机的，<strong>DNS污染是对大部分用户所访问的当地的DNS服务器进行投毒</strong>，对这些DNS服务器的缓存进行投毒，这种投毒效果往往更好，原因是，为了降低网络上的流量压力，地区的DNS服务器会记录更高层的DNS服务器过去的解析记录。而这些解析记录就存在地区DNS服务器的缓存里，一旦缓存被人做了手脚，那就没法正常访问想要访问的网站了。墙的原理，便是如此。</p>
+<h2 id="端口小结"><a href="#端口小结" class="headerlink" title="端口小结"></a>端口小结</h2><p>本篇新学习了与DNS相关的53端口，按照学习顺序，这里再作总结：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3389端口：	远程桌面</span><br><span class="line">23端口：		telnet</span><br><span class="line">445端口:	共享服务</span><br><span class="line">UDP67,68:	DHCP	</span><br><span class="line">53端口:		DNS</span><br></pre></td></tr></tbody></table></figure></div>
+
+
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>参考教程：</p>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1i7411G7vm?p=29" target="_blank" rel="noopener">千峰网络开源课p29~p30</a></li>
+<li><a href="https://blog.csdn.net/luoyir1997/article/details/82109068" target="_blank" rel="noopener">打开虚拟机时报错</a></li>
+</ul>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://blog.csdn.net/weixin_43252204/article/details/105338995" target="_blank" rel="noopener">beglage笔记</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Top-level_domain" target="_blank" rel="noopener">维基百科：顶级域名</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Second-level_domain" target="_blank" rel="noopener">维基百科：二级域名</a></li>
+<li><a href="https://www.cnblogs.com/anyhoo/p/10369589.html" target="_blank" rel="noopener">DNS相关图源</a></li>
+</ul>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/">http://cataloc.gitee.io/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/blog/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/"><img class="next_cover lazyload" data-src="https://gitee.com/cataloc/blog/raw/master/2020/09/25/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8A-DHCP/cover0x3C.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>网路安全基础05(上)：DHCP</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/blog/2020/03/07/浅谈对称加密传输/" title="浅谈对称加密传输"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-07</div><div class="relatedPosts_title">浅谈对称加密传输</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/01/网络安全基础01-配置虚拟机/" title="网络安全基础01：配置虚拟机"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/01/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8001-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9F%E6%9C%BA/cover0x08.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-01</div><div class="relatedPosts_title">网络安全基础01：配置虚拟机</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/02/网络安全基础02-IP地址-Dos命令/" title="网络安全基础02：IP地址&Dos命令"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8002-IP%E5%9C%B0%E5%9D%80-Dos%E5%91%BD%E4%BB%A4/cover0x09.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-02</div><div class="relatedPosts_title">网络安全基础02：IP地址&Dos命令</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/15/网络安全基础03-上-批处理与病毒/" title="网络安全基础03(上)：批处理与病毒"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/15/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E4%B8%8A-%E6%89%B9%E5%A4%84%E7%90%86%E4%B8%8E%E7%97%85%E6%AF%92/cover0xC.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-15</div><div class="relatedPosts_title">网络安全基础03(上)：批处理与病毒</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/18/网络安全基础03-下-用户与组管理/" title="网络安全基础03(下)：用户与组管理"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/18/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E4%B8%8B-%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86/cover0xD.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-18</div><div class="relatedPosts_title">网络安全基础03(下)：用户与组管理</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/29/网路安全基础03-实验/" title="网路安全基础03(实验)：破解Win7登录密码"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/29/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E5%AE%9E%E9%AA%8C/cover0xF.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-29</div><div class="relatedPosts_title">网路安全基础03(实验)：破解Win7登录密码</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2021 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
