@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>网络安全基础06(上)：WEB服务器 | cataLoc's Blog</title><meta name="description" content="网络安全基础06(上)：WEB服务器"><meta name="keywords" content="网络安全"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="网络安全基础06(上)：WEB服务器"><meta name="twitter:description" content="网络安全基础06(上)：WEB服务器"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="网络安全基础06(上)：WEB服务器"><meta property="og:url" content="http://cataloc.gitee.io/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="网络安全基础06(上)：WEB服务器"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cataloc.gitee.io/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/"><link rel="next" title="网络安全基础05(下)：DNS" href="http://cataloc.gitee.io/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">115</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">7</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#定义"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">定义</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#协议"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">协议</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#端口"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">端口</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#Web服务器发布软件"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">Web服务器发布软件</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#网站类型"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">网站类型</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#实验"><span class="toc_mobile_items-number">6.</span> <span class="toc_mobile_items-text">实验</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#安装IIS"><span class="toc_mobile_items-number">6.1.</span> <span class="toc_mobile_items-text">安装IIS</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#发布网站"><span class="toc_mobile_items-number">6.2.</span> <span class="toc_mobile_items-text">发布网站</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#部署多个站点"><span class="toc_mobile_items-number">6.3.</span> <span class="toc_mobile_items-text">部署多个站点</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#动态网站部署-旧"><span class="toc_mobile_items-number">6.4.</span> <span class="toc_mobile_items-text">动态网站部署(旧)</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#端口小结"><span class="toc_mobile_items-number">7.</span> <span class="toc_mobile_items-text">端口小结</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考资料"><span class="toc_mobile_items-number">8.</span> <span class="toc_mobile_items-text">参考资料</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#定义"><span class="toc-number">1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#协议"><span class="toc-number">2.</span> <span class="toc-text">协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#端口"><span class="toc-number">3.</span> <span class="toc-text">端口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web服务器发布软件"><span class="toc-number">4.</span> <span class="toc-text">Web服务器发布软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#网站类型"><span class="toc-number">5.</span> <span class="toc-text">网站类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验"><span class="toc-number">6.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装IIS"><span class="toc-number">6.1.</span> <span class="toc-text">安装IIS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发布网站"><span class="toc-number">6.2.</span> <span class="toc-text">发布网站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署多个站点"><span class="toc-number">6.3.</span> <span class="toc-text">部署多个站点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态网站部署-旧"><span class="toc-number">6.4.</span> <span class="toc-text">动态网站部署(旧)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#端口小结"><span class="toc-number">7.</span> <span class="toc-text">端口小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">8.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">网络安全基础06(上)：WEB服务器</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2020-09-30<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2021-02-19</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>Web服务器又称<strong>网页服务器</strong>或<strong>HTTP服务器</strong>。</p>
+<h2 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h2><p>协议，是通话的前提；客户端想要与服务端进行通信，就需要满足规定的协议。拿前两天学习的DHCP与DNS协议来说，<code>Win+R</code>，输入<code>services.msc</code>，查看本地服务。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/protocol.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/protocol.png"></a>
+
+<p>可以发现，当前主机作为DHCP和DNS的客户端，这两个服务都是打开的，若是将它们关闭，则当前主机无法再自动获取IP地址或是对域名进行解析了，而想要从服务端获取服务，就要遵循相应的协议，所有的通信都是建立在遵循同一套协议的基础上。Web服务器使用的是协议是<strong>HTTP</strong>或<strong>HTTPS</strong>。</p>
+<h2 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h2><p>HTTP协议端口号：<strong>TCP80</strong></p>
+<p>HTTPS协议端口号：<strong>TCP443</strong></p>
+<h2 id="Web服务器发布软件"><a href="#Web服务器发布软件" class="headerlink" title="Web服务器发布软件"></a>Web服务器发布软件</h2><p> 网站，需要包含多个网页，也需要具备IP地址，DNS以及端口相关信息。想要发布一个网站供人们访问，就需要通过web服务器发布软件，下面介绍几类：</p>
+<ul>
+<li>微软：IIS（可发布Web网站和FTP站点）</li>
+<li>Linux：Apache/LAMP/Tomcat/Nginx .etc</li>
+<li>第三方：phpStudy、XAMPP（均内嵌LAMP，主要用于学习和测试） </li>
+</ul>
+<h2 id="网站类型"><a href="#网站类型" class="headerlink" title="网站类型"></a>网站类型</h2><ol>
+<li>静态网站：一般扩展名为.html或.htm，无后台数据库。</li>
+<li>动态网站：这里需要稍作扩展的讲一下，在过去，没有前端这个概念，排版布局，页面渲染，数据库查询动态数据都会放在一起。能够实现这种功能的语言，例如PHP，就很受欢迎。那段时期，动态网站的扩展名通常为.asp或.php。现如今，前后端已经分离，并迈入了云端时代，网站界面通常用框架编写，会混入大量逻辑，文件可能是.tpl .vue .jsx这种框架独有格式的文件，但最后编译打包时，都会转为对应的html和js文件。前端和后台数据逻辑，已经分开了。</li>
+</ol>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>实验环境：客户机(Windows XP)、服务端(Windows 2003)</p>
+<p>Web服务器发布软件：IIS</p>
+<h3 id="安装IIS"><a href="#安装IIS" class="headerlink" title="安装IIS"></a>安装IIS</h3><ol>
+<li><p>进入Windows组件向导(参考DNS安装) -> 应用程序服务器 -> Internet信息服务(IIS) -> 勾上万维网服务(会自动勾上公用文件)，这里把下一篇要用到的文件传输协议(FTP)服务也给勾上。完成安装后，可以在管理工具中找到IIS。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/install.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/install.png"></a>
+</li>
+<li><p>安装之后，进入命令行输入<code>netstat -an</code>，可以发现，<strong>21端口</strong>(ftp)与<strong>80端口</strong>(http)已经打开。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/install_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/install_2.png"></a>
+
+
+
+</li>
+</ol>
+<h3 id="发布网站"><a href="#发布网站" class="headerlink" title="发布网站"></a>发布网站</h3><ol>
+<li><p><strong>打开IIS管理器</strong>软件，在网站目录下，可以看到一个默认网站</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_1.png"></a>
+</li>
+<li><p>我们试图去<strong>访问</strong>一下这个<strong>默认网站</strong>，切换到客户机(Windows XP)，打开任一游览器，访问<code>10.1.1.1</code>(服务器地址)。会看到如下所示情形。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_2.png"></a>
+</li>
+<li><p>这并不是访问出错了，<strong>切回服务器</strong>(Windows 2003)，在<strong>C盘</strong>下，可以看到一个叫做<strong>Inetpub目录</strong>，进入后会发现有多个目录，其中wwwroot这个目录就是存放网站信息的目录</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_3.png"></a>
+</li>
+<li><p>进入后，会看到一个.htm文件，点开它，会发现它就是先前从客户机访问的网站。验证了刚刚实验的成功。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_4.png"></a>
+</li>
+<li><p>接下来，我们自己手动发布一个网站，网站是由网页和站点组成的，所以我们需要先<strong>编写一个网页</strong>，为了方便，这里只简单编写一个html文件，并将其<strong>存到指定目录</strong>下，名为index.html。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_5.png"></a>
+</li>
+<li><p>回到IIS管理器，<strong>选择网站，右键->新建->网站</strong>，关于网站描述，随便写就可以了，这里填的是Web0x1。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_6.png"></a>
+</li>
+<li><p>下一步，这里分别需要配置<strong>IP，端口以及主机头</strong>，这三个单位在部署多个站点时会有所用处。这里IP地址有两个选项，<strong>选择全部未分配时，会任意选择当前主机(服务器)下的IP地址作为网站的IP地址</strong>，由于当前只有一个IP地址，所以无论选择哪个都无所谓。<strong>端口这里默认</strong>填写80，<strong>主机头默认</strong>就不填了。后面会说到。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_7.png"></a>
+</li>
+<li><p>然后<strong>填写路径</strong>，这里选择刚刚编写的网页所在文件夹的路径。这里<strong>允许匿名访问网站一定要勾上</strong>！不然访问个网站还让你输用户名密码啥的</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_8.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_8.png"></a>
+</li>
+<li><p>来到下一步，完成后情况如下。为了不影响实验，这里先<strong>把默认网站给它停止</strong>运行。右键Web0x1进入属性->文档。在右侧添加，<strong>将先前编写的index.html添加到默认内容文档，并移到最上方</strong>。保存设置。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_9.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_9.png"></a>
+</li>
+<li><p>这时，我们<strong>回到客户机</strong>(Windows XP)上来，再次试图访问<code>10.1.1.1</code>(服务器地址)，就可以看到先前编写的index.html作为网站页面出现。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_10.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deliver_10.png"></a>
+</li>
+<li><p>这里作个小结，在使用IIS发布网站时需要<strong>指定网站的IP，端口，以及主机头值(域名)</strong>，在IP与端口确定的情况下，也可以不指定主机头值。此外需要设置网站属性，<strong>将要展示的页面，放到默认文档的最前面</strong>，这样访问时，就可以直接打开该网页。</p>
+</li>
+</ol>
+<h3 id="部署多个站点"><a href="#部署多个站点" class="headerlink" title="部署多个站点"></a>部署多个站点</h3><p>前面学习了使用IIS发布网站，但是一个服务器只发布一个网站，那实在太浪费了，假设公司想弄一个业务系统出来，同样放在这个服务器上，该如何操作呢？接下来就介绍如何在一个Web服务器上部署多个站点：</p>
+<ol>
+<li><p>首先，<strong>创建一个网页</strong>(为了方便，就不写一个业务系统了，随意写一个简单网页)</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_1.png"></a>
+</li>
+<li><p>接着，<strong>新建一个网站</strong>，描述就写Web0x2，其它和手动发布网站一样，选择上一步创建的网页。创建完发现，该网站默认被停止运行了，当我们试图启动时，会出现如下弹窗。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_2.png"></a>
+</li>
+<li><p>它告诉我们，80端口已经被占用了，需要<strong>重新绑定端口号</strong>，进入Web0x2属性，在网站一栏，找到TCP端口，将其设置为任一1000以上的端口号即可。完了别忘记在文档一栏，将该站点对应的网页添加并移到默认内容文档的最上方。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_3.png"></a>
+</li>
+<li><p>设置完后，切回客户机，当访问<code>10.1.1.1:8080</code>时，就会进入Web0x2站点对应的网页，当访问<code>10.1.1.1:80</code>时就会进入Web0x1站点对应的网页（<strong>http协议默认是80端口因此会不显示</strong>）。这是通过<strong>控制端口</strong>完成对单服务器多网站的实现。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_4.png"></a>
+</li>
+<li><p>当然，除了控制端口，也可以通过<strong>控制IP地址</strong>来实现，首先进入服务器(Windows 2003)，给它<strong>增加一个地址</strong>。操作如下图所示</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_5.png"></a>
+</li>
+<li><p>然后修改Web0x2，将其<strong>IP地址修改为10.1.1.3，端口则改回80</strong>。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_6.png"></a>
+</li>
+<li><p>也可以实现单服务器多网站</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_7.png"></a>
+</li>
+<li><p>虽然控制IP或者端口都可以实现单服务器部署多个网站的操作，但这不是最优解。因为用户不会记住你的IP或者是端口，真实网站发布时也是如此，所以才有了第三种方法，通过<strong>设定网站主机头</strong>，也就是域名，来实现同样的操作。这里进行演示，例如进入Web0x2的属性后，<strong>选择网站->高级->编辑，设定主机值</strong>。然后对Web0x1使用类似的操作。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_8.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_8.png"></a>
+</li>
+<li><p>接下来就可以按照前一篇<a href="https://cataloc.gitee.io/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/#%E6%AD%A3%E5%90%91%E8%A7%A3%E6%9E%90">DNS正向解析</a>的方式，给两个网站分别在正向查找区域中<strong>创建一个区域，并添加主机记录</strong>。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_9.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_9.png"></a>
+</li>
+<li><p>再回到客户机(Windows XP)，将DNS服务器指向我们的Windows 2003系统。此时便可<strong>通过域名访问</strong>同一台服务器上的不同站点了。在同IP地址，同端口的情况下。但是这样就不可以通过IP访问了。</p>
+<a href="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_10.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/deploy_10.png"></a>
+
+
+
+</li>
+</ol>
+<h3 id="动态网站部署-旧"><a href="#动态网站部署-旧" class="headerlink" title="动态网站部署(旧)"></a>动态网站部署(旧)</h3><p>这里就不进行完整的过程演示了，现如今，Asp项目在网上也已经很难找到了。不过对于sql注入等手法还是很有学习意义，这里只简单说明一下部署过程。</p>
+<ol>
+<li>DNS服务中新增一条关于此网站域名的正向解析记录。</li>
+<li>IIS中创建网站，勾上运行脚本（如ASP）和执行（如ISAPI应用程序或CGI）这两个选项。</li>
+<li>网站属性中，找到对应的首页（如index.asp，default.asp），将其放到默认文档的最前面。</li>
+<li>视频中介绍利用时有点翻车，进入网站属性->主目录->配置->选项->启用父路径。经此操作后，可以在前端页面通过首页访问<strong>首页所在目录的子目录下的网页</strong>。我对这里的疑问在于，既然可以设置服务器选项了，那么也没有必要去从前端进入控制台了。</li>
+</ol>
+<h2 id="端口小结"><a href="#端口小结" class="headerlink" title="端口小结"></a>端口小结</h2><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">3389端口：	远程桌面</span><br><span class="line">23端口：		telnet</span><br><span class="line">445端口:	共享服务</span><br><span class="line">UDP67, 68:	DHCP	</span><br><span class="line">53端口:		DNS</span><br><span class="line">TCP80:		HTTP</span><br><span class="line">TCP443:		HTTPS</span><br></pre></td></tr></tbody></table></figure></div>
+
+
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>参考教程：</p>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1i7411G7vm?p=32" target="_blank" rel="noopener">千峰开源课程p32~34</a></li>
+</ul>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://blog.csdn.net/weixin_43252204/article/details/105339254" target="_blank" rel="noopener">beglage笔记</a></li>
+</ul>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/">http://cataloc.gitee.io/blog/2020/09/30/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8A-Web%E6%9C%8D%E5%8A%A1%E5%99%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/"><img class="next_cover lazyload" data-src="https://gitee.com/cataloc/blog/raw/master/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/cover0x3D.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>网络安全基础05(下)：DNS</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/blog/2020/03/07/浅谈对称加密传输/" title="浅谈对称加密传输"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-07</div><div class="relatedPosts_title">浅谈对称加密传输</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/01/网络安全基础01-配置虚拟机/" title="网络安全基础01：配置虚拟机"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/01/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8001-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9F%E6%9C%BA/cover0x08.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-01</div><div class="relatedPosts_title">网络安全基础01：配置虚拟机</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/02/网络安全基础02-IP地址-Dos命令/" title="网络安全基础02：IP地址&Dos命令"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8002-IP%E5%9C%B0%E5%9D%80-Dos%E5%91%BD%E4%BB%A4/cover0x09.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-02</div><div class="relatedPosts_title">网络安全基础02：IP地址&Dos命令</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/15/网络安全基础03-上-批处理与病毒/" title="网络安全基础03(上)：批处理与病毒"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/15/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E4%B8%8A-%E6%89%B9%E5%A4%84%E7%90%86%E4%B8%8E%E7%97%85%E6%AF%92/cover0xC.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-15</div><div class="relatedPosts_title">网络安全基础03(上)：批处理与病毒</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/18/网络安全基础03-下-用户与组管理/" title="网络安全基础03(下)：用户与组管理"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/18/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E4%B8%8B-%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86/cover0xD.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-18</div><div class="relatedPosts_title">网络安全基础03(下)：用户与组管理</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/29/网路安全基础03-实验/" title="网路安全基础03(实验)：破解Win7登录密码"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/29/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E5%AE%9E%E9%AA%8C/cover0xF.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-29</div><div class="relatedPosts_title">网路安全基础03(实验)：破解Win7登录密码</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2021 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
