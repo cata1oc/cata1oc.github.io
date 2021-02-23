@@ -1,0 +1,174 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>网络安全基础07(上)：域 | cataLoc's Blog</title><meta name="description" content="网络安全基础07(上)：域"><meta name="keywords" content="网络安全"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="网络安全基础07(上)：域"><meta name="twitter:description" content="网络安全基础07(上)：域"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="网络安全基础07(上)：域"><meta property="og:url" content="http://cataloc.gitee.io/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="网络安全基础07(上)：域"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cataloc.gitee.io/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/"><link rel="next" title="网络安全基础06(下)：FTP服务器" href="http://cataloc.gitee.io/blog/2020/10/01/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8B-Ftp%E6%9C%8D%E5%8A%A1%E5%99%A8/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">117</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">7</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#什么是域"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">什么是域</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#域的特点"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">域的特点</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#域的组成"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">域的组成</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#域控制器"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">域控制器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#活动目录"><span class="toc_mobile_items-number">3.2.</span> <span class="toc_mobile_items-text">活动目录</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#组策略"><span class="toc_mobile_items-number">3.3.</span> <span class="toc_mobile_items-text">组策略</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#实验"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">实验</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#实验环境"><span class="toc_mobile_items-number">4.1.</span> <span class="toc_mobile_items-text">实验环境</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#域的部署"><span class="toc_mobile_items-number">4.2.</span> <span class="toc_mobile_items-text">域的部署</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#PC加入域"><span class="toc_mobile_items-number">4.3.</span> <span class="toc_mobile_items-text">PC加入域</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#小结"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">小结</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考资料"><span class="toc_mobile_items-number">6.</span> <span class="toc_mobile_items-text">参考资料</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是域"><span class="toc-number">1.</span> <span class="toc-text">什么是域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#域的特点"><span class="toc-number">2.</span> <span class="toc-text">域的特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#域的组成"><span class="toc-number">3.</span> <span class="toc-text">域的组成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#域控制器"><span class="toc-number">3.1.</span> <span class="toc-text">域控制器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#活动目录"><span class="toc-number">3.2.</span> <span class="toc-text">活动目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组策略"><span class="toc-number">3.3.</span> <span class="toc-text">组策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验"><span class="toc-number">4.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#实验环境"><span class="toc-number">4.1.</span> <span class="toc-text">实验环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#域的部署"><span class="toc-number">4.2.</span> <span class="toc-text">域的部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PC加入域"><span class="toc-number">4.3.</span> <span class="toc-text">PC加入域</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">5.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">6.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">网络安全基础07(上)：域</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2020-10-02<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2021-02-23</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="什么是域"><a href="#什么是域" class="headerlink" title="什么是域"></a>什么是域</h2><p>域（Domain），是Windows系统下提供的一种<strong>内网环境</strong>，在之前我们已经介绍过了一个概念，工作组，具体可以参考<a href="https://cataloc.gitee.io/blog/2020/06/18/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E4%B8%8B-%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86/">此篇</a>，默认情况下，Windows会处于工作组模式（如下图所示），这是一种人人平等、但不方便管理的模式。<strong>工作组</strong>的诞生，主要是为了<strong>方便权限的赋予</strong>；本篇要介绍的<strong>域</strong>，它并不是一个人人平等的模式，但优点在于能够对用户进行<strong>集中、统一的管理</strong>。</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/workGroupMode.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/workGroupMode.png"></a>
+
+
+
+<h2 id="域的特点"><a href="#域的特点" class="headerlink" title="域的特点"></a>域的特点</h2><p><strong>集中/统一管理</strong>。</p>
+<h2 id="域的组成"><a href="#域的组成" class="headerlink" title="域的组成"></a>域的组成</h2><h3 id="域控制器"><a href="#域控制器" class="headerlink" title="域控制器"></a>域控制器</h3><p>域的组成包括成员机和<strong>域控制器（Domain Controller，下文简称DC）</strong>，这个DC的地位极高，可以控制所有域中的成员机，系统部署等行为，若DC宕机可导致公司全网瘫痪。</p>
+<p>DC也是域的核心，当服务器系统（例如Windows 2008）<strong>安装了DC后，就生成了域环境</strong>，此时，该系统就会从工作组环境切换到域环境中，主机名也会发生改变，假设<strong>域名</strong>为<code>loc.com</code>，<strong>工作组环境下的主机名</strong>为<code>dc</code>。则<strong>域环境下的主机名</strong>会变为<code>dc.loc.com</code>。看到域名，自然会想到DNS，通常而言，域服务器与DNS服务器是绑定在一起的，否则还需要设置转发器指向别的DNS服务器。</p>
+<p>在域环境下，除了有DC，还得有域成员，原先学习的<code>net user</code>命令是用来创建本地账号的，在别人电脑无法直接使用，只是能让同一网段别的电脑通过RDP远程登录来使用该账号访问服务器；而<strong>域账号却可以在别人的电脑上登录</strong>，这个是如何实现的呢？这里就要引出另一个概念，活动目录。</p>
+<h3 id="活动目录"><a href="#活动目录" class="headerlink" title="活动目录"></a>活动目录</h3><p>在安装DC时，会安装若干个软件，其中最重要的一个软件就是<strong>活动目录（Active Directory，下文简称AD）</strong>。可以把AD想象成一个数据库，它会存放公司中所有公共资源。例如新建一个域用户，用户名为a，密码为1。这样就会生成一条数据存放到AD中。然后域管理员就可以利用这个域用户的账号登录域环境中的任意一台主机。</p>
+<p>具体过程如下，在域账号第一次登录前，该主机只有本地账号与本地管理员账号，通过域账号登录时，主机会发现自己的本地并没有存储这个账号的信息，因此它会向域中的老大咨询，也就是DC。DC会去AD中查询，发现有该账号的信息。遂允许该主机登录此域账号。这样就实现了通过域账号登录别人的主机。</p>
+<h3 id="组策略"><a href="#组策略" class="headerlink" title="组策略"></a>组策略</h3><p>在介绍完AD后，就来介绍另一个与AD关系密切的配置，<strong>组策略（Group Policy）</strong>。组策略就是一条一条的规定，DC可以根据利用组策略来对域成员机进行管控。在很多公司中，每台主机仅允许登录域账号，这样，每次域账号登录时，除了根据AD验证自己账号的合法性，AD还会根据该主机所在表中的组策略对其进一步管控。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h3><p>域服务器：Windows 2008</p>
+<p>域成员：Windows XP，Windows 7</p>
+<h3 id="域的部署"><a href="#域的部署" class="headerlink" title="域的部署"></a>域的部署</h3><ol>
+<li><p>关闭Windows 2008防火墙</p>
+</li>
+<li><p>将虚拟机<strong>桥接到同一个网段</strong>上（本实验选择VMnet1）</p>
+</li>
+<li><p>配置Windows 2008静态IP地址<code>10.1.1.1/24</code>，完了得把2008上面的IPv6的勾给去掉，防止影响实验。</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_3.png"></a>
+</li>
+<li><p>开始->运行-><strong>输入dcpromo</strong>（既是安装指令，又是卸载指令），回车，屏幕上出现如下所示，对安装环境进行检测</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_4.png"></a>
+</li>
+<li><p>若检测成功，则进入安装向导。<strong>不需要点使用高级模式</strong>，直接下一步。</p>
+</li>
+<li><p>进入兼容性声明，直接下一步。</p>
+</li>
+<li><p>进入配置域名系统设置，这里<strong>勾选上</strong>（域环境下，域服务器与DNS服务器通常都是绑定的），然后下一步</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_7.png"></a>
+</li>
+<li><p>这里关于林的概念，简单介绍一下，假设一家公司总部在上海，分部在杭州，总部上海有一个域，杭州也有一个域，这时杭州这个域的DC作为域成员加入上海这个域中，这样两个域就构成了一个树。假设刚刚这个树研究的业务是网络安全，该公司还有另一个业务研究二进制安全，同样也构成一个树，该公司这两个树就构成了一个林。不过林太过庞大，国内几乎没有。这里<strong>选择在新林中新建域</strong>，然后下一步。</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_8.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_8.png"></a>
+</li>
+<li><p>这里填域的FQDN，就是第一个域的名称，这里设置为loc.com</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_9.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_9.png"></a>
+</li>
+<li><p>林功能级别，这里指接下来在林中新建域时，最低操作系统要求，若选择Windows 2008，之后创建域时，就只能使用Windows 2008或更高级的服务器系统来创建域。这里一般选择Windows 2003。</p>
+</li>
+<li><p>接下来是域功能级别，这个是对域中未来新加的DC进行限制（一般来说域不会只有1个）。域功能级别只对当前域有效，子域则受林功能级别限制，这里依旧选择Windows 2003。</p>
+</li>
+<li><p>接下来会遇到如下所示的报错，这是正常的，点击“是”就行。</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_12.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_12.png"></a>
+</li>
+<li><p>然后会有一个路径设置，这里不需要改。简单说一下，NTDS就是AD存放的地方，SYSVOL则和组策略有关。</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_13.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_13.png"></a>
+</li>
+<li><p>接下来需要设置一个密码，这个是AD的还原密码，通常情况下用不到。这里密码设置为666.com。</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_14.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_14.png"></a>
+</li>
+<li><p>下一步，等待几分钟，完成域服务的安装，重启电脑应用设置。此时，登录窗口如下所示，在Administrator前多了一个LOC，这时原先的本地管理员已经升级成了域管理员。此时会要求我们设置新的密码，为了方便记住，这里也设置为666.com</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_15.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_15.png"></a>
+</li>
+<li><p>再次打开系统查看，此时该计算机全名多了<code>loc.com</code>，工作组也变成了域<code>loc.com</code></p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_16.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_16.png"></a>
+</li>
+<li><p>此时DNS服务已经被连带装好，进入后可以看到，在域<code>loc.com</code>中已经自动记录了当前主机的信息。</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_17.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_17.png"></a>
+</li>
+<li><p>开始->管理工具->Active Directory 用户和计算机，在这个AD中可以查看很多信息，包括当前域成员（Computers），域中的DC（Domain Controllers），以及域中的组（由工作组升级而来）</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_18.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/deploy_18.png"></a>
+
+
+
+</li>
+</ol>
+<h3 id="PC加入域"><a href="#PC加入域" class="headerlink" title="PC加入域"></a>PC加入域</h3><ol>
+<li><p>以XP为例，桥接VMnet1，配IP<code>10.1.1.2/24</code>，并指向DNS<code>10.1.1.1</code>。</p>
+</li>
+<li><p>我的电脑右键->属性->计算机名->更改->隶属于，选择域，输入<code>loc.com</code></p>
+</li>
+<li><p>点击确定，会弹出对话框，以域管理员的身份登录，这里用户名填<code>loc.com\Administrator</code>，密码则是刚刚修改的<code>666.com</code>。</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/join_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/join_3.png"></a>
+</li>
+<li><p>稍等片刻，会弹出加入域成功的对话框，重启计算机后生效。</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/join_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/join_4.png"></a>
+</li>
+<li><p>切换回Windows 2008，在AD上可以看到XP已经加入了域</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/join_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/join_5.png"></a>
+</li>
+<li><p>然后新建一个用户验证一下，右键Users->新建->用户，格式如下，密码设置<code>123.com</code></p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/join_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/join_6.png"></a>
+</li>
+<li><p>切回XP，已经加入域的XP，和服务器系统一样，需要按Ctrl-Alt-Delete来进入系统了。若要登录域成员，点击选项，将登录到切换为域名，这里为LOC，然后输入刚刚新建的域成员登录。</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/join_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/join_7.png"></a>
+</li>
+<li><p>此时，右键我的电脑->属性->计算机名，可以看到该主机已加入域。这样就完成了一次PC加入域的操作，Win7加入域的方法类似。这里不再演示。</p>
+<a href="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/join_8.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/join_8.png"></a>
+</li>
+<li><p>这里简要归纳几个常见问题</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1）加入域不成功</span><br><span class="line">   网络是不是不通！</span><br><span class="line">   解析是否能成功解析！</span><br><span class="line">   是否为DNS缓存问题</span><br><span class="line">   </span><br><span class="line">2）登入域不成功</span><br><span class="line">   如XP，已勾选登录域LOC，不用再写loc\fall.cinder</span><br><span class="line"></span><br><span class="line">3）域用户的权限</span><br><span class="line">   建议将域用户加入到普通成员机的本地管理员组中</span><br></pre></td></tr></tbody></table></figure></div>
+
+
+
+</li>
+</ol>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这里的小结，不是针对域这个知识点的总结，而是对于过去这半年的小结。实际上，现在已经是2021年2月23日晚上十点半了，<del>我依然再写去年国庆节时期的博客。这也是因为，自8月份离职以来，直到10月22日我才开始恢复博客的更新，原本就已经差了接近70天了。但是进入12月后，我突然又变得像以前一样颓废，接近3个月的时间断断续续只更新了几篇博客，现在过完年复工快1周了。我依旧没有找到工作，现在算是付出代价了。</del>从现在开始，计划也有所变化了，原先我更新博客过于细节了，导致在博客本身上花的时间过多了，现在向beglage学习，尽量精简，总结重要的知识点，只要自己能够看懂就足够了。因此，从下篇开始，博客会变得精简，贴图也会减少。现在只有尽可能的，在短时间内，完成对网络安全的学习和理解。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>参考教程：</p>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1i7411G7vm?p=37" target="_blank" rel="noopener">千峰网络安全开源课程p37~p38</a></li>
+</ul>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/">http://cataloc.gitee.io/blog/2020/10/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8007-%E4%B8%8A-%E5%9F%9F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/blog/2020/10/01/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8B-Ftp%E6%9C%8D%E5%8A%A1%E5%99%A8/"><img class="next_cover lazyload" data-src="https://gitee.com/cataloc/blog/raw/master/2020/10/01/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8006-%E4%B8%8B-Ftp%E6%9C%8D%E5%8A%A1%E5%99%A8/0x3F.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>网络安全基础06(下)：FTP服务器</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/blog/2020/03/07/浅谈对称加密传输/" title="浅谈对称加密传输"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-07</div><div class="relatedPosts_title">浅谈对称加密传输</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/01/网络安全基础01-配置虚拟机/" title="网络安全基础01：配置虚拟机"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/01/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8001-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9F%E6%9C%BA/cover0x08.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-01</div><div class="relatedPosts_title">网络安全基础01：配置虚拟机</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/02/网络安全基础02-IP地址-Dos命令/" title="网络安全基础02：IP地址&Dos命令"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/02/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8002-IP%E5%9C%B0%E5%9D%80-Dos%E5%91%BD%E4%BB%A4/cover0x09.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-02</div><div class="relatedPosts_title">网络安全基础02：IP地址&Dos命令</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/15/网络安全基础03-上-批处理与病毒/" title="网络安全基础03(上)：批处理与病毒"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/15/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E4%B8%8A-%E6%89%B9%E5%A4%84%E7%90%86%E4%B8%8E%E7%97%85%E6%AF%92/cover0xC.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-15</div><div class="relatedPosts_title">网络安全基础03(上)：批处理与病毒</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/18/网络安全基础03-下-用户与组管理/" title="网络安全基础03(下)：用户与组管理"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/18/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E4%B8%8B-%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86/cover0xD.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-18</div><div class="relatedPosts_title">网络安全基础03(下)：用户与组管理</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/29/网路安全基础03-实验/" title="网路安全基础03(实验)：破解Win7登录密码"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/29/%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8003-%E5%AE%9E%E9%AA%8C/cover0xF.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-29</div><div class="relatedPosts_title">网路安全基础03(实验)：破解Win7登录密码</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2021 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
