@@ -88,7 +88,7 @@ function activateLightMode(){
 <h2 id="扫描工具"><a href="#扫描工具" class="headerlink" title="扫描工具"></a>扫描工具</h2><p>通过telnet命令一条条试比较浪费时间，因此可以依靠扫描工具，针对指定IP范围进行端口扫描，下图为scanport扫描的结果。</p>
 <a href="/blog/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/scan_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/scan_2.png"></a>
 
-<p>后面的文章会介绍到namp，它是一款非常强大的扫描器，甚至可以针对不同版本的系统扫描出未修复的漏洞。</p>
+<p>后面的文章会介绍到nmap，它是一款非常强大的扫描器，甚至可以针对不同版本的系统扫描出未修复的漏洞。</p>
 <h2 id="445端口"><a href="#445端口" class="headerlink" title="445端口"></a>445端口</h2><p>根据先前的学习，了解到445端口提供共享服务。但这个端口也会引发较大的安全问题，下面来看一个简短的利用过程。执行如下指令：</p>
 <div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net use \\10.1.1.1\ipc$ 123.com /user:administrator</span><br></pre></td></tr></tbody></table></figure></div>
 
