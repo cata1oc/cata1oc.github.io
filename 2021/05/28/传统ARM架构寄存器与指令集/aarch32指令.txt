@@ -1,0 +1,45 @@
+寄存器部分：
+1) 运行模式
+
+2）Arm状态 37/44/43
+
+3）Thumb状态
+
+
+指令部分：
+1.  VPUSH   {D8-D9}
+
+2.  VMOV.I32   Q4, #0
+
+3.  VST1.64   {D8-D9}, {R0}!
+参考资料：https://stackoverflow.com/questions/38386861/what-vst-vld-actually-do
+
+4.  IT
+参考资料：https://blog.csdn.net/petib_wangwei/article/details/41318069/
+          https://developer.arm.com/documentation/dui0472/k/Compiler-Coding-Practices/Loop-unrolling-in-C-code?lang=en （ADDNE）
+
+5.  STRD.W   R1, R1, [R4, #0x20]
+
+6.  LDRD.W   R1, R2, [R7, #arg0]
+
+7.  CBZ   R0, loc_BB8
+
+8.  DCD伪指令
+
+9.  BIC   R4, R3, #0x1FC0 （摄像头内核）
+
+10. MCR   p15, 0, R3, c3, c0, 0 （摄像头内核）
+
+11. PC
+参考资料：https://blog.csdn.net/lee244868149/article/details/49488575/
+          https://blog.csdn.net/azhangyi188/article/details/9269893
+ 
+12. STMEA.W         SP, {R0,R9,R11}
+
+13. TST	R0, #0x3F8
+    TSTNE      R1, R5, ASR R1
+
+14. ASR    R7, R8, R9
+
+15. BKPT #1
+参考资料：https://developer.arm.com/documentation/dui0489/h/arm-and-thumb-instructions/bkpt?lang=en
