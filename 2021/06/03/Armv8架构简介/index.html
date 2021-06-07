@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>Arm-v8架构简介 | cataLoc's Blog</title><meta name="description" content="Arm-v8架构简介"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Arm-v8架构简介"><meta name="twitter:description" content="Arm-v8架构简介"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="Arm-v8架构简介"><meta property="og:url" content="http://cataloc.gitee.io/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="Arm-v8架构简介"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>Arm-v8架构简介 | cataLoc's Blog</title><meta name="description" content="Arm-v8架构简介"><meta name="keywords" content="Android逆向"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/blog/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Arm-v8架构简介"><meta name="twitter:description" content="Arm-v8架构简介"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="Arm-v8架构简介"><meta property="og:url" content="http://cataloc.gitee.io/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="Arm-v8架构简介"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
 var t = Cookies.get("theme");
 if (autoChangeMode == '1'){
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -69,7 +69,7 @@ function activateLightMode(){
   isHome: false,
   isPost: true
   
-}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">126</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">7</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#前言"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">前言</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#新增特性"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">新增特性</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#禁止直接修改PC"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">禁止直接修改PC</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#异常级别"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">异常级别</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#安全模型"><span class="toc_mobile_items-number">2.3.</span> <span class="toc_mobile_items-text">安全模型</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行状态"><span class="toc_mobile_items-number">2.4.</span> <span class="toc_mobile_items-text">执行状态</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#寄存器组织-AArch64"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">寄存器组织(AArch64)</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#通用寄存器"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">通用寄存器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#特殊寄存器"><span class="toc_mobile_items-number">3.2.</span> <span class="toc_mobile_items-text">特殊寄存器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#系统寄存器"><span class="toc_mobile_items-number">3.3.</span> <span class="toc_mobile_items-text">系统寄存器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#系统控制寄存器"><span class="toc_mobile_items-number">3.4.</span> <span class="toc_mobile_items-text">系统控制寄存器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#NEON与浮点寄存器"><span class="toc_mobile_items-number">3.5.</span> <span class="toc_mobile_items-text">NEON与浮点寄存器</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#对Arm-v7架构的兼容"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">对Arm-v7架构的兼容</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考资料"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">参考资料</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#新增特性"><span class="toc-number">2.</span> <span class="toc-text">新增特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#禁止直接修改PC"><span class="toc-number">2.1.</span> <span class="toc-text">禁止直接修改PC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#异常级别"><span class="toc-number">2.2.</span> <span class="toc-text">异常级别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全模型"><span class="toc-number">2.3.</span> <span class="toc-text">安全模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行状态"><span class="toc-number">2.4.</span> <span class="toc-text">执行状态</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#寄存器组织-AArch64"><span class="toc-number">3.</span> <span class="toc-text">寄存器组织(AArch64)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#通用寄存器"><span class="toc-number">3.1.</span> <span class="toc-text">通用寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#特殊寄存器"><span class="toc-number">3.2.</span> <span class="toc-text">特殊寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统寄存器"><span class="toc-number">3.3.</span> <span class="toc-text">系统寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统控制寄存器"><span class="toc-number">3.4.</span> <span class="toc-text">系统控制寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NEON与浮点寄存器"><span class="toc-number">3.5.</span> <span class="toc-text">NEON与浮点寄存器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对Arm-v7架构的兼容"><span class="toc-number">4.</span> <span class="toc-text">对Arm-v7架构的兼容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">Arm-v8架构简介</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2021-06-03<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2021-06-07</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Arm-v8架构是在2011年10月宣布的，至今也有10年了，但网上大部分关于Arm处理器的内容主要是基于早期经典的Arm-v6架构下的，甚至Arm-v7架构下的资料都很少，关于这两个架构的部分已经在<a href="https://cataloc.gitee.io/blog/2021/05/28/%E4%BC%A0%E7%BB%9FARM%E6%9E%B6%E6%9E%84%E5%AF%84%E5%AD%98%E5%99%A8%E4%B8%8E%E6%8C%87%E4%BB%A4%E9%9B%86/">前一篇</a>进行了整理，也是对网上关于Arm寄存器最常见的一些说法进行了总结和筛选。本篇，目标移至目前主流的Arm-v8架构进行简要介绍（由于内容太多了，指令的部分被阉割了），主要内容均参考这本2015年发布的<a href="https://winddoing.github.io/downloads/arm/DEN0024A_v8_architecture_PG.pdf" target="_blank" rel="noopener">Arm白皮书手册</a>。</p>
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/blog/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/blog/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length_num">126</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/blog/tags/"><div class="headline">Tags</div><div class="length_num">7</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/blog/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/blog/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#前言"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">前言</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#新增特性"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">新增特性</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#禁止直接修改PC"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">禁止直接修改PC</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#异常级别"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">异常级别</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#安全模型"><span class="toc_mobile_items-number">2.3.</span> <span class="toc_mobile_items-text">安全模型</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行状态"><span class="toc_mobile_items-number">2.4.</span> <span class="toc_mobile_items-text">执行状态</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#寄存器组织-AArch64"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">寄存器组织(AArch64)</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#通用寄存器"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">通用寄存器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#特殊寄存器"><span class="toc_mobile_items-number">3.2.</span> <span class="toc_mobile_items-text">特殊寄存器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#系统寄存器"><span class="toc_mobile_items-number">3.3.</span> <span class="toc_mobile_items-text">系统寄存器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#系统控制寄存器"><span class="toc_mobile_items-number">3.4.</span> <span class="toc_mobile_items-text">系统控制寄存器</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#NEON与浮点寄存器"><span class="toc_mobile_items-number">3.5.</span> <span class="toc_mobile_items-text">NEON与浮点寄存器</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#对Arm-v7架构的兼容"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">对Arm-v7架构的兼容</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#寄存器组织的映射"><span class="toc_mobile_items-number">4.1.</span> <span class="toc_mobile_items-text">寄存器组织的映射</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#AArch32状态下的PSTATE"><span class="toc_mobile_items-number">4.2.</span> <span class="toc_mobile_items-text">AArch32状态下的PSTATE</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#异常级别的切换"><span class="toc_mobile_items-number">4.3.</span> <span class="toc_mobile_items-text">异常级别的切换</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行状态的切换"><span class="toc_mobile_items-number">4.4.</span> <span class="toc_mobile_items-text">执行状态的切换</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考资料"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">参考资料</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#新增特性"><span class="toc-number">2.</span> <span class="toc-text">新增特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#禁止直接修改PC"><span class="toc-number">2.1.</span> <span class="toc-text">禁止直接修改PC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#异常级别"><span class="toc-number">2.2.</span> <span class="toc-text">异常级别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全模型"><span class="toc-number">2.3.</span> <span class="toc-text">安全模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行状态"><span class="toc-number">2.4.</span> <span class="toc-text">执行状态</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#寄存器组织-AArch64"><span class="toc-number">3.</span> <span class="toc-text">寄存器组织(AArch64)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#通用寄存器"><span class="toc-number">3.1.</span> <span class="toc-text">通用寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#特殊寄存器"><span class="toc-number">3.2.</span> <span class="toc-text">特殊寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统寄存器"><span class="toc-number">3.3.</span> <span class="toc-text">系统寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统控制寄存器"><span class="toc-number">3.4.</span> <span class="toc-text">系统控制寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NEON与浮点寄存器"><span class="toc-number">3.5.</span> <span class="toc-text">NEON与浮点寄存器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对Arm-v7架构的兼容"><span class="toc-number">4.</span> <span class="toc-text">对Arm-v7架构的兼容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#寄存器组织的映射"><span class="toc-number">4.1.</span> <span class="toc-text">寄存器组织的映射</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AArch32状态下的PSTATE"><span class="toc-number">4.2.</span> <span class="toc-text">AArch32状态下的PSTATE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#异常级别的切换"><span class="toc-number">4.3.</span> <span class="toc-text">异常级别的切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行状态的切换"><span class="toc-number">4.4.</span> <span class="toc-text">执行状态的切换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">Arm-v8架构简介</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2021-06-03<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2021-06-08</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Arm-v8架构是在2011年10月宣布的，至今也有10年了，但网上大部分关于Arm处理器的内容主要是基于早期经典的Arm-v6架构下的，甚至Arm-v7架构下的资料都很少，关于这两个架构的部分已经在<a href="https://cataloc.gitee.io/blog/2021/05/28/%E4%BC%A0%E7%BB%9FARM%E6%9E%B6%E6%9E%84%E5%AF%84%E5%AD%98%E5%99%A8%E4%B8%8E%E6%8C%87%E4%BB%A4%E9%9B%86/">前一篇</a>进行了整理，也是对网上关于Arm寄存器最常见的一些说法进行了总结和筛选。本篇，目标移至目前主流的Arm-v8架构进行简要介绍（由于内容太多了，指令的部分被阉割了），主要内容均参考这本2015年发布的<a href="https://winddoing.github.io/downloads/arm/DEN0024A_v8_architecture_PG.pdf" target="_blank" rel="noopener">Arm白皮书手册</a>。</p>
 <h2 id="新增特性"><a href="#新增特性" class="headerlink" title="新增特性"></a>新增特性</h2><h3 id="禁止直接修改PC"><a href="#禁止直接修改PC" class="headerlink" title="禁止直接修改PC"></a>禁止直接修改PC</h3><p>在x86架构中，直接修改EIP（<strong>E</strong>xtended <strong>I</strong>nstruction <strong>P</strong>ointer，该寄存器指向<strong>即将执行</strong>的指令，类似Arm处理器中的PC）的值是不被允许的，只能通过间接的方式来实现地址的跳转，例如<code>call, jmp, jcc</code>。但在Arm架构的处理器下，汇编代码是可以直接修改PC（R15）寄存器的值的，这确实给了程序设计者更大的自由，对于艺高胆大的人来说，甚至可以玩出多种花样来。</p>
 <p>然而，这种自由的代价就是增加了编译器的复杂度，也阻碍了更深的指令流水线的设计，最终<strong>在Arm-v8架构中，直接访问PC的方式也同x86一样，被禁止了</strong>。</p>
 <h3 id="异常级别"><a href="#异常级别" class="headerlink" title="异常级别"></a>异常级别</h3><p>在Arm-v8架构下，新增了<strong>异常级别（Exception Level）EL0~EL4，用来整合早期架构中的运行模式</strong>（Arm-v7架构中的9种运行模式，除了Usr模式以外均为特权模式）<strong>与特权级别PLn</strong>（Privilege Level，与特权模式对应，只有Usr模式属于非特权级别，其余模式均为特权级别，大多数情况下，软件都运行在用户模式）。有点类似x86架构上的Ring0-Ring3，不同的是x86架构上，Ring3权限最小，Ring0权限最大，并且Ring1-Ring2通常不被使用。Arm-v8架构的异常级别则是，EL4权限最大，EL0权限最小。</p>
@@ -117,19 +117,19 @@ function activateLightMode(){
 <li><p><strong>参数寄存器（X0~X7）:</strong></p>
 <p>通常用来传递函数的参数或是保存函数返回值，最多可以用来暂存函数的前8个参数。</p>
 </li>
-<li><p><strong>调用者保存临时寄存器（X9~X15）:</strong></p>
-<p>原文是Caller-saved temporary registers，我的理解是，当调用者试图调用子程序时，如果子程序会对这几个寄存器中的值进行修改，就需要在调用之前，将这几个寄存器的值暂存到堆栈中。有点类似于<strong>保存现场过程中被保存的那部分寄存器</strong>。</p>
+<li><p><strong>易失性寄存器（X9~X15）:</strong></p>
+<p>Caller-saved temporary registers，顾名思义，<strong>调用者需要保存的临时寄存器</strong>，也叫做易失性寄存器。当调用者试图调用子程序时，如果想继续使用这几个寄存器中的值，就需要在调用前，将这几个寄存器的值暂存到堆栈中。如果子程序中修改了这几个寄存器的值，在返回前，是不会恢复这几个寄存器中的值的。</p>
 </li>
-<li><p><strong>被调用者保存寄存器（X19~X28）:</strong></p>
-<p>Callee-saved registers，顾名思义，就是<strong>被调用的子程序所需要保存的寄存器</strong>。本质上，也是保存现场时需要被保存的寄存器。但是又与前面的X9-X15不一样，X9-X15是在调用子程序前就得保存一份，而X19-X29是在进入子程序后，执行主要逻辑前，保存一份，然后在子程序执行完之前，先恢复这些寄存器，然后再返回。<strong>X19-X29更贴近我们通常理解的保存现场时保存的那部分寄存器</strong>。</p>
+<li><p><strong>非易失性寄存器（X19~X28）:</strong></p>
+<p>Callee-saved registers，同理，<strong>被调用的子程序需要保存的寄存器</strong>，也叫做非易失性寄存器。在进入子程序时，子程序需要先将这些寄存器保存到堆栈中，然后再执行主体程序。在返回上层函数之前，也需要将这些寄存器恢复后再返回。因此调用者，可以不必保存这些寄存器。</p>
 </li>
 <li><p><strong>特殊用途寄存器（X8, X16~X18, X29, X30）:</strong></p>
 <ul>
-<li>X8：间接结果寄存器。用来保存间接结果的地址，例如返回值是一个结构体时，保存结构体的地址，通常不使用。</li>
-<li>X16~X17：程序内调用临时寄存器（Intra-Procedure-Call Temporary Registers），IP0与IP1，在子程序调用前，用于存储中间值的临时寄存器。</li>
-<li>X18：平台（Platform）寄存器，用于保存当前所用的平台的ABI。</li>
-<li>X29：帧指针寄存器（FP）</li>
-<li>X30：链接寄存器（LR）</li>
+<li>X8：间接结果寄存器。用来保存间接结果的地址，例如返回值是一个结构体时，保存结构体的地址。</li>
+<li>子程序内部调用寄存器（<strong>I</strong>ntra-<strong>P</strong>rocedure-Call Temporary Registers），IP0与IP1，这俩寄存器可被Veneers（实现Arm/Thumb状态切换，由链接器插入的一小段代码）或类似的代码所用。或是用于在子程序调用前，作为存储中间值的临时寄存器。使用时不需要保存，但尽量不要用。</li>
+<li>x18：平台寄存器（<strong>P</strong>latform <strong>R</strong>egister），用于保存当前所用的平台的ABI，尽量不要使用。</li>
+<li>x29：帧指针寄存器（FP），用于连接栈帧，使用时必须保存。</li>
+<li>x30：链接寄存器（LR），用于保存子程序的返回地址。</li>
 </ul>
 </li>
 </ul>
@@ -169,8 +169,8 @@ function activateLightMode(){
 <li>Z：零标志位（<strong>Z</strong>ero result）</li>
 <li>C：进位标志位（<strong>C</strong>arry out）</li>
 <li>V：溢出标志位（o<strong>V</strong>erflow）</li>
-<li>SS：软件单步（<strong>S</strong>oftware <strong>S</strong>tep），表示异常发生时是否开启软件单步，我的理解是类似EFlags的单步异常那个位。</li>
-<li>IL：非法执行状态位（<strong>I</strong>l<strong>L</strong>egal Execution State bit），对应PSTATE.IL位。</li>
+<li>SS：软件单步（<strong>S</strong>oftware <strong>S</strong>tep），表示异常发生时是否开启软件单步，我的理解是类似EFlags的TF（<strong>T</strong>rap <strong>F</strong>lag）位。</li>
+<li>IL：非法（代码）执行状态位（<strong>I</strong>l<strong>L</strong>egal Execution State bit），异常一发生，PSTATE的IL位就会被设置。</li>
 <li>D：进程状态调试位（Process state <strong>D</strong>ebug mask）。表示是否从检测点（断点处）开始调试异常，软件单步调试事件会根据异常发生时，所在异常级别的SPSR_ELn的D位，决定是否进行调试。</li>
 <li>A：系统错误标志位（System Error）</li>
 <li>I：IRQ标志位。</li>
@@ -196,91 +196,89 @@ function activateLightMode(){
 <p>访问系统寄存器代码形式如下：</p>
 <div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MRS x0, TTBR0_EL1		// Move TTBR0_EL1 into x0</span><br><span class="line">MSR TTBR0_EL1, x0		// Move x0 into TTBR0_EL1</span><br></pre></td></tr></tbody></table></figure></div>
 
-<p>以下为几个比较重要的系统寄存器，更多关于系统寄存器的，得去查<a href="https://winddoing.github.io/downloads/arm/DEN0024A_v8_architecture_PG.pdf" target="_blank" rel="noopener">白皮书</a>了。</p>
+<p>以下为几个比较重要的系统寄存器，这里仅对功能作简要介绍，不展开。更详细的内容，可以参考<a href="https://winddoing.github.io/downloads/arm/DEN0024A_v8_architecture_PG.pdf" target="_blank" rel="noopener">白皮书</a>，或者后期对Arm架构进一步深入时会介绍到。</p>
 <table>
 <thead>
 <tr>
-<th>写法</th>
 <th>寄存器</th>
-<th>描述</th>
+<th>说明</th>
+<th>作用</th>
 <th>n的可选值</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>ACTLR_Eln</td>
-<td>辅助控制寄存器</td>
-<td></td>
-<td></td>
+<td>CTR_EL<em>n</em></td>
+<td>缓存类型寄存器（Cache Type Register）</td>
+<td>有关集成缓存体系结构的信息</td>
+<td>0</td>
 </tr>
 <tr>
-<td>CTR_ELn</td>
-<td></td>
-<td></td>
-<td></td>
+<td>ELR_EL<em>n</em></td>
+<td>异常链接寄存器（Exception Link Register）</td>
+<td>存储导致异常发生的指令的地址</td>
+<td>1, 2, 3</td>
 </tr>
 <tr>
-<td>ELR_ELn</td>
-<td></td>
-<td></td>
-<td></td>
+<td>ESR_EL<em>n</em></td>
+<td>异常综合表征寄存器（Exception Syndrome Register）</td>
+<td>包含导致异常发生的原因等信息</td>
+<td>1, 2, 3</td>
 </tr>
 <tr>
-<td>ESR_ELn</td>
-<td></td>
-<td></td>
-<td></td>
+<td>HCR_EL<em>n</em></td>
+<td>Hypervisor配置寄存器（Hypervisor Configuration Register）</td>
+<td>控制虚拟化功能的配置以及EL2的异常捕获。捕获异常时，会将异常(IRQ/FIQ/SError)路由到hypervisor中处理。</td>
+<td>2</td>
 </tr>
 <tr>
-<td>HCR_ELn</td>
-<td></td>
-<td></td>
-<td></td>
+<td>SCR_EL<em>n</em></td>
+<td>安全配置寄存器（Secure Configuration Register）</td>
+<td>控制安全状态以及EL3的异常捕获</td>
+<td>3</td>
 </tr>
 <tr>
-<td>SCR_ELn</td>
-<td></td>
-<td></td>
-<td></td>
+<td>SCTLR_EL<em>n</em></td>
+<td>系统控制寄存器（System Control Register）</td>
+<td>控制体系结构的特征，例如MMU，缓存以及对齐检测</td>
+<td>0, 1, 2, 3</td>
 </tr>
 <tr>
-<td>SCTLR_ELn</td>
-<td></td>
-<td></td>
-<td></td>
+<td>SPSR_EL<em>n</em></td>
+<td>进程状态保存寄存器（Saved Program Status Register）</td>
+<td>当异常发生，切换运行模式或者异常等级时，保存处理器状态</td>
+<td>abt, fiq, irq, und, 1, 2, 3</td>
 </tr>
 <tr>
-<td>SPSR_ELn</td>
-<td></td>
-<td></td>
-<td></td>
+<td>TPIDR_EL<em>n</em></td>
+<td>用户读写线程ID寄存器（User Read/Write Thread ID Register）</td>
+<td>为执行在某个异常级别的软件，提供一个存储其线程身份信息的地方，以方便操作系统管理</td>
+<td>0, 1, 2, 3</td>
 </tr>
 <tr>
-<td>TPIDR_ELn</td>
-<td></td>
-<td></td>
-<td></td>
+<td>TTBR0_EL<em>n</em></td>
+<td>Hypervisor转换表基址寄存器0（Translation Table Base Register 0）</td>
+<td>保存着转换表0的基址，以及被占用的内存信息。在AArch64中，TTBR0有3个，TTBR1只有1个。在双系统切换时（Linux/Tee），需要在ATF中保存/恢复这些寄存器。</td>
+<td>1, 2, 3</td>
 </tr>
 <tr>
-<td>TTBR0_ELn</td>
-<td></td>
-<td></td>
-<td></td>
+<td>TTBR1_EL<em>n</em></td>
+<td>Hypervisor转换表基址寄存器1（Translation Table Base Register 1)</td>
+<td>保存着转换表1的基址，以及被占用的内存信息</td>
+<td>1</td>
 </tr>
 <tr>
-<td>TTBR1_ELn</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>VBAR_ELn</td>
-<td></td>
-<td></td>
-<td></td>
+<td>VBAR_EL<em>n</em></td>
+<td>向量基址寄存器（Vector Based Address Register）</td>
+<td>保存任意异常进入EL<em>n</em>时的跳转向量基地址</td>
+<td>1, 2, 3</td>
 </tr>
 </tbody></table>
 <h3 id="系统控制寄存器"><a href="#系统控制寄存器" class="headerlink" title="系统控制寄存器"></a>系统控制寄存器</h3><p>系统控制寄存器（<strong>S</strong>ystem <strong>C</strong>on<strong>T</strong>ro<strong>L</strong> <strong>R</strong>egister ），<strong>用来控制标准内存，系统设施，并为核心功能函数的实现提供状态信息。</strong>系统控制寄存器属于系统寄存器，同样用<code>MSR</code>与<code>MRS</code>指令进行操作。这里不展开介绍了，就先贴个图吧，等以后遇到了再展开讲讲。</p>
 <a href="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/SCTLR.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/SCTLR.png"></a>
+
+<a href="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/SCTLR_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/SCTLR_2.png"></a>
+
+<a href="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/SCTLR_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/SCTLR_3.png"></a>
 
 
 
@@ -293,36 +291,70 @@ function activateLightMode(){
 
 
 
-<h2 id="对Arm-v7架构的兼容"><a href="#对Arm-v7架构的兼容" class="headerlink" title="对Arm-v7架构的兼容"></a>对Arm-v7架构的兼容</h2><p>先上图，看的明白：</p>
+<h2 id="对Arm-v7架构的兼容"><a href="#对Arm-v7架构的兼容" class="headerlink" title="对Arm-v7架构的兼容"></a>对Arm-v7架构的兼容</h2><h3 id="寄存器组织的映射"><a href="#寄存器组织的映射" class="headerlink" title="寄存器组织的映射"></a>寄存器组织的映射</h3><p>先上图，看的明白：</p>
 <a href="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/AArch32_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/AArch32_1.png"></a>
 
 <p>左图很熟悉了，就是Arm-v7架构下的寄存器组织。再看右图，右图则是Arm-v8架构下，将AArch32状态对应的寄存器组织（也就是Arm-v7架构的寄存器组织）映射到Arm-v8架构下的31个通用寄存器上的情况。所以现在很多说法是，Arm处理器拥有31个通用寄存器和6个状态寄存器，这种说法其实是有误区的。<strong>在Arm-v7架构下，仅有16个通用寄存器；而在Arm-v8架构下，有31个通用寄存器，并且在AArch32执行状态下，原先Arm-v7架构所对应的各个寄存器的位置（除状态寄存器外）全部映射到了这31个寄存器上</strong>。因此才会被说成，有31个通用寄存器和6个状态寄存器，这也是至今仍有37个寄存器说法的原因之一。</p>
-<p>继续看，除了通用寄存器外，这里面也有一些其它的映射关系：</p>
+<p>AArch32运行状态下的SPSR与ELR_hyp寄存器作为额外的可以访问并使用系统指令的寄存器，它们并不会映射到AArch64状态下的通用寄存器上。这里面有着一些其它的映射关系，具体如下：</p>
 <ul>
 <li>SPSR_svc映射到SPSR_EL1</li>
 <li>SPSR_hyp映射到SPSR_EL2</li>
 <li>ELR_hyp映射到ELR_EL2</li>
 </ul>
-<p>还有一些寄存器，没有映射到AArch64的寄存器上，这些寄存器仅能在AArch32状态下使用，在AArch64状态下则无法访问（好像也能？如果通过上下文切换到更高的异常级别？这里没看明白……）：</p>
+<p>还有一些寄存器，它们只在AArch32状态下才使用，但是会保留寄存器的状态，即便在AArch64执行状态下无法访问它们：</p>
 <ul>
 <li>SPSR_abt</li>
 <li>SPSR_und</li>
 <li>SPSR_irq</li>
 <li>SPSR_fiq</li>
 </ul>
-<p>前面说到，在AArch64下，是没有CPSR寄存器的，取而代之的是名为PSTATE的一组寄存器。但是在AArch32状态下，PSTATE字段值的含义将有所改变，并利用空余的字段，构造成可以兼容Arm-v7的PSTATE。当然，这种拥有额外字段PSTATE只能在AArch32状态下可被访问，具体如下：</p>
+<p>这里白皮书提到一点，如果一个异常导致从AArch32状态的异常级别切换到了AArch64状态的异常级别，那么AArch64状态下，ELR_EL<em>n</em>的高32位会被置零。</p>
+<h3 id="AArch32状态下的PSTATE"><a href="#AArch32状态下的PSTATE" class="headerlink" title="AArch32状态下的PSTATE"></a>AArch32状态下的PSTATE</h3><p>前面说到，在AArch64下，是没有CPSR寄存器的，取而代之的是名为PSTATE的一组寄存器。但是在AArch32状态下，PSTATE字段值的含义将有所改变，并利用空余的字段，构造成可以兼容Arm-v7的PSTATE。当然，这种拥有额外字段PSTATE只能在AArch32状态下可被访问，具体如下：</p>
 <a href="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/AArch32_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/AArch32_2.png"></a>
+
+<p>为了方便比较，下图为AArch64状态下的PSTATE与AArch32状态下PSTATE各字段的对比：</p>
+<a href="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/AArch32_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/AArch32_3.png"></a>
+
+
+
+<h3 id="异常级别的切换"><a href="#异常级别的切换" class="headerlink" title="异常级别的切换"></a>异常级别的切换</h3><p>在Arm-v7架构上，处理器模式可以通过特权级别的软件控制，或者在发生异常时自动切换。当异常发生时，内核会保存当前的执行状态与返回地址，进入到指定的运行模式，并大概率屏蔽掉硬件中断。</p>
+<p>下图是对Arm-v7架构上，运行模式与特权级别的总结。应用程序运行在最低特权等级的PL0上，也就是非特权模式。操作系统运行在PL1上，虚拟机监视器以及虚拟化扩展位于PL2。作为连接Secure World与 Normal World的安全监视器（Secure Monitor）同样运行在PL1。</p>
+<a href="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/change_el.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/change_el.png"></a>
+
+<a href="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/change_el_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/change_el_2.png"></a>
+
+<p>在AArch64执行状态下，处理器模式被映射到了异常级别上（如下图所示）。当AArch32运行状态发生异常时，处理器会切换到支持当前异常处理的异常级别（运行模式）上。</p>
+<a href="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/change_el_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/change_el_3.png"></a>
+
+<p>异常级别的切换必须遵循如下规则：</p>
+<ul>
+<li>当切换到更高等级的异常级别时，例如从EL0到EL1，表明提升了软件执行时的特权。</li>
+<li>不能产生一个低于当前异常级别的异常，例如EL1不能产生一个EL0的异常。</li>
+<li>异常处理不能在EL0进行，处理异常必须在更高的异常级别上。</li>
+<li>异常会导致程序流程的改变，后面省略，参考<a href="https://winddoing.github.io/downloads/arm/DEN0024A_v8_architecture_PG.pdf" target="_blank" rel="noopener">白皮书</a>P34。</li>
+<li>异常处理结束，并返回先前异常级别时，是通过<code>ERET</code>指令实现的。</li>
+<li>从一个异常返回时，可以仍然处于发生异常的异常级别，或者返回到一个更低的异常级别中，但是不能进入到更高的异常级别中。例如从EL1返回，可能仍然位于EL1，或者返回到EL0，但是不能进入到EL2。</li>
+<li>安全状态通常不会随着异常级别的切换而发生改变，除非是EL3直接返回到一个Non-secure状态。（这部分白皮书好像也错了，少了一个not）</li>
+</ul>
+<h3 id="执行状态的切换"><a href="#执行状态的切换" class="headerlink" title="执行状态的切换"></a>执行状态的切换</h3><p>你的操作系统会经常发生执行状态的切换。它可能是这样一种情况，例如，你所运行的是64位操作系统，但你想运行一个32位的应用程序在EL0，这时，你不得不将系统切换成AArch32状态。当程序执行完，再将操作系统切回AArch64执行状态。</p>
+<p>一般来说，只能通过切换异常级别来实现执行状态的切换。当发生一个异常时，或许会导致从AArch32切换到AArch64，当从这个异常返回时，又会从AArch64切换回AArch32。这样就实现了执行状态的切换。更多注意要点，这里不再翻译了，参考<a href="https://winddoing.github.io/downloads/arm/DEN0024A_v8_architecture_PG.pdf" target="_blank" rel="noopener">白皮书</a>P35。</p>
+<a href="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/change_exe_state.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/change_exe_state.png"></a>
 
 
 
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
 <li><a href="https://winddoing.github.io/downloads/arm/DEN0024A_v8_architecture_PG.pdf" target="_blank" rel="noopener">《Arm Cortex-A Series Programmer’s Guide for ARMv8-A》2015</a></li>
 <li><a href="http://superedu.hqyj.com/xuexi/bowen/328.html" target="_blank" rel="noopener">Armv8架构寄存器组织</a></li>
+<li><a href="https://www.pianshen.com/article/18261056235/" target="_blank" rel="noopener">AArch64异常(一)：AArch64异常简介</a></li>
+<li><a href="http://www.360doc.com/content/20/0528/15/36367108_915141859.shtml" target="_blank" rel="noopener">Arm体系结构知识：汇编、架构、异常级别和安全状态</a></li>
 <li><a href="https://winddoing.github.io/post/7190.html" target="_blank" rel="noopener">Winddong-Armv8-AArch64 寄存器和指令集</a></li>
+<li><a href="https://segmentfault.com/a/1190000022797518?utm_source=tag-newest" target="_blank" rel="noopener">思否-Armv8架构虚拟化介绍</a></li>
 <li><a href="https://zhuanlan.zhihu.com/p/85081006" target="_blank" rel="noopener">知乎-Armv8带来的变化</a></li>
 <li><a href="https://blog.csdn.net/Jesse_Yeh/article/details/48159237" target="_blank" rel="noopener">CSDN-Armv8-a架构简介</a></li>
 <li><a href="https://blog.csdn.net/l471094842/article/details/104059613" target="_blank" rel="noopener">CSDN-Armv8体系架构简介: AArch64系统级体系结构之编程模型</a></li>
 <li><a href="https://blog.csdn.net/feelabclihu/article/details/105872886" target="_blank" rel="noopener">CSDN-Armv8异常处理简介</a></li>
 <li><a href="https://blog.csdn.net/forever_2015/article/details/50285865" target="_blank" rel="noopener">CSDN-Armv8架构与指令集.学习笔记</a></li>
+<li><a href="https://blog.csdn.net/u013286033/article/details/106363282/" target="_blank" rel="noopener">CSDN-Arm通用寄存器传递参数介绍</a></li>
+<li><a href="https://blog.csdn.net/gaojy19881225/article/details/88889180" target="_blank" rel="noopener">CSDN-Armv8对CPU虚拟化的支持及L4_fiasco中实现</a></li>
 </ol>
-</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/">http://cataloc.gitee.io/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/blog/2021/05/28/%E4%BC%A0%E7%BB%9FARM%E6%9E%B6%E6%9E%84%E5%AF%84%E5%AD%98%E5%99%A8%E4%B8%8E%E6%8C%87%E4%BB%A4%E9%9B%86/"><img class="next_cover lazyload" data-src="https://gitee.com/cataloc/blog/raw/master/2021/05/28/%E4%BC%A0%E7%BB%9FARM%E6%9E%B6%E6%9E%84%E5%AF%84%E5%AD%98%E5%99%A8%E4%B8%8E%E6%8C%87%E4%BB%A4%E9%9B%86/cover0x48.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>传统ARM架构寄存器与指令集</span></div></a></div></nav></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2021 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cataloc.gitee.io/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/">http://cataloc.gitee.io/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/Android%E9%80%86%E5%90%91/">Android逆向    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/blog/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/blog/2021/05/28/%E4%BC%A0%E7%BB%9FARM%E6%9E%B6%E6%9E%84%E5%AF%84%E5%AD%98%E5%99%A8%E4%B8%8E%E6%8C%87%E4%BB%A4%E9%9B%86/"><img class="next_cover lazyload" data-src="https://gitee.com/cataloc/blog/raw/master/2021/05/28/%E4%BC%A0%E7%BB%9FARM%E6%9E%B6%E6%9E%84%E5%AF%84%E5%AD%98%E5%99%A8%E4%B8%8E%E6%8C%87%E4%BB%A4%E9%9B%86/cover0x48.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>传统ARM架构寄存器与指令集</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/blog/2020/05/03/Android程序分析入门-上/" title="Android程序分析入门（准备工作）"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/05/03/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8A/cover0x01.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-05-03</div><div class="relatedPosts_title">Android程序分析入门（准备工作）</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/05/11/Android程序分析入门-下/" title="Android程序分析入门（破解程序）"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/05/11/Android%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8-%E4%B8%8B/Cover0x05.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-05-11</div><div class="relatedPosts_title">Android程序分析入门（破解程序）</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/06/09/Dalvik虚拟机/" title="Dalvik虚拟机"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/06/09/Dalvik%E8%99%9A%E6%8B%9F%E6%9C%BA/cover0xB.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-09</div><div class="relatedPosts_title">Dalvik虚拟机</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/07/24/Dalvik指令集/" title="Dalvik指令集"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/07/24/Dalvik%E6%8C%87%E4%BB%A4%E9%9B%86/cover0x10.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-07-24</div><div class="relatedPosts_title">Dalvik指令集</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/08/06/adb与Root/" title="adb&Root"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/08/06/adb%E4%B8%8ERoot/cover0x11.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-08-06</div><div class="relatedPosts_title">adb&Root</div></div></a></div><div class="relatedPosts_item"><a href="/blog/2020/08/09/常见Android文件格式1/" title="Android文件格式：库文件"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/cataloc/blog/raw/master/2020/08/09/%E5%B8%B8%E8%A7%81Android%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F1/cover0x14.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-08-09</div><div class="relatedPosts_title">Android文件格式：库文件</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2021 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="/blog/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
