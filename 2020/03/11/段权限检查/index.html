@@ -117,11 +117,8 @@ function activateLightMode(){
 <div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov ax,000B	       //1011   RPL = 3</span><br><span class="line">mov ds,ax	       //ax指向的段描述符的DPL = 0</span><br></pre></td></tr></tbody></table></figure></div>
 
 <p>这个程序是会执行失败的，虽然满足了CPL <= DPL，但是RPL > DPL。</p>
-<p>网上看到一个例子很形象，这里拿过来用</p>
-<a href="/2020/03/11/%E6%AE%B5%E6%9D%83%E9%99%90%E6%A3%80%E6%9F%A5/SBGitee.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/03/11/%E6%AE%B5%E6%9D%83%E9%99%90%E6%A3%80%E6%9F%A5/SBGitee.png"></a>
-
-
-
+<p>网上看到一个例子很形象，这里拿过来用：中国官员分为6级国家主席1、总理2、省长3、市长4、县长5、乡长6，假设我是当前进程，级别总理(CPL=2)，我去某城市(DPL=4)考察，我用省长的级别(RPL=3 这样也能吓死他们:-)) 去访问，可以吧；但是如果我用县长的级别(RPL=5)，人家就不理咱了(你看看电视上的微服私访，呵呵)。</p>
+<p>这个例子很形象，所以说数据段的权限检查，要保证 CPL <= DPL 并且 RPL <= DPL (数值上的比较)</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>CPL  CPU当前的权限级别</li>
 <li>DPL  如果你想访问我，你应该具备什么样的权限</li>
