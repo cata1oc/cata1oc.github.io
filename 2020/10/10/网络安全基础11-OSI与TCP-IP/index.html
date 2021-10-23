@@ -73,28 +73,28 @@ function activateLightMode(){
 <h2 id="分层模型"><a href="#分层模型" class="headerlink" title="分层模型"></a>分层模型</h2><h3 id="分层思想"><a href="#分层思想" class="headerlink" title="分层思想"></a>分层思想</h3><ul>
 <li><strong>将复杂的流程分解为几个功能相对单一的子过程</strong>（参考下图收发信件的过程，体现了分层的思想）</li>
 </ul>
-<a href="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/layer.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/layer.png"></a>
+<a href="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/layer.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/layer.png"></a>
 
 
 
 <h3 id="OSI参考模型"><a href="#OSI参考模型" class="headerlink" title="OSI参考模型"></a>OSI参考模型</h3><p>为了让各种计算机在世界范围互联，OSI（Open System Interconnection）七层模型被提出。</p>
-<a href="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/osi_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/osi_1.png"></a>
+<a href="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/osi_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/osi_1.png"></a>
 
 
 
 <h3 id="TCP-IP模型"><a href="#TCP-IP模型" class="headerlink" title="TCP/IP模型"></a>TCP/IP模型</h3><p>OSI模型没有最终被采用，专家们在往每一层里添加协议时，发现表示层与会话层有些多余，于是就将这两层融合到了应用层中。于是有了TCP/IP模型，又称TCP/IP协议簇。</p>
-<a href="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/tcpip_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/tcpip_1.png"></a>
+<a href="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/tcpip_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/tcpip_1.png"></a>
 
 <p>融合进应用层后，<strong>应用层需要实现表示层与会话层原先的功能</strong>：</p>
 <ul>
 <li>表示层：将数据转码</li>
 <li>会话层：消息排队，维护秩序</li>
 </ul>
-<h3 id="TCP-IP模型-vs-OSI模型"><a href="#TCP-IP模型-vs-OSI模型" class="headerlink" title="TCP/IP模型 vs OSI模型"></a>TCP/IP模型 vs OSI模型</h3><a href="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/tcpipvsosi.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/tcpipvsosi.png"></a>
+<h3 id="TCP-IP模型-vs-OSI模型"><a href="#TCP-IP模型-vs-OSI模型" class="headerlink" title="TCP/IP模型 vs OSI模型"></a>TCP/IP模型 vs OSI模型</h3><a href="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/tcpipvsosi.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/tcpipvsosi.png"></a>
 
 
 
-<h2 id="数据传输过程"><a href="#数据传输过程" class="headerlink" title="数据传输过程"></a>数据传输过程</h2><h3 id="数据封装与解封装过程"><a href="#数据封装与解封装过程" class="headerlink" title="数据封装与解封装过程"></a>数据封装与解封装过程</h3><a href="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/package_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/package_1.png"></a>
+<h2 id="数据传输过程"><a href="#数据传输过程" class="headerlink" title="数据传输过程"></a>数据传输过程</h2><h3 id="数据封装与解封装过程"><a href="#数据封装与解封装过程" class="headerlink" title="数据封装与解封装过程"></a>数据封装与解封装过程</h3><a href="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/package_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/package_1.png"></a>
 
 <ul>
 <li><p>同层使用相同的协议</p>
@@ -110,7 +110,7 @@ function activateLightMode(){
 <li><p>TCP/UDP头：源端口号，目的端口号</p>
 </li>
 </ul>
-<h2 id="TCP-IP协议簇"><a href="#TCP-IP协议簇" class="headerlink" title="TCP/IP协议簇"></a>TCP/IP协议簇</h2><h3 id="协议与层的对应关系"><a href="#协议与层的对应关系" class="headerlink" title="协议与层的对应关系"></a>协议与层的对应关系</h3><a href="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/relationship_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/relationship_1.png"></a>
+<h2 id="TCP-IP协议簇"><a href="#TCP-IP协议簇" class="headerlink" title="TCP/IP协议簇"></a>TCP/IP协议簇</h2><h3 id="协议与层的对应关系"><a href="#协议与层的对应关系" class="headerlink" title="协议与层的对应关系"></a>协议与层的对应关系</h3><a href="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/relationship_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/relationship_1.png"></a>
 
 <ul>
 <li>ICMP功能：<strong>差错通知和信息查询</strong><ul>
@@ -119,11 +119,11 @@ function activateLightMode(){
 </ul>
 </li>
 </ul>
-<h3 id="设备与层的对应关系"><a href="#设备与层的对应关系" class="headerlink" title="设备与层的对应关系"></a>设备与层的对应关系</h3><a href="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/relationship_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/relationship_2.png"></a>
+<h3 id="设备与层的对应关系"><a href="#设备与层的对应关系" class="headerlink" title="设备与层的对应关系"></a>设备与层的对应关系</h3><a href="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/relationship_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/relationship_2.png"></a>
 
 
 
-<h3 id="各层间通信"><a href="#各层间通信" class="headerlink" title="各层间通信"></a>各层间通信</h3><a href="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/relationship_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/relationship_3.png"></a>
+<h3 id="各层间通信"><a href="#各层间通信" class="headerlink" title="各层间通信"></a>各层间通信</h3><a href="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/relationship_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/relationship_3.png"></a>
 
 
 
@@ -155,7 +155,7 @@ function activateLightMode(){
 </ul>
 </li>
 <li><p><strong>型号及用图</strong></p>
-<a href="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/twistedpair.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/twistedpair.png"></a>
+<a href="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/twistedpair.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/twistedpair.png"></a>
 
 
 
@@ -187,7 +187,7 @@ function activateLightMode(){
 </ul>
 <h2 id="Cisco-Packet-Tracer"><a href="#Cisco-Packet-Tracer" class="headerlink" title="Cisco Packet Tracer"></a>Cisco Packet Tracer</h2><p>一个功能非常强大的网络模拟工具，可以提供真实操作经验。通过它可以练习使用路由器、交换机和其它各种设备构建简单或复杂的网络。下面对部分功能及设置作简要介绍：</p>
 <h3 id="偏好设置"><a href="#偏好设置" class="headerlink" title="偏好设置"></a>偏好设置</h3><p>在偏好设置中，对模拟设备进行自定义设置，通常来说，会关闭模拟设备的名称显示，并打开端口显示，便于操作。</p>
-<a href="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/cpt_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/cpt_1.png"></a>
+<a href="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/cpt_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/cpt_1.png"></a>
 
 <p>这里说明Fa0/3的含义：</p>
 <ul>
@@ -196,7 +196,7 @@ function activateLightMode(){
 <li>0/3：表示该交换机第一个模块的第三个接口</li>
 </ul>
 <h3 id="部署局域网"><a href="#部署局域网" class="headerlink" title="部署局域网"></a>部署局域网</h3><p>可以对所有模拟设备进行配置。例如给设备配置IP，给服务器配置DSN/DHCP的服务。实现局域网中的功能等等。</p>
-<a href="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/cpt_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/cpt_2.png"></a>
+<a href="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/cpt_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/10/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8011-OSI%E4%B8%8ETCP-IP/cpt_2.png"></a>
 
 
 

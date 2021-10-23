@@ -81,12 +81,12 @@ function activateLightMode(){
 </ol>
 <p>以上为渗透的一个常见流程，下面会介绍一些入门级的手法，好对渗透有个形象的理解。</p>
 <h2 id="telnet命令"><a href="#telnet命令" class="headerlink" title="telnet命令"></a>telnet命令</h2><p>在Windows的命令行中执行<code>telnet IP地址 测试端口</code>，可以测试目标主机开放了哪些端口号。端口未打开时会显示连接失败，端口打开时会进入黑屏或者要求输入账号密码。</p>
-<a href="/blog/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/scan_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/scan_1.png"></a>
+<a href="/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/scan_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/scan_1.png"></a>
 
 
 
 <h2 id="扫描工具"><a href="#扫描工具" class="headerlink" title="扫描工具"></a>扫描工具</h2><p>通过telnet命令一条条试比较浪费时间，因此可以依靠扫描工具，针对指定IP范围进行端口扫描，下图为scanport扫描的结果。</p>
-<a href="/blog/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/scan_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/scan_2.png"></a>
+<a href="/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/scan_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/scan_2.png"></a>
 
 <p>后面的文章会介绍到nmap，它是一款非常强大的扫描器，甚至可以针对不同版本的系统扫描出未修复的漏洞。</p>
 <h2 id="445端口"><a href="#445端口" class="headerlink" title="445端口"></a>445端口</h2><p>根据先前的学习，了解到445端口提供共享服务。但这个端口也会引发较大的安全问题，下面来看一个简短的利用过程。执行如下指令：</p>
@@ -99,7 +99,7 @@ function activateLightMode(){
 <li>administrator：靶机管理员账号。</li>
 </ul>
 <p>这个指令有什么用呢。执行完后，会与靶机建立连接，此时可以<strong>直接操纵靶机的磁盘和文件</strong>，例如执行指令<code>dir \\10.1.1.1\c$</code>，就可以列出靶机C盘下的所有文件（注意这里要用隐藏共享格式）。</p>
-<a href="/blog/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/445.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/445.png"></a>
+<a href="/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/445.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/10/08/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8009-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%85%A5%E9%97%A8/445.png"></a>
 
 <p>接下来，就可以利用工具制作木马（例如灰鸽子，没找到能用的，就不演示了），并将其植入，例如执行<code>copy c:\trojan.exe "\\10.1.1.1\c$\Program Files"</code>将木马复制到靶机的Program Files目录下。然后可以先通过指令<code>net time \\10.1.1.1</code>获取靶机系统的当前时间，再通过指令<code>at \\10.1.1.1 15:30 "c:\Program Files\trojan.exe"</code>给靶机安排一个定时任务，从而执行被植入的木马。木马执行后，获得对靶机的最高权限，就可以在灰鸽子客户端对靶机进行任意操纵。</p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>

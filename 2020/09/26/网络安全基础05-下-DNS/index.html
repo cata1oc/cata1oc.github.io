@@ -81,31 +81,31 @@ function activateLightMode(){
 <h2 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h2><p><strong>TCP53,  UDP53</strong></p>
 <h2 id="DNS解析"><a href="#DNS解析" class="headerlink" title="DNS解析"></a>DNS解析</h2><h3 id="DNS转发器"><a href="#DNS转发器" class="headerlink" title="DNS转发器"></a>DNS转发器</h3><p>通常，每个网段中都会有一个本地DNS服务器，大部分公司也会自己配置一个DNS服务器，它们通常会内置一个DNS转发器，在收到DNS解析请求后，它们会先查看自己能否处理，<strong>若不能处理，则通过转发器转发给运营商的DNS服务器去处理</strong>。在收到运营商DNS服务器解析的结果后，会返回给用户，并将该结果缓存在本地DNS服务器中。</p>
 <h3 id="正向-反向解析"><a href="#正向-反向解析" class="headerlink" title="正向/反向解析"></a>正向/反向解析</h3><p><strong>正向解析</strong>，是将域名解析成IP地址，进而访问对应网站。通常采用的是递归查询，图示如下：</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse.png"></a>
 
 <p>例如，在命令行中可以通过指令<code>nslookup 域名</code>的形式，像DNS服务器发送请求解析域名，例如解析百度的域名：</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse_2.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse_2.png"></a>
 
 <p><strong>反向解析</strong>，顾名思义，即通过IP去查询域名的过程。</p>
 <h2 id="DNS实验"><a href="#DNS实验" class="headerlink" title="DNS实验"></a>DNS实验</h2><p><strong>实验准备</strong>：2台Windows2003虚拟机（服务器），1台WindowsXP虚拟机（客户机）。</p>
 <h3 id="安装DNS服务"><a href="#安装DNS服务" class="headerlink" title="安装DNS服务"></a>安装DNS服务</h3><ol>
 <li><p>与安装DHCP服务相同，开始->控制面板->添加或删除程序，进入后选择添加/删除Windows组件，在网络服务中，找到域名系统（DNS），将其勾上并确定，即完成DNS服务的安装。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_1.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_1.png"></a>
 </li>
 <li><p>在安装服务之前，先做一个观察，进入命令行，查看当前已打开的端口：</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_2.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_2.png"></a>
 </li>
 <li><p>安装的时候，会发现，这个DNS服务本地没有，需要从Service Pack 2 CD-ROM上面拷贝，那这个Service Pack 2 CD-ROM是什么呢？其实<strong>就是安装Windows2003系统时所用的镜像文件</strong>，只不过在安装时，一些必要的服务都没有安装上去，因此需要通过镜先文件重新安装，对于早年的操作系统，通常都是如此。具体操作为：右键当前虚拟机->设置->CD/DVD（IDE）->连接->使用ISO映像文件，并选择当前操作系统对应的镜像文件。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_3.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_3.png"></a>
 </li>
 <li><p>这里需要注意，<strong>一定要把设备状态里的选项给勾上，否则镜像将无法成功插入系统</strong>，并会出现 “在系统启动时至少有一个服务或驱动程序产生错误” 这样的错误提示。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_4.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_4.png"></a>
 </li>
 <li><p>若按照上述步骤，就可以看到可移动存储设备变成如下所示</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_5.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_5.png"></a>
 </li>
 <li><p>点击它，选择安装可选的Windows组件，按照第一步，找到DNS并安装。安装后，再次查看已打开的端口。会发现53端口已经打开。即已开启DNS服务。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_6.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/config_6.png"></a>
 
 
 
@@ -114,16 +114,16 @@ function activateLightMode(){
 <h3 id="正向解析"><a href="#正向解析" class="headerlink" title="正向解析"></a>正向解析</h3><p>正向解析，也就是域名解析成IP。接下来，通过配置Windows 2003系统上的一台服务器，演示DNS服务器如何实现正向解析的功能：</p>
 <ol>
 <li><p><strong>打开DNS服务->主机->正向查找区域，右键新建区域，选择主要区域</strong>，主要区域相当于公司的主服务器，通常而言公司会有两台DNS服务器，另一个<strong>作为备份使用，创建时会选择辅助区域</strong>。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_1.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_1.png"></a>
 </li>
 <li><p>接下来填写<strong>区域名称</strong>，这里填的其实就是域名。这里选择填写baidu.com。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_2.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_2.png"></a>
 
 <p>这么做的话，就相当于<strong>声明了该服务器就是baidu.com这个域名的权威DNS服务器</strong>。权威服务器意味着，解析出的结果一定真实可靠。例如先前真实机中试图解析域名时，访问的是非权威服务器。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse_2.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/parse_2.png"></a>
 </li>
 <li><p>下一步会创建一个新文件，名为baidu.com.dns，这里不作修改。再接下来<strong>选择不允许动态更新</strong>（其它选项在域时才会用到）。接着创建完成后，会生成两个文件：</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_3.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_3.png"></a>
 
 <ul>
 <li>第一个是SOA类型文件，它用来说明该域名（baidu.com）的权威服务器是谁，这里显示的是当前这台主机的主机名。</li>
@@ -131,16 +131,16 @@ function activateLightMode(){
 </ul>
 </li>
 <li><p>用于正向解析时，这里选择<strong>右键新建主机</strong>记录，主机记录又称<strong>A记录</strong>。名称一栏填写主机名即可，此处填写www，FQDN一栏则会生成相应的完整域名。然后填写域名对应的IP地址，这里将域名的IP拟作4.4.4.4，然后选择添加主机。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_4.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_4.png"></a>
 </li>
 <li><p>经过上述操作后，（baidu.com）这个域名下多了一条记录。此时，<strong>www这个主机名所对应的当前域名的完全限定域名而言</strong>，已经可以通过当前DNS服务进行<strong>权威</strong>解析了。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_5.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_5.png"></a>
 </li>
 <li><p>下面进行验证，进入客户机Windows XP，<strong>将XP系统指向的DNS服务器设置为先前配置好的2003系统的IP地址</strong>。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_6.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_6.png"></a>
 </li>
 <li><p>此时在XP中进入命令行，通过<code>nslookup</code>指令解析<code>www.baidu.com</code>这个域名的地址。可以发现，我们指向的是IP地址为10.1.1.1DNS服务器，得到的结果也确实先前设置的4.4.4.4。这样，就完成了一个简单的正向解析实验。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_7.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/forwardanalysis_7.png"></a>
 </li>
 <li><p>最后在这里补充一些，如果我们想再增加一个完全限定域名的正向解析，只需按照上述过程再新建一条主机记录。这里要注意一点，我们知道在新增记录完成之前，试图解析该域名，是无法解析成功的；但是在新增记录完成后，仍可能解析失败。主要原因是<strong>XP系统存在DNS缓存机制</strong>，短时间内缓存记录的仍是上一次查询的结果。此时需要通过指令<code>ipconfig /flushdns</code>刷新缓存，再次解析，便能成功。通过指令<code>ipconfig /displaydns</code>可以显示当前的DNS缓存。</p>
 </li>
@@ -148,25 +148,25 @@ function activateLightMode(){
 <h3 id="别名"><a href="#别名" class="headerlink" title="别名"></a>别名</h3><p>别名这个实验比较简单就不做了，简单说一下吧，<strong>在正向查找区域中新建一个别名(CNAME)</strong>，设置别名，并<strong>指定目标主机的FQDN（从现有的记录中选择）</strong>。这样通过别名或者原本的FQDN，访问的网址是相同的。</p>
 <h3 id="反向解析"><a href="#反向解析" class="headerlink" title="反向解析"></a>反向解析</h3><ol>
 <li><p>反向解析，就是用IP地址去查询域名，观察先前的查询实验，会发现服务器名是UnKnown，出现这种情况的原因是像服务器寻求域名解析时会<strong>先问服务器域名是什么</strong>，但是服务器没有应答，因此被设置成了UnKnown。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_1.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_1.png"></a>
 </li>
 <li><p>为了解决上述情况，就要利用到反向解析。这里，和正向解析一样，先<strong>在正向查找区域新建一个主机记录</strong>，这里将主机名设置为<code>dns1.baidu.com</code>。与正向解析步骤不同的是，这里要将<strong>创建相关的指针(PTR)记录</strong>给勾上。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_2.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_2.png"></a>
 </li>
 <li><p>然后<strong>在反向查找区域中新建一个区域</strong>，这里的网络ID写的是网段，我们的主机IP地址为10.1.1.1，因此这里填写10.1.1</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_3.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_3.png"></a>
 
 <p>其它的默认下一步就行。创建完反向查找区域后，情况如下。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_4.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_4.png"></a>
 </li>
 <li><p>接着<strong>在反向查找区域中新建指针(PTR)</strong>，在主机IP号这里补充完整的IP地址。<strong>主机名</strong>，则游览文件，<strong>选择第二步中在正向查找区域中新建的主机记录</strong>。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_5.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_5.png"></a>
 
 <p>确定后，反向查找区域中会增加一条记录。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_6.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_6.png"></a>
 </li>
 <li><p>接下来，回到客户机上，进行验证。可以看到通过<code>nslookup</code>指令解析域名时，可以看到服务器本身的域名了。不再是UnKnown。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_7.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/reverseanalysis_7.png"></a>
 
 
 
@@ -174,19 +174,19 @@ function activateLightMode(){
 </ol>
 <h3 id="转发器"><a href="#转发器" class="headerlink" title="转发器"></a>转发器</h3><ol>
 <li><p>转发器，简单来说，就是<strong>自己解析不了，转发给别的DNS服务器帮忙解析</strong>。我们需要<strong>配置另一台</strong>Windows 2003作为DNS服务器。首先，<strong>设置该服务器的IP地址为10.1.1.2</strong>，然后将其<strong>挂入</strong>与第一台Windows 2003系统（10.1.1.1）以及XP客户机<strong>同一个局域网</strong>中，本次实验为VMnet1上（在设置中将多台虚拟机配置为同一个网络适配器，即可实现虚拟机位于同一个局域网中）。并将用于安装DNS服务的Windows 2003 <strong>ISO镜像插入虚拟机</strong>。接着<strong>安装DNS服务</strong>，参考上文。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_1.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_1.png"></a>
 </li>
 <li><p>第二步，与正向解析相同，在新的DNS服务器<strong>创建一个正向查找区域</strong>，并<strong>新建一个主要区域</strong>，区域名称为qq.com，完成后在该区域中<strong>新建一条主机记录</strong>，设置<strong>主机名为www的完全限定域名的IP地址为6.7.8.9</strong>。完成后效果如下。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_2.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_2.png"></a>
 </li>
 <li><p>这个时候回到客户机XP上，<strong>试图解析刚刚设置的域名</strong>，发现不行，原因是我们设置的DNS服务器是10.1.1.1，而刚刚设置的域名记录在10.1.1.2这台DNS服务器。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_3.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_3.png"></a>
 </li>
 <li><p>这个时候就要利用转发器了，<strong>进入第一台DNS服务器</strong>，右键主机，进入属性。找到转发器，<strong>将第二台DNS服务器的IP地址添加进入转发器的IP地址列表</strong>。确定。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_4.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_4.png"></a>
 </li>
 <li><p>接下来，回到客户机XP上，再次试图解析域名时，便成功了。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_5.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/repeater_5.png"></a>
 
 
 
@@ -194,16 +194,16 @@ function activateLightMode(){
 </ol>
 <h3 id="辅助DNS服务器"><a href="#辅助DNS服务器" class="headerlink" title="辅助DNS服务器"></a>辅助DNS服务器</h3><ol>
 <li><p>在一开始，我们创建的区域都是主要区域，而辅助DNS服务器就要用到辅助区域，它的主要作用是备份，当一台服务器宕机后，可以有另一台服务器临时接管。例如，我们要备份主DNS服务器上baidu.com这个区域，操作如下：<strong>右键该区域名->属性->区域复制->勾上允许区域复制</strong>，这里有3个选项，通常选择只允许到下列服务器，这样最安全，并<strong>添加备用DNS服务器的IP地址</strong>。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_1.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_1.png"></a>
 </li>
 <li><p>接下来进入备份DNS服务器，在正向查找区域中，<strong>新建区域</strong>，这里<strong>选择辅助区域</strong>。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_2.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_2.png"></a>
 </li>
 <li><p><strong>区域名称填写baidu.com</strong>，与主DNS服务器一样。然后将主DNS服务器的IP地址添加进入想要复制区域的DNS服务器地址列表。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_3.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_3.png"></a>
 </li>
 <li><p>点击确定后，<strong>此次实验</strong>就完成了对主DNS服务器正向查找区域内容的备份</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_4.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/backup_4.png"></a>
 
 
 
@@ -212,22 +212,22 @@ function activateLightMode(){
 <h3 id="虚拟机上真实网"><a href="#虚拟机上真实网" class="headerlink" title="虚拟机上真实网"></a>虚拟机上真实网</h3><p>首先，简单说明一下原理。通常来说，一个局域网中的设备都是通过网线连在交换机或者路由器上，从而访问外网。在虚拟机中，是没法直接访问外网的，但是可以将虚拟机所在的VMnet设置为相同，使得不同虚拟机连上相同的虚拟交换机，从而将不同的虚拟机放入同一个局域网中，这样可以保证虚拟机之间可以互相ping通。其中VMnet0比较特殊，它可以看作是连入现实路由器的一款交换机，通过对VMnet0进行设置，就可以实现虚拟机上真实网。下面开始实验（<strong>本次实验以Windows XP作为实验环境</strong>）：</p>
 <ol>
 <li><p>在操作之前，先<strong>确定</strong>一下<strong>网卡的型号</strong>。如下所示</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_1.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_1.png"></a>
 </li>
 <li><p>在虚拟机左上角选择编辑，<strong>进入虚拟网络编辑器</strong>，选择更改设置</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_2.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_2.png"></a>
 </li>
 <li><p>选择VMnet0，找到桥接模式，并<strong>将桥接对象设置为第一步中确定的网卡型号</strong>。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_3.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_3.png"></a>
 </li>
 <li><p>最后，将XP所在网络适配器<strong>设置为VMnet0</strong></p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_4.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_4.png"></a>
 </li>
 <li><p>此时还没完，由于在前一篇DHCP的实验中，给XP客户机分配了特定的IP地址，此时需要<strong>重置一下IP</strong>。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_5.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_5.png"></a>
 </li>
 <li><p>可以看到，此时分配到的新IP所在网段与已经与真实机的相同。最后<strong>把DNS服务器再设置为自动获取</strong>。</p>
-<a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_6.png"></a>
+<a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/online_6.png"></a>
 
 
 
@@ -235,7 +235,7 @@ function activateLightMode(){
 </ol>
 <h3 id="综合实验"><a href="#综合实验" class="headerlink" title="综合实验"></a>综合实验</h3><p>综合实验这里就不展开了，实验建立在<strong>每台虚拟机能上真实网</strong>的情况下，假设将一台DNS服务器中的配置全部删除（清理缓存，删除记录，删除转发器等），此时将XP指向的DNS服务器设置为这台仅能上网，但是已经清空数据的DNS服务器。问，XP是否能够上网？</p>
 <p>答：能上。这个涉及到对DNS的原理的理解，尽管DNS服务器没有进行任何配置，但是它能够上网，因此会将请求转发给更上层的DNS服务器。最终还是可以得到域名解析的结果。因此，XP最终能够上网。</p>
-<h2 id="DNS-AT-K"><a href="#DNS-AT-K" class="headerlink" title="DNS AT???K"></a>DNS AT???K</h2><a href="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/SBGitee.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/SBGitee.png"></a>
+<h2 id="DNS-AT-K"><a href="#DNS-AT-K" class="headerlink" title="DNS AT???K"></a>DNS AT???K</h2><a href="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/SBGitee.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/26/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8005-%E4%B8%8B-DNS/SBGitee.png"></a>
 
 
 

@@ -80,10 +80,10 @@ function activateLightMode(){
 <div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.FAT	Windows</span><br><span class="line">2.NTFS	Windwos</span><br><span class="line">3.EXT4	Linux</span><br><span class="line">4.APFS	MacOS</span><br></pre></td></tr></tbody></table></figure></div>
 
 <h3 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h3><p>我们经常提到的格式化是什么？例如经常说 “将U盘格式化，这样就能清空U盘了” 。实际上，<strong>格式化的本质就是制作文件系统</strong>。用一种比较形象的话来说就是，<strong>将分区内容抹除，再重新打格子(block)</strong>，可以理解为excel表格那样，每个格子大小通常为4KB（可以设置成别的大小）。例如要保存一个10KB的文件，就需要3个block，前2个占满，后1个占一半。如下图所示，Windows默认格式化为NTFS格式，默认一个block的大小是4KB。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/format_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/format_1.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/format_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/format_1.png"></a>
 
 <p>当然除了用来存储内容的block，还有一个<strong>用来记录每个文件信息的主文件表（MFT：Master File Table）</strong>，包括MFT本身，至少都有一个条目。有关文件的所有信息，包括文件的大小，时间和日期戳，权限和数据内容，都存储在MFT条目中或MFT条目描述的MFT外部空间中。随着文件添加到NTFS文件系统卷中，更多的条目将添加到MFT中，并且MFT的大小会增加。从NTFS文件系统卷中删除文件时，它们的MFT条目被标记为空闲，可以重复使用。但是，已分配给这些条目的磁盘空间不会重新分配，并且MFT的大小不会减少。其内部格式大致如下：</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/format_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/format_2.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/format_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/format_2.png"></a>
 
 <p>老师在课程中提到的inode，是属于Linux文件系统中的概念，在Windows的NTFS文件系统中起到类似功能的就是上面提到的MFT。</p>
 <h3 id="NTFS相比FAT的优势"><a href="#NTFS相比FAT的优势" class="headerlink" title="NTFS相比FAT的优势"></a>NTFS相比FAT的优势</h3><p>在早期的Windows系统中，主要使用的是FAT32文件系统，现如今都替换成了NTFS文件系统，相比于FAT32，NTFS有以下几点优势：</p>
@@ -95,7 +95,7 @@ function activateLightMode(){
 <li><p>加密文件系统</p>
 </li>
 <li><p><strong>访问控制列表</strong>（Access Control List），在磁盘中新建一个文件(或文件夹)，右键属性，进入安全，如下图所示，<strong>访问控制列表分为2个部分，一部分是用户或组的划分</strong>，即可以单独设置某个用户或者组是权限；<strong>另一部分则是该用户或组的权限</strong>。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/advantage_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/advantage_1.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/advantage_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/advantage_1.png"></a>
 </li>
 </ul>
 </li>
@@ -104,7 +104,7 @@ function activateLightMode(){
 <li><p>压缩</p>
 </li>
 <li><p>磁盘配额，用来限制不同用户的使用空间，通常管理服务器时会用到。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/advantage_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/advantage_2.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/advantage_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/advantage_2.png"></a>
 </li>
 </ul>
 </li>
@@ -112,7 +112,7 @@ function activateLightMode(){
 </li>
 </ol>
 <h2 id="修改NFTS权限（实验环境：Windows7）"><a href="#修改NFTS权限（实验环境：Windows7）" class="headerlink" title="修改NFTS权限（实验环境：Windows7）"></a>修改NFTS权限（实验环境：Windows7）</h2><h3 id="权限的含义"><a href="#权限的含义" class="headerlink" title="权限的含义"></a>权限的含义</h3><p>修改NTFS权限，实际上就是修改文件(或文件夹)访问控制列表，那什么是访问控制列表呢？概括来讲，就是<strong>当前用户对该文件(或文件夹)所拥有的权限列表</strong>。它可以控制<strong>用户(或组)</strong>对文件(或文件夹)的行为，例如修改，删除，查看等。下面来看一下访问控制列表包含哪些权限：</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/ACL_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/ACL_1.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/ACL_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/ACL_1.png"></a>
 
 <table>
 <thead>
@@ -183,13 +183,13 @@ function activateLightMode(){
 </tr>
 </tbody></table>
 <h3 id="权限继承"><a href="#权限继承" class="headerlink" title="权限继承"></a>权限继承</h3><p>在了解了访问控制列表中各个权限的含义后，下面开始介绍NTFS权限的一些属性，首先要说到的是权限继承。这个比较好理解，就是<strong>任一文件夹下的所有文件的访问控制列表会继承该文件夹自身的访问控制链表，包括设置的组</strong>。如下图所示，在文件夹1目录下，新建文件a.txt，图像b.png，文件夹c，可以看到，文件夹1目录下的文件(或文件夹)均继承了文件夹1的访问控制列表的权限以及用户组（注：文件是没有列出属性的）</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/inherit_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/inherit_1.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/inherit_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/inherit_1.png"></a>
 
 <p>继承这一点很好理解，继承是默认进行的，但同样可以<strong>取消继承</strong>，操作如下所示，进入安全->高级->更改权限，<strong>将包括可从该对象的父项继承的权限上的勾去掉</strong>，此时会跳出一个警告，让你选择添加/删除。如果选择删除，就把这些组全删了；所以选择添加，则可以自由删减。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/inherit_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/inherit_2.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/inherit_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/inherit_2.png"></a>
 
 <p>这里将Administrators以外的组都删掉了，此时Administrators组以外的用户都无法访问文件夹c了。这样通过取消继承，可以达到控制用户对文件夹的访问限制。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/inherit_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/inherit_3.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/inherit_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/inherit_3.png"></a>
 
 <p>这里再补充一点，<strong>权限继承除了适用于当前分区（例如C盘）创建的文件(文件夹)，同样适用于复制或移动进来的文件。只有同分区移动文件(文件夹)不会被修改访问控制列表，其它情况与创建文件(或文件夹)是一样的</strong>。</p>
 <h3 id="权限累加"><a href="#权限累加" class="headerlink" title="权限累加"></a>权限累加</h3><p>前面看到访问控制列表，它既可以是用户的权限，也可以是组的权限。如果一个用户被单独设置了权限，而它又位于一个或多个组中，那么最终的权限是怎样的呢？答案就是<strong>权限累加，将用户自己的权限与所有组的权限加在一起，就是这个用户的最终权限。</strong>（这个实验比较简单，就不演示了）</p>
@@ -198,46 +198,46 @@ function activateLightMode(){
 <li><p>进入文件夹，先按照前面取消权限继承的步骤，令机密文件的访问控制列表取消对父文件夹的继承。这样就可以自行修改访问控制列表。</p>
 </li>
 <li><p>然后查看机密文件的ACL，发现User组中的成员是有读取和执行这个文件的权限的。并且刺头用户User0x1也位于Users组中。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_1.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_1.png"></a>
 </li>
 <li><p>为了不影响Users组中其它用户的正常权限，需要把用户User0x1权限单独列出来。右键机密文件属性->编辑->添加->高级->对象类型选择用户->立即查找，就可以看到所有用户，这里选择用户User0x1。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_2.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_2.png"></a>
 
 <p>选择后，会显示<code>设备名\用户名的</code>形式，这种形式用来确定某一个用户或者组。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_3.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_3.png"></a>
 </li>
 <li><p>现在来修改User0x1的权限，可以看到，此时User0x1的权限是允许读取和执行的，选择高级->更改权限->编辑，将原先允许的权限，全部更改为拒绝。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_4.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_4.png"></a>
 
 <p>这时会跳出来一个警告，告诉你<strong>拒绝项优先于允许项</strong>，并且在权限项目列表中User0x1的类型也是拒绝。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_5.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_5.png"></a>
 
 <p>可以看到User0x1此时的权限都是拒绝</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_6.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_6.png"></a>
 </li>
 <li><p>这时再用User0x1去访问机密文件就会失败了，<strong>即使位于Users组中，但是由于拒绝项优先于允许项，还是会被拒绝访问。</strong></p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_7.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/delete_7.png"></a>
 
 </li>
 </ol>
 <h3 id="取得所有权"><a href="#取得所有权" class="headerlink" title="取得所有权"></a>取得所有权</h3><p>这个时候，被限制访问的User0x1不高兴了，很没有面子，为了把面子找回来，它决定创建一个除了自己，谁都无法访问的文件。ACL里只有User0x1自己，拥有所有权限。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_1.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_1.png"></a>
 
 <p>此时即使切换到了管理员，也无法访问这个文件。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_2.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_2.png"></a>
 
 <p>这就很过分了对不对，作为管理员，怎么能访问不了用户的权限呢？进入属性->安全，发现竟然看不了ACL，但是没关系，点击继续，发现可以修改文件的所有者，我们将原有的文件所有者User0x1更改为Admin用户或者Administrators这个组。这样就可以对这个文件的ACL进行修改了。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_3.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_3.png"></a>
 
 <p>结果，可以正常打开文件，并且在用户和组中删掉了用户User0x1，User0x1反而打开不了自己创建的文件了。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_4.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/owner_4.png"></a>
 
-<h3 id="强制继承"><a href="#强制继承" class="headerlink" title="强制继承"></a>强制继承</h3><p>什么是强制继承呢？前面介绍了取消权限继承，这导致文件夹1中各个文件的ACL可以自由修改以至于都不相同。<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/force_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/force_1.png"></a></p>
+<h3 id="强制继承"><a href="#强制继承" class="headerlink" title="强制继承"></a>强制继承</h3><p>什么是强制继承呢？前面介绍了取消权限继承，这导致文件夹1中各个文件的ACL可以自由修改以至于都不相同。<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/force_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/force_1.png"></a></p>
 <p>为了方便管理，管理员希望将这些文件重新恢复为取消继承之前的ACL，这里就要用到强制继承的功能了。右键文件夹1属性->安全->高级->更改权限-><strong>勾选使用可从此对象继承的权限替换所有子对象权限。</strong>（注意先让User0x1那个文件赋予Admin完全控制的权限），这样就可以让文件夹1中所有子文件(文件夹)均拥有与文件夹1一样的ACL。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/force_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/force_2.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/force_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/force_2.png"></a>
 
 <p>修改完后查看两个文件，发现会和文件夹1的ACL相同。原来添加或删除的用户也不见了。这就是强制继承。</p>
-<a href="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/force_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/force_3.png"></a>
+<a href="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/force_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2020/09/22/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%8004-%E4%B8%8A-NTFS%E6%9D%83%E9%99%90/force_3.png"></a>
 
 
 

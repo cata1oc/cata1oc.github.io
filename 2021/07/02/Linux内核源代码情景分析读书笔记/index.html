@@ -89,7 +89,7 @@ function activateLightMode(){
 <h3 id="物理空间的均匀性"><a href="#物理空间的均匀性" class="headerlink" title="物理空间的均匀性"></a>物理空间的均匀性</h3><p>参考P49，均质存储结构（<strong>U</strong>niform <strong>M</strong>emory <strong>A</strong>rchitecture），是一种理想化的物理空间结构，即CPU访问这个空间中的任何一个地址所需的时间都相同。随着非均质存储结构的引入（<strong>N</strong>on-<strong>U</strong>niform <strong>M</strong>emory <strong>A</strong>rchitecture）物理页面管理机制也作了相应的修正。管理区不再是属于最高层的机构，而是在每个存储节点中都有至少两个管理区。而且 page 结构数组（mem_map）也不再是全局性的，而是从属于具体的节点了。从而，在 zone_struct 结构（以及 page 结构数组）之上又有了另一层代表着存储节点的 pglist_data 数据结构。</p>
 <h3 id="Linux中的映射内存"><a href="#Linux中的映射内存" class="headerlink" title="Linux中的映射内存"></a>Linux中的映射内存</h3><p>参考P52，有两种情况下虚存页面会跟磁盘文件发生关系。一种是盘区交换（swap），参考缺页异常的处理流程。另一种情况则是将一个磁盘文件映射到一个进程的用户空间中。Linux 提供了一个系统调用 mmap()，使一个进程可以将一个已经打开的文件映射到其用户空间中，此后就可以像访问内存中一个字符数组那样来访问这个文件的内容，而不必通过 leek()、read() 或 write() 等进行文件操作。这部分内容类似 Windows 中的<a href="https://cataloc.gitee.io/blog/2020/09/01/Mapped-Memory/" target="_blank" rel="noopener">映射内存</a>。</p>
 <h3 id="Linux虚拟内存管理中数据结构间的联系"><a href="#Linux虚拟内存管理中数据结构间的联系" class="headerlink" title="Linux虚拟内存管理中数据结构间的联系"></a>Linux虚拟内存管理中数据结构间的联系</h3><p>参考2.3 几个重要的数据结构和函数。这一节介绍了多个数据结构，mm_struct 和 vm_area_struct 说明了（进程）对页面的需求；page、zone_struct 等结构则说明了（物理内存）对页面的供应；而页面目录、中间目录以及页面表则是二者中间的桥梁。其关系如下所示：</p>
-<a href="/blog/2021/07/02/Linux%E5%86%85%E6%A0%B8%E6%BA%90%E4%BB%A3%E7%A0%81%E6%83%85%E6%99%AF%E5%88%86%E6%9E%90%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/vm_ds_relationship.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2021/07/02/Linux%E5%86%85%E6%A0%B8%E6%BA%90%E4%BB%A3%E7%A0%81%E6%83%85%E6%99%AF%E5%88%86%E6%9E%90%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/vm_ds_relationship.png"></a>
+<a href="/2021/07/02/Linux%E5%86%85%E6%A0%B8%E6%BA%90%E4%BB%A3%E7%A0%81%E6%83%85%E6%99%AF%E5%88%86%E6%9E%90%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/vm_ds_relationship.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2021/07/02/Linux%E5%86%85%E6%A0%B8%E6%BA%90%E4%BB%A3%E7%A0%81%E6%83%85%E6%99%AF%E5%88%86%E6%9E%90%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/vm_ds_relationship.png"></a>
 
 
 
@@ -124,7 +124,7 @@ function activateLightMode(){
 <li><p>type：指该页面在哪一个文件中，是个序号</p>
 </li>
 <li><p>0：相当于 pte_t 的最低位 P 标志。指明页面不在内存，在磁盘上。</p>
-<a href="/blog/2021/07/02/Linux%E5%86%85%E6%A0%B8%E6%BA%90%E4%BB%A3%E7%A0%81%E6%83%85%E6%99%AF%E5%88%86%E6%9E%90%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/swap_entry_t.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/blog/2021/07/02/Linux%E5%86%85%E6%A0%B8%E6%BA%90%E4%BB%A3%E7%A0%81%E6%83%85%E6%99%AF%E5%88%86%E6%9E%90%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/swap_entry_t.png"></a>
+<a href="/2021/07/02/Linux%E5%86%85%E6%A0%B8%E6%BA%90%E4%BB%A3%E7%A0%81%E6%83%85%E6%99%AF%E5%88%86%E6%9E%90%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/swap_entry_t.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2021/07/02/Linux%E5%86%85%E6%A0%B8%E6%BA%90%E4%BB%A3%E7%A0%81%E6%83%85%E6%99%AF%E5%88%86%E6%9E%90%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/swap_entry_t.png"></a>
 
 </li>
 </ul>
