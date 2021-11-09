@@ -94,15 +94,13 @@ function activateLightMode(){
 <div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">python</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"></span><br><span class="line">padding = <span class="string">'AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMNNNNOOOOPPPPQQQQRRRRSSSSTTTT'</span></span><br><span class="line">sys_addr = struct.pack(<span class="string">'I'</span>, <span class="number">0xb7ecffb0</span>)</span><br><span class="line">ret = <span class="string">'AAAA'</span></span><br><span class="line">bin_addr = struct.pack(<span class="string">'I'</span>, <span class="number">0xb7fb63bf</span>)</span><br><span class="line"> </span><br><span class="line">print(padding + sys_addr + ret + bin_addr)</span><br></pre></td></tr></tbody></table></figure></div>
 
 <ul>
-<li><p>padding：就是填充用的</p>
-</li>
-<li><p>sys_addr：返回时的跳转地址，它覆盖了原先的返回地址。这里为此题中<code>system</code>的地址</p>
-</li>
-<li><p>bin_addr：函数<code>system</code>的参数</p>
-</li>
-<li><p>ret：这个函数这样理解，函数调用前，会先将参数压栈，再将返回地址压栈，然后再进入新的栈帧执行函数（push ebp…）。<strong>因此在一个函数开始执行时（即push ebp执行前），栈顶通常是返回地址 [ebp+0x4]，然后才是参数 [ebp+0x8/0xC…]</strong>。而当函数返回时，由于原本的返回地址被sys_addr覆盖，因而会直接进入sys_addr函数的首地址处。这里是没有参数压栈，返回值压栈的过程的。为了能让CPU看懂，因此这里设置好了一个值，假装是返回地址，然后才是参数。因此这里多了一个<code>AAAA</code>，说直白点，这么做就是为了平衡堆栈</p>
-</li>
+<li>padding：就是填充用的</li>
+<li>sys_addr：返回时的跳转地址，它覆盖了原先的返回地址。这里为此题中<code>system</code>的地址</li>
+<li>bin_addr：函数<code>system</code>的参数。获取参数字符串的方法参考下图。（<code>system</code>的地址用类似的方法，不过需要自己先写一个调用<code>system</code>的Demo来找它在libc.so中的偏移。<strong>此方法仅限在未开启ASLR等安全机制的情况下使用</strong>）</li>
+<li>ret：这个函数这样理解，函数调用前，会先将参数压栈，再将返回地址压栈，然后再进入新的栈帧执行函数（push ebp…）。<strong>因此在一个函数开始执行时（即push ebp执行前），栈顶通常是返回地址 [ebp+0x4]，然后才是参数 [ebp+0x8/0xC…]</strong>。而当函数返回时，由于原本的返回地址被sys_addr覆盖，因而会直接进入sys_addr函数的首地址处。这里是没有参数压栈，返回值压栈的过程的。为了能让CPU看懂，因此这里设置好了一个值，假装是返回地址，然后才是参数。因此这里多了一个<code>AAAA</code>，说直白点，这么做就是为了平衡堆</li>
 </ul>
+<a href="/2021/11/07/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%85%A5%E9%97%A8-%E4%B8%8A/findstr.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2021/11/07/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%85%A5%E9%97%A8-%E4%B8%8A/findstr.png"></a>
+
 <h2 id="格式化溢出"><a href="#格式化溢出" class="headerlink" title="格式化溢出"></a>格式化溢出</h2><h3 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h3><p>利用<code>printf</code>的格式化漏洞。如下图所示，当执行像<code>printf(foo)</code>这样的语句时，若输入的foo包含<code>%n</code>，这将导致在<code>printf</code>执行时像内存（栈）中写入数据。</p>
 <a href="/2021/11/07/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%85%A5%E9%97%A8-%E4%B8%8A/printf.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2021/11/07/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%85%A5%E9%97%A8-%E4%B8%8A/printf.png"></a>
 
