@@ -1,0 +1,300 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>记一次恶意样本行为分析 | cataLoc's Blog</title><meta name="description" content="记一次恶意样本行为分析"><meta name="keywords" content="Windows逆向,二进制安全"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="记一次恶意样本行为分析"><meta name="twitter:description" content="记一次恶意样本行为分析"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="记一次恶意样本行为分析"><meta property="og:url" content="http://cata1oc.github.io/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="记一次恶意样本行为分析"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cata1oc.github.io/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/"><link rel="prev" title="某桌面便签软件暴破" href="http://cata1oc.github.io/2019/04/11/%E6%9F%90%E6%A1%8C%E9%9D%A2%E4%BE%BF%E7%AD%BE%E8%BD%AF%E4%BB%B6%E6%9A%B4%E7%A0%B4/"><link rel="next" title="初探Go逆向" href="http://cata1oc.github.io/2019/03/23/%E5%88%9D%E6%8E%A2Go%E9%80%86%E5%90%91/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">142</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">13</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#分析环境"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">分析环境</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#注意事项"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">注意事项</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#分析过程"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">分析过程</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#main部分"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">main部分</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#init部分"><span class="toc_mobile_items-number">3.2.</span> <span class="toc_mobile_items-text">init部分</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#分析环境"><span class="toc-number">1.</span> <span class="toc-text">分析环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注意事项"><span class="toc-number">2.</span> <span class="toc-text">注意事项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析过程"><span class="toc-number">3.</span> <span class="toc-text">分析过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#main部分"><span class="toc-number">3.1.</span> <span class="toc-text">main部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#init部分"><span class="toc-number">3.2.</span> <span class="toc-text">init部分</span></a></li></ol></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">记一次恶意样本行为分析</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2019-03-27<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2022-05-18</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="分析环境"><a href="#分析环境" class="headerlink" title="分析环境"></a>分析环境</h2><ul>
+<li>操作系统：Win10 20H2</li>
+<li>分析工具：IDA 7.7</li>
+</ul>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>实际分析时函数名以及变量可能与我的不同，由于IDA对未导出的函数是通过偏移地址进行命名，故可以通过Rebase的方式来实现函数名同步，方法如下所示：</p>
+<ol>
+<li><p>Edit -> Segments -> Rebase program</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/rebase_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/rebase_1.png"></a>
+</li>
+<li><p>Value设置为0，这样就可以使得未导出的函数名一致了，但是变量名仍然不同，需要根据实际情况进行判断</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/rebase_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/rebase_2.png"></a>
+
+
+
+</li>
+</ol>
+<h2 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h2><h3 id="main部分"><a href="#main部分" class="headerlink" title="main部分"></a>main部分</h3><ol>
+<li><p>首先搜索并进入main函数，F5进入伪代码，发现下方有一个死循环，无用；因此只关心上方的<code>sub_3C294</code></p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_1.png"></a>
+</li>
+<li><p>进入<code>sub_3C294</code>，这部分按照不同颜色的方框归类进行分析</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_2.png"></a>
+
+<ul>
+<li><p>红色方框：<strong>读取running_pass这个文件的前25个字节，存储到未初始化的全局变量s1中</strong></p>
+</li>
+<li><p>橙色方框：</p>
+<ul>
+<li><p>首先初始化一个指针数组，这个指针数组包含7个指针，每个指针指向一块大小为25字节的内存空间；指针数组的首地址为0x268100，由于encrypt程序是64位的ELF，因此每个指针都是8字节</p>
+</li>
+<li><p>接着，将这7个指针指向的缓冲区，分别用从地址0x1B5037开始（如下图所示）的大小为25字节的字符串进行填充，通过Hex View可以查看这些字符串</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_3.png"></a>
+</li>
+</ul>
+</li>
+<li><p>蓝色方框：进入<code>sub_3BD75</code>，这个函数会传入一个参数，通过该参数选择上述7个指针中的某一个，取出其中的字符串，用0x262014地址处的值与字符串中的每个字符进行异或运算。<strong>此时</strong>地址0x262014保存的值为0x21（这个值后期会被修改）。取出的是第一个指针指向的字符串内容，经过异或运算后可得到新的字符串 “Welcome, FLAG is readable”。<strong>为了方便分析，我们可以通过快捷键”N”，将sub_3BD75重命名为<code>initStringViaXor</code></strong></p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_4.png"></a>
+</li>
+<li><p>紫色方框：在程序一开始，就调用了signal函数，将信号5的处理函数设置为了handler，进入handler我们可以看到，这个处理函数就是<code>sub_3BFAA</code>；所以后文处的<code>raise(5)</code>其实就是调用<code>sub_3BFAA</code>，当然这里IDA也帮助分析了出来。至此<code>sub_3C294</code>的主体流程分析完，接下来进入<code>sub_3BFAA</code>继续分析</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_5.png"></a>
+</li>
+</ul>
+</li>
+<li><p>进入<code>sub_3BFAA</code>，这部分的逻辑从伪代码看比较乱，因此在分析时需要结合汇编追踪关注的变量是如何变化的。由于伪代码较长，这里分为两部分看，首先是第一部分，<strong>包含4个单独的循环，每个循环进行5轮</strong>。当然这部分整个都在一个大的while循环内，这个大循环也是进行5轮</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_6.png"></a>
+
+<ol>
+<li><p>首先是调用了<code>__readfsqword(0x28)</code>，这是一个栈保护过程中获取canary的部分，其本身并不用关心，由于这个值保存在返回地址上面用于防止栈溢出（rbp-4的位置，不过汇编中通过rsp来进行寻址），因此刚好也就在该函数局部变量的后面（局部变量通常位于rbp-8开始，汇编中通常使用rsp来寻址）。因此这里IDA分析的时候使用了v22[5]来保存它，也是因为后期v22[0]~v22[4]会暂存5个字符的指针，它们作为局部变量存储在栈中，刚好在canary的前面</p>
+</li>
+<li><p>接着调用了<code>initStringViaXor</code>，也就是经过重命名的<code>sub_3BD75</code>，经过异或运算后生成一个字符串。注意这里传入的参数为v21，该变量<strong>在第一轮大循环时，v21被赋值为1</strong>，因此得到的字符串的值为<strong>“RV&Dr_ke1OvS8}ds{9*lg%tE3”</strong>，并且将这个字符串，赋值给v2</p>
+</li>
+<li><p>接下来有一个操作，<strong>初始化了一个byte数组，这个数组从0x2680A8开始一直到0x2680AC</strong>，共5个字节。<strong>用来初始化这些数组的值为地址0x2680BB+0x5（即0x2680C0）开始的连续5个字节的值</strong>。但是进入后发现，0x2680C0位于<code>.bss</code>段，并且发现刚好是字符串s1的地址开始处，根据前面的分析，我们知道字符串s1存储的是running_pass文件的前25个字节。所以这一步，就是将这25个字节的前5个字节，赋给数组0x2680A8开始的5个字节地址空间中</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_7.png"></a>
+</li>
+<li><p>接下来进入一个循环，依次从0x2680A8开始，也就是上面被初始化的这个数组中取一个字符，赋值给v5，然后<strong>在字符串”RV&Dr_ke1OvS8}ds{9*lg%tE3”中找到字符v5第一次出现的位置</strong>，并将这个位置记录在数组v22中（v22是一个char类型的指针数组，指针指向字符串中字符的位置）；若未找到，则保存一个指向截断符00的指针，这个指针位于字符串+0x25偏移处</p>
+</li>
+<li><p>接下来是第二个循环，这个循环非常关键。<strong>这次将v22数组中存的值（字符的位置），依次减去字符串的首地址，得到一个偏移量，这个偏移量就是字符在字符串中的偏移量</strong>。然后根据这个偏移量调用不同的函数，调用的函数通过0x260280加上一个偏移获得</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_8.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_8.png"></a>
+
+<p>进入前两个函数查看其伪代码</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_9.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_9.png"></a>
+
+<p>如上图所示，0x268100正是指针数组的首地址，a1指定了指针指向的字符串，这里是第一个字符串，其值为”RV&Dr_ke1OvS8}ds{9*lg%tE3”，将这个一维数组看成一个5x5的矩阵，那么这两个函数的作用如下：</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_10.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_10.png"></a>
+
+<p>可以看到，前两个函数，根据传入的下标，将除下标外，其对应位置所在的横行、竖行、对角线的其他元素全部清零。由此可以发现，这是五皇后算法中的一步（具体可以参考八皇后，本题降低难度选用了五皇后算法，只有10种可能的解），因此可以知道，这个循环，就是根据筛选出的下标，对其他横行、竖行、对角线的值进行清空的操作。</p>
+</li>
+<li><p>第三个循环用于将<strong>根据</strong>char类型指针数组v22中保存的指针，将对应的字符存到数组0x2680A8里；这里<strong>和先前将s1字符串中的字符保存到数组中不同的是，如果这些字符不在字符串”RV&Dr_ke1OvS8}ds{9*lg%tE3”中， 那么存到数组0x2680A8中的值为0</strong></p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_10_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_10_1.png"></a>
+</li>
+<li><p>接下来继续细看第四个循环，这里我把前后对变量的处理也截图进来了，因为它们都很关键。这个循环，<strong>将数组0x2680A8中保存的字符对应的ascii值依次进行异或运算，得到一个值保存到变量v16中。然后将v16与3进行与运算，得到一个0~3范围的值，再将这个值与地址0x262014处保存的值（在第一轮大循环时，这个值为0x21）进行异或运算，结果保存在地址0x262014</strong></p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_10_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_10_2.png"></a>
+</li>
+<li><p>接下来进入switch语句，循环开始前，有几个赋值语句，对应了函数开头几个未知的赋值语句，这个其实就是push和pop的对应，用于变量的存储与恢复，没有意义，不用关心。</p>
+<p>然后我们具体来看switch语句，这里伪代码不清晰，咱们直接看汇编。从汇编中可以看到，<strong>switch用于条件判断的值受到寄存器r12影响，r12寄存器的值仅在函数开头被寄存器rdi赋值，整个函数流程中没有再发生变化，再往上跟，可以发现rdi的值，在程序开头被设置为了1！这个rdi，也就是伪代码中定义的变量v21。</strong></p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_10_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_10_3.png"></a>
+
+<p>因此，我们可以把这里的v23改成v21，很明显，IDA分析错了！实际上这里的switch语句，就是让v21的值在每轮循环递增，所以我们直接看case5的情况。</p>
+<ol>
+<li><p>首先要判断dword_262014与dword_262010的值是否相等，这里实际上是判断是否满足五皇后达成的条件，因为前面会根据每个字符的值进行异或，并最终修改全局变量dword_262014的值（初始为0x21）。如果所有字符串达成了五皇后条件以后，走到这一步的时候，dword_262014的值会被修改回0x21，dword_262010只是做了一个备份，用于后期判断</p>
+</li>
+<li><p>接下来的判断很关键，会<strong>判断字符串s1的前7个字节，与字符串”Red{EV3”是否相同，如果相同，则会修改位于地址0x263CC4的全局变量的值，这个全局变量影响后面的加密算法的选择，这里也是main部分中唯一对解密过程产生影响的地方</strong>。至于为什么是用s1进行比较，而不是用数组0x2680A8的值进行比较。是因为数组0x2680A8中只暂存5个字符。它是在对s1字符串进行一次次筛选重排中的一个步骤。</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_10_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_10_4.png"></a>
+</li>
+<li><p>接下来我们来看字符串中的前5个字符”Red{E”，它们<strong>在字符串”RV&Dr_ke1OvS8}ds{9*lg%tE3”中的下标</strong>分别为<strong>[0，7，14，16，23]</strong>，换算在5X5矩阵中如下：</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_11.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_11.png"></a>
+</li>
+<li><p>此时，打住，在前面第4个循环的时候，做了这样一件事，就是将5个字符进行异或，然后和3进行与运算，再去异或dword_262014的值。我们做这个5个字符做如下操作，得到0x20。<strong>也就是说，此时dword_262014的值被修改为0x20</strong></p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_11_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_11_1.png"></a>
+</li>
+<li><p>这个时候，我们把新的dword_262014的值代入到下一轮<strong>大循环</strong>，此时v21的值已经变为2</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_11_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_11_2.png"></a>
+</li>
+<li><p>接下来，我们0x268100这个指针数组中第二指针指向的字符串，再进行一次运算，得到了<strong>新的字符串为”JV5NPGzj34rX#L!tbyD-W*}p_”</strong></p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_11_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_11_3.png"></a>
+</li>
+<li><p>这个时候我们回到switch语句这里，因为它总共会进行5轮大循环，由于每轮循环v21的值会增加，因此每轮循环选择的字符串也有所不同。因此我们刚刚计算出的<strong>字符串”JV5NPGzj34rX#L!tbyD-W*}p_”</strong>用于计算s1字符串中第5~9个字符的值。</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_11_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_11_4.png"></a>
+</li>
+<li><p>目前，已经显示了两个字符，也就是<strong>“V”，”3”，这俩字符在字符串”JV5NPGzj34rX#L!tbyD-W*}p_”中的下标分别为1和8</strong>。我们在5X5矩阵的图中先标记出来。</p>
+<p>字符串”JV5NPGzj34rX#L!tbyD-W*}p_”</p>
+</li>
+<li><p>于是我们自己编写一个五皇后的代码，算出所有的可能性，代码如下：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">python</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NQueens</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, size)</span>:</span></span><br><span class="line">		self.size = size</span><br><span class="line">		self.solutions = <span class="number">0</span></span><br><span class="line">		self.solve()</span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">solve</span><span class="params">(self)</span>:</span></span><br><span class="line">		positions = [<span class="number">-1</span>] * self.size</span><br><span class="line">		self.put_queen(positions, <span class="number">0</span>)</span><br><span class="line">		print(<span class="string">"Found"</span>, self.solutions, <span class="string">"solutions."</span>)</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">put_queen</span><span class="params">(self, positions, target_row)</span>:</span></span><br><span class="line">		<span class="keyword">if</span> target_row == self.size:</span><br><span class="line">			self.show_full_board(positions)</span><br><span class="line">			self.solutions += <span class="number">1</span></span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			<span class="keyword">for</span> column <span class="keyword">in</span> range(self.size):</span><br><span class="line">				<span class="keyword">if</span> self.check_place(positions, target_row, column):</span><br><span class="line">					positions[target_row] = column</span><br><span class="line">					self.put_queen(positions, target_row + <span class="number">1</span>)</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">check_place</span><span class="params">(self, positions, ocuppied_rows, column)</span>:</span></span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(ocuppied_rows):</span><br><span class="line">			<span class="keyword">if</span> positions[i] == column <span class="keyword">or</span> positions[i] - i == column - ocuppied_rows <span class="keyword">or</span> positions[i] + i == column + ocuppied_rows:</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">show_full_board</span><span class="params">(self, positions)</span>:</span></span><br><span class="line">		<span class="keyword">for</span> row <span class="keyword">in</span> range(self.size):</span><br><span class="line">			line = <span class="string">""</span></span><br><span class="line">			<span class="keyword">for</span> column <span class="keyword">in</span> range(self.size):</span><br><span class="line">				<span class="keyword">if</span> positions[row] == column:</span><br><span class="line">					line += <span class="string">"X "</span></span><br><span class="line">				<span class="keyword">else</span>:</span><br><span class="line">					line += <span class="string">"0 "</span></span><br><span class="line">			print(line)</span><br><span class="line">		print(<span class="string">"\n"</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">	 NQueens(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">	main()</span><br></pre></td></tr></tbody></table></figure></div>
+</li>
+<li><p>列出所有的可能性后，刚好找到一个可以匹配当前情况的五皇后状态，如下图所示：</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_13.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_13.png"></a>
+</li>
+<li><p>此时补充完此图的全部位置，并标注其对应字符，可以得到，因此我们可以<strong>补全s1字符串为”Red{EV3ry_}”</strong></p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_14.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_14.png"></a>
+</li>
+<li><p>接下来关注对全局变量0x263CC4的设置：</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_15.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_15.png"></a>
+</li>
+<li><p>由图所示，可以很清楚的看到，这里将0x2680C7这个地址处对应的值（一个字节大小），经过符号扩展后赋值给了eax，再对eax+6，赋值给了全局变量0x26CC4，因此这里的0x2680C7就显得很重要。</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_16.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/main_16.png"></a>
+
+<p>进入查看，发现又位于.bss段，往上看刚好是s1字符串的起始处，又因为只有满足前7个字符相同这个条件才能走到这一步，因此可以直接拿7个字符先匹配过来，刚好对应地址0x2680C0~0x2680C6处的值，接下来的<strong>0x2680C7的值，根据前面推算，即字符”r”</strong>，其对应的十六进制值分别为0x72，再进行加6，可以确定<strong>全局变量0x263CC4地址处的值为0x78中的一个</strong>。至此<code>sub_3BFAA</code>函数部分分析完成，<strong>其核心功能是通过五皇后算法，设置了一个全局变量的值为0x78</strong></p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="init部分"><a href="#init部分" class="headerlink" title="init部分"></a>init部分</h3><p>由于<code>main</code>函数中并没有实现对文件加密的功能，目光只能聚集到先于<code>main</code>调用的<code>init</code>和init_array，在执行ELF文件时，会优先调用<code>init</code>函数，以及init_array数组中的所有函数。下面开始分析<code>init</code>函数的部分：</p>
+<ol>
+<li><p>通过对<code>main</code>函数进行xref（快捷键”X“），可以找到其上层函数<code>_libc_start_main</code>，这里可以看到init函数</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_1.png"></a>
+</li>
+<li><p>进入<code>init</code>，前面是<code>init_proc</code>用于初始化进程没什么用；接下来是调用偏移0x238988处的一系列函数，实际上就是遍历init_array数组中的函数，依次进行调用。进入init_array数组，一共两个函数，依次点进去，发现<code>sub_3B160</code>没有做什么操作，因此只能关注函数<code>sub_3B025</code>了</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_2.png"></a>
+
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_3.png"></a>
+</li>
+<li><p>进入函数<code>sub_3B025</code>，这里一共有2个函数，首先来看<code>sub_3D2A6</code>，该函数只做了一件事，设置sigaction结构体，将<strong>信号14</strong>的处理函数设置为<code>sub_3D27B</code>。两个<code>__readfsqword</code>没什么用，读取和校验canary的值，是检查栈溢出的。</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_4.png"></a>
+
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_5.png"></a>
+</li>
+<li><p>再看<code>sub_3D318</code>，这个函数也只做了一件事，调用<code>setitimer</code>设置超时时间为600s，ITIMRE_REAL按实际时间计时，计时达到将给进程发送SIGALRM信号，即信号14。而信号14的回调函数在前面被设置为了<code>sub_3D27B</code>。所以，这个程序就会每10min调用一次<code>sub_3D27B</code>这个函数，重点也是这个函数。</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_6.png"></a>
+</li>
+<li><p>进入<code>sub_3D27B</code>，情况如下：</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_7.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_7.png"></a>
+</li>
+<li><p>首先判断地址0x263CA0处是否为空，这个地址同样位于.bss段，未经初始化，在执行init_array数组中的函数时肯定没有初始化，因为这个函数本身就是最早执行的。<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_8.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_8.png"></a></p>
+</li>
+<li><p>因此进入<code>sub_3D243</code>查看。可以看到，这里根据先前的全局变量0x263CC4，计算出一个偏移值，这个值的范围在0~3之间，然后根据这个偏移<strong>在0x262020处的数组中（蓝色方框框出）找到特定函数地址（这是4个不同模式的AES加密函数），写入到0x263CA0开始的数组中。</strong></p>
+<p>由于我们已经<strong>在main部分确定了全局变量的值为0x78</strong>，因此数组0x263CA0存的顺序如下：</p>
+<ul>
+<li>[sub_3C6D5、sub_3C979、sub_3CACB、sub_3C827]</li>
+</ul>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_9.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_9.png"></a>
+</li>
+<li><p>完成对数组的赋值工作后回到``sub_3D27B<code>，接下来关注</code>sub_3CD78`，该函数传递了一个参数，这个参数的值为0xFE</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_10.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_10.png"></a>
+</li>
+<li><p>进入<code>sub_3CD78</code>，</p>
+<ol>
+<li><p>这里先判断buf是否为空，一开始肯定是空的，所以需要调用<code>sub_3CCD9</code>，进入<code>sub_3CCD9</code>，如果buf为空，则会先为其分配空间，然后再调用<code>sub_3CD78</code>，这里需要注意一点，此时参数传递的是aW，进入查看，发现是一段写死的数据。</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_12.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_12.png"></a>
+</li>
+<li><p>再回到<code>sub_3CD78</code>，由于已经为buf分配了空间。接下来会对0x2680A0地址是否有值进行判断，这是一个临时存放解码数据的缓冲区。第一次执行时同样不会有值，走else逻辑，进入蓝色方框区域</p>
+</li>
+<li><p>给0x2680A0开始的地址申请一块128字节的内存空间，然后将a1指向的字符串的值依次与0xE9进行异或运算，然后再保存到0x2680A0地址开始的内存空间中。注意一点，这里的a1的值不是0xFE，而是在<code>sub_3CCD9</code>中调用时传递的aW</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_11.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_11.png"></a>
+</li>
+</ol>
+</li>
+<li><p>编写简单的脚本进行解析，可以得到aW传递的字符串实际是<code>/proc/self/exe</code>。返回结果保存在v6，</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">python</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">e1 = [<span class="number">0x57</span>, <span class="number">0xF0</span>, <span class="number">0xA2</span>, <span class="number">0x97</span>, <span class="number">0x6B</span>, <span class="number">0x57</span>, <span class="number">0xFB</span>, <span class="number">0x1D</span>, <span class="number">0x8C</span>, <span class="number">0x76</span>, <span class="number">0x57</span>,</span><br><span class="line">      <span class="number">0x1D</span>, <span class="number">0xB8</span>, <span class="number">0x1D</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> e1:</span><br><span class="line">	s = str(hex(<span class="number">0xE9</span>*x))[<span class="number">4</span>:]</span><br><span class="line">	res.append(chr(int(s, <span class="number">16</span>)))</span><br><span class="line">print(<span class="string">''</span>.join(res))</span><br></pre></td></tr></tbody></table></figure></div>
+</li>
+<li><p>此时返回到<code>sub_3CCD9</code>中，在Linux中，<code>/proc/self/exe</code>是一个符号链接，代表当前程序。通过调用<code>readlink</code>读取它的源路径就可以获取当前程序的绝对路径。然后，通过一个循环，寻找绝对路径最后一个<code>\或者/</code>之后的字符串，也就是程序自身的真实名字，将其保存在buf中</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_13.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_13.png"></a>
+</li>
+<li><p>此时，从<code>sub_3CCD9</code>中回到<code>sub_3CD78</code>。可以发现，在buf为空的情况下，会调用<code>sub_3CCD9</code>初始化buf缓冲区，并赋值为当前程序名的字符串。此时，我只需要关心if部分，因为在先前<code>sub_3CCD9</code>中调用<code>sub_3CD78</code>后，地址0x2680A0处已经有值，存放的是<code>proc/self/exe</code>，此时，</p>
+<ol>
+<li><p>先将0x2680A0中保存的值全部清除</p>
+</li>
+<li><p>打开自身程序读取前4个字节，ELF文件的前4个字节为<code>.EFL</code>，对应的ascii码为（0x7F，0x45，0x4C，0x46）</p>
+</li>
+<li><p>接下来用第2~4个字节相乘，取低字节再加1（刚好又是0xE9），然后与传入的a1字符串（此时为0xFE）进行异或，得到字符串<code>.</code>，也就是当前目录，然后返回</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_14.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_14.png"></a>
+
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_15.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_15.png"></a>
+</li>
+</ol>
+</li>
+<li><p>回到上层调用<code>sub_3D27B</code>，将刚刚分析的<code>sub_3CD78</code>改名为<code>xorStringWith0xE9</code>，然后进入分析<code>sub_3D067</code>的调用过程，参数传入为字符串<code>"."</code></p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_16.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_16.png"></a>
+</li>
+<li><p>进入<code>sub_3D067</code>，这部分很简单，核心函数在后头，先梳理下流程：</p>
+<ol>
+<li><p>调用<code>sub_1B4960</code>，该函数实际调用了<code>_xstat</code>用于获取文件属性，这些属性会保存在传入的stat_buf结构体中。然后通过st_mode字段判断是否为目录文件（第14位被置位，即0x4000）。这里传入的是字符串<code>"."</code>，表示当前目录</p>
+</li>
+<li><p>然后调用<code>opendir</code>打开当前目录，进入循环调用<code>readdir</code>遍历当前目录的所有文件；获取文件名，将其存入全局变量s1中（注意这里的s1和前面main函数中出现的s1指向的不是同一个地址），并筛选掉所有目录文件</p>
+</li>
+<li><p>调用<code>sub_3CE9B</code>，这个函数会判断文件名是否是<code>.dp</code>后缀，如果是的话，则会返回1；否则返回0，则会进入<code>sub_3CFDA</code></p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_17.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_17.png"></a>
+</li>
+</ol>
+</li>
+<li><p>进入<code>sub_3CFDA</code>，橙色方框的部分会将<code>.dp</code>附加到原文件名后面，然后将原文件名和修改后的文件名，作为参数传入<code>sub_3CEF5</code></p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_18.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_18.png"></a>
+</li>
+<li><p>进入<code>sub_3CEF5</code>，这是最为关键的用于加密的函数，具体操作如下：</p>
+<ul>
+<li><p>橙色方框：<strong>生成一个16字节的随机字符串，赋值给变量v5</strong></p>
+</li>
+<li><p>蓝色方框：打开原始文件，<strong>读取内容到变量v7中</strong></p>
+</li>
+<li><p>红色方框：打开新创建的文件，用于将原文件内容加密后写入，<strong>文件描述符赋给变量v8</strong></p>
+</li>
+<li><p>粉色方框：</p>
+<ul>
+<li><p><strong>选则随机字符串的第4个字节，加上索引i（范围0<del>2，从0开始，每轮循环递增），再和3进行与操作，得到一个范围在0</del>3之间的随机数，赋值给变量v6</strong></p>
+</li>
+<li><p><strong>将v6作为索引，选择数组中存放的加密函数</strong>，数组中加密函数的排列如下所示：</p>
+<p>[sub_3C6D5、sub_3C979、sub_3CACB、sub_3C827]</p>
+</li>
+<li><p>将v7、v8、v5作为参数，调用从数组中选取的加密函数，进行三轮加密（每一轮需要重新在数组中选择加密函数，这些加密函数均为AES加密，但是加密模式不同）</p>
+<a href="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_19.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/init_19.png"></a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cata1oc.github.io/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/">http://cata1oc.github.io/2019/03/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%81%B6%E6%84%8F%E6%A0%B7%E6%9C%AC%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Windows%E9%80%86%E5%90%91/">Windows逆向    </a><a class="post-meta__tags" href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E5%85%A8/">二进制安全    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2019/04/11/%E6%9F%90%E6%A1%8C%E9%9D%A2%E4%BE%BF%E7%AD%BE%E8%BD%AF%E4%BB%B6%E6%9A%B4%E7%A0%B4/"><img class="prev_cover lazyload" data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Previous Post</div><div class="prev_info"><span>某桌面便签软件暴破</span></div></a></div><div class="next-post pull_right"><a href="/2019/03/23/%E5%88%9D%E6%8E%A2Go%E9%80%86%E5%90%91/"><img class="next_cover lazyload" data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>初探Go逆向</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2021/10/22/KCTF题库-异想天开/" title="KCTF题库：异想天开"><img class="relatedPosts_cover lazyload"data-src="https://raw.githubusercontent.com/cata1oc/cata1oc.github.io/master/2021/10/22/KCTF%E9%A2%98%E5%BA%93-%E5%BC%82%E6%83%B3%E5%A4%A9%E5%BC%80/cover0x4B.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2021-10-22</div><div class="relatedPosts_title">KCTF题库：异想天开</div></div></a></div><div class="relatedPosts_item"><a href="/2020/03/12/一次简单的Hook-下/" title="一次简单的Hook（下）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-12</div><div class="relatedPosts_title">一次简单的Hook（下）</div></div></a></div><div class="relatedPosts_item"><a href="/2020/03/10/一次简单的Hook-上/" title="一次简单的Hook（上）"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-10</div><div class="relatedPosts_title">一次简单的Hook（上）</div></div></a></div><div class="relatedPosts_item"><a href="/2020/04/03/分析SwapContext/" title="分析SwapContext"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-04-03</div><div class="relatedPosts_title">分析SwapContext</div></div></a></div><div class="relatedPosts_item"><a href="/2020/03/21/逆向分析MmIsAddressValid/" title="逆向分析MmIsAddressValid(10-10-12)"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-03-21</div><div class="relatedPosts_title">逆向分析MmIsAddressValid(10-10-12)</div></div></a></div><div class="relatedPosts_item"><a href="/2022/05/15/KCTF2022春季赛第三题/" title="KCTF2022春季赛第三题"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2022-05-15</div><div class="relatedPosts_title">KCTF2022春季赛第三题</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
