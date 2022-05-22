@@ -1,0 +1,7 @@
+#!/usr/bin/sh
+
+for f in *.csv;do
+        clickhouse-client --query "CREATE TABLE table_ipnoport_${f:0:-4}(ip String, sha256 FixedString(64))ENGINE=MergeTree ORDER BY sha256 SETTINGS index_g    ranularity = 8192"
+        cat $f | clickhouse-client --query "INSERT INTO table_ipnoport_${f:0:-4} FORMAT CSV"
+        echo "finish insert $f"
+done

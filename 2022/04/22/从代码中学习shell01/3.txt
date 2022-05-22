@@ -1,0 +1,131 @@
+#!/usr/bin/sh
+
+function download_file() {
+
+        ftp_user="data"
+        ftp_pass="data@qihoo_tip"
+        ftp_host="ftp://20.20.100.31"
+        subdir="Qihoo/"
+
+        date=`date -I`
+        date_pat=${date//'-'/}
+        # Test Date
+        date_pat="20220426"
+        file_pat_array=("TIP_IOC_all" "IOC_all")
+
+        files=$(curl -l -s -u ${ftp_user}:${ftp_pass} ${ftp_host}/${subdir})
+        for f in ${files[*]};do
+                for file_pat in ${file_pat_array[*]};do
+                        if [[ $f == $file_pat*$date_pat* ]]
+                        then
+                                echo "start download $f ..."
+                                info=$(curl -O -u ${ftp_user}:${ftp_pass} ${ftp_host}/${subdir}/${f})
+                                echo "finish download $f"
+                        fi
+                done
+        done
+}
+
+# Decrypt And Extract Zip Data
+function decrypt_gzip() {
+
+        dat=".dat"
+        json_pattern=".json"
+        dir="/"
+
+        for line in `tar -xvzf $1`;do
+                if [[ $line == *$json_pattern ]]
+                then
+                        json_file=$line
+                elif [[ $line == *$dat ]]
+                then
+                        dat_file=$line
+                elif [[ $line == *$dir ]]
+                then
+                        dir=$line
+                fi
+        done
+
+        # Read Sign In Json File
+        str=$(jq '.sign' $json_file)
+        sign=${str:1:-1}
+
+        # Generate Key And Decrypt File
+        key=$(./license-sdk-go.license-sdk-go -p BQ6ZN-DW78F-38YWG-9GT49-JY7V7.lic -d $sign)
+        openssl enc -aes-256-cbc -d -K $key -iv 0 -in $dat_file -out out.tar.gz
+
+        # Unzip File And Delete Dir We Dont Need
+        tar -xvzf out.tar.gz
+        rm out.tar.gz
+        rm -r $dir
+}
+
+# Classify Different Data Into Json
+function classify_data() {
+
+        tip_pat="TIP_IOC_all"
+        ioc_pat="IOC_all"
+        date=`date -I`
+        date_pat=${date//'-'/}
+
+        # Filter Different Zip, Decrypt And Strip Data
+        for f in *.gz;do
+                if [[ $f == $tip_pat* ]]
+                then
+                        echo $f
+                        decrypt_gzip $f
+                        mv package/all/ioc.json `pwd`
+                        rm -rf package/
+                        grep '"type": "SLD"' ioc.json >> domain${date_pat}.json
+                        grep '"type": "FQDN"' ioc.json >> domain${date_pat}.json
+                        rm -f ioc.json
+                        rm -f $f
+
+                elif [[ $f == $ioc_pat* ]]
+                then
+                        echo $f
+                        decrypt_gzip $f
+                        mv package/all/ioc.json `pwd`
+                        rm -rf package/
+                        grep '"type": "SLD"' ioc.json >> domain${date_pat}.json
+                        grep '"type": "FQDN""' ioc.json >> domain${date_pat}.json
+                        rm -f ioc.json
+                        rm -f $f
+
+                fi
+        done
+
+        # Filter DGA Data
+        grep -v 'DGA' domain${date_pat}.json > domain_nodga${date_pat}.json
+        rm  -f domain${date_pat}.json
+
+        # Execute Python Script For Query Database
+        python3 ../py_script/query_domain.py ./domain_nodga${date_pat}.json domain_hash_map${date_pat}.json
+}
+
+# Upload Parsed Data
+function upload_data() {
+
+        ftp_user="data"
+        ftp_pass="data@qihoo_tip"
+        ftp_host="ftp://20.20.100.31"
+        subdir="JSON"
+        date=`date -I`
+        date_pat=${date//'-'/}
+
+        # Calculate MD5 For Each File
+        md5sum domain_nodga${date_pat}.json >> domain_md5check${date_pat}
+        md5sum domain_hash_map${date_pat}.json >> domain_md5check${date_pat}
+
+        # Upload Data And Remove Local File
+        curl -u ${ftp_user}:${ftp_pass} ${ftp_host}/${subdir}/ -T \
+        "{domain_nodga${date_pat}.json,domain_hash_map${date_pat}.json,domain_md5check${date_pat}}"
+
+        rm -f domain_nodga${date_pat}.json
+        rm -f domain_hash_map${date_pat}.json
+        rm -f domain_md5check${date_pat}
+}
+
+download_file
+classify_data
+upload_data
