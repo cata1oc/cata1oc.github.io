@@ -1,0 +1,390 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>堆基础02-malloc源码分析 | cataLoc's Blog</title><meta name="description" content="堆基础02-malloc源码分析"><meta name="keywords" content="二进制安全"><meta name="author" content="cataLoc"><meta name="copyright" content="cataLoc"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="堆基础02-malloc源码分析"><meta name="twitter:description" content="堆基础02-malloc源码分析"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="堆基础02-malloc源码分析"><meta property="og:url" content="http://cata1oc.github.io/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"><meta property="og:site_name" content="cataLoc's Blog"><meta property="og:description" content="堆基础02-malloc源码分析"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'true'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://cata1oc.github.io/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"><link rel="next" title="堆基础01-ptmalloc2初探" href="http://cata1oc.github.io/2022/06/30/%E5%A0%86%E5%9F%BA%E7%A1%8001-ptmalloc2%E5%88%9D%E6%8E%A2/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">148</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">14</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#前言"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">前言</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#源码调试"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">源码调试</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#libc-malloc-主流程"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">__libc_malloc 主流程</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#libc-malloc-辅助函数"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">__libc_malloc 辅助函数</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#checked-request2size"><span class="toc_mobile_items-number">4.1.</span> <span class="toc_mobile_items-text">checked_request2size</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#csize2tidx"><span class="toc_mobile_items-number">4.2.</span> <span class="toc_mobile_items-text">csize2tidx</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#MAYBE-INIT-TCACHE"><span class="toc_mobile_items-number">4.3.</span> <span class="toc_mobile_items-text">MAYBE_INIT_TCACHE</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#tcache-get"><span class="toc_mobile_items-number">4.4.</span> <span class="toc_mobile_items-text">tcache_get</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#chunk-is-mmapped"><span class="toc_mobile_items-number">4.5.</span> <span class="toc_mobile_items-text">chunk_is_mmapped</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#chunk2mem-mem2chunk"><span class="toc_mobile_items-number">4.6.</span> <span class="toc_mobile_items-text">chunk2mem &#x2F; mem2chunk</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#arena-for-chunk"><span class="toc_mobile_items-number">4.7.</span> <span class="toc_mobile_items-text">arena_for_chunk</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#arena-get"><span class="toc_mobile_items-number">4.8.</span> <span class="toc_mobile_items-text">arena_get</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#arena-get-retry"><span class="toc_mobile_items-number">4.9.</span> <span class="toc_mobile_items-text">arena_get_retry</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#int-malloc-主流程"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">_int_malloc 主流程</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#初始校验"><span class="toc_mobile_items-number">5.1.</span> <span class="toc_mobile_items-text">初始校验</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Fast-Bin-处理流程"><span class="toc_mobile_items-number">5.2.</span> <span class="toc_mobile_items-text">Fast Bin 处理流程</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Small-Bin-处理流程"><span class="toc_mobile_items-number">5.3.</span> <span class="toc_mobile_items-text">Small Bin 处理流程</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Unsorted-Bin-处理流程"><span class="toc_mobile_items-number">5.4.</span> <span class="toc_mobile_items-text">Unsorted Bin 处理流程</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#int-malloc-辅助函数"><span class="toc_mobile_items-number">6.</span> <span class="toc_mobile_items-text">_int_malloc 辅助函数</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考链接"><span class="toc_mobile_items-number">7.</span> <span class="toc_mobile_items-text">参考链接</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码调试"><span class="toc-number">2.</span> <span class="toc-text">源码调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#libc-malloc-主流程"><span class="toc-number">3.</span> <span class="toc-text">__libc_malloc 主流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#libc-malloc-辅助函数"><span class="toc-number">4.</span> <span class="toc-text">__libc_malloc 辅助函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#checked-request2size"><span class="toc-number">4.1.</span> <span class="toc-text">checked_request2size</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#csize2tidx"><span class="toc-number">4.2.</span> <span class="toc-text">csize2tidx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MAYBE-INIT-TCACHE"><span class="toc-number">4.3.</span> <span class="toc-text">MAYBE_INIT_TCACHE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tcache-get"><span class="toc-number">4.4.</span> <span class="toc-text">tcache_get</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chunk-is-mmapped"><span class="toc-number">4.5.</span> <span class="toc-text">chunk_is_mmapped</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chunk2mem-mem2chunk"><span class="toc-number">4.6.</span> <span class="toc-text">chunk2mem &#x2F; mem2chunk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#arena-for-chunk"><span class="toc-number">4.7.</span> <span class="toc-text">arena_for_chunk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#arena-get"><span class="toc-number">4.8.</span> <span class="toc-text">arena_get</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#arena-get-retry"><span class="toc-number">4.9.</span> <span class="toc-text">arena_get_retry</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#int-malloc-主流程"><span class="toc-number">5.</span> <span class="toc-text">_int_malloc 主流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初始校验"><span class="toc-number">5.1.</span> <span class="toc-text">初始校验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fast-Bin-处理流程"><span class="toc-number">5.2.</span> <span class="toc-text">Fast Bin 处理流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Small-Bin-处理流程"><span class="toc-number">5.3.</span> <span class="toc-text">Small Bin 处理流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Unsorted-Bin-处理流程"><span class="toc-number">5.4.</span> <span class="toc-text">Unsorted Bin 处理流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#int-malloc-辅助函数"><span class="toc-number">6.</span> <span class="toc-text">_int_malloc 辅助函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">7.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">堆基础02-malloc源码分析</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2022-07-16<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2022-07-16</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a href>前一篇</a>已经介绍了 ptmalloc2 的分配策略以及涉及到的主要数据结构，本篇将<strong>基于 glibc.2.31 源码</strong>，分析 <code>malloc</code>在源码中的具体实现。主要参考博客园上的<a href="https://www.cnblogs.com/luoleqi/p/15520621.html" target="_blank" rel="noopener">一篇</a>基于 glibc2.31的源码分析，以及看雪上<a href="https://bbs.pediy.com/thread-271316.htm" target="_blank" rel="noopener">一篇</a>基于 glibc2.23 的源码分析。分析过程与之前分析 AFL 源码一样，按照执行的先后顺序来。</p>
+<h2 id="源码调试"><a href="#源码调试" class="headerlink" title="源码调试"></a>源码调试</h2><ol>
+<li><p>按照<a href="https://github.com/pwndbg/pwndbg" target="_blank" rel="noopener">官网</a>的方式下载安装</p>
+</li>
+<li><p>网速慢，可下载 zip 包后，解压到指定目录下，然后配置<code>~/.gdbinit</code>文件即可</p>
+</li>
+<li><p>要进行源码调试，需在<a href="https://ftp.gnu.org/gnu/glibc" target="_blank" rel="noopener">官网</a>下载对应版本的源码，然后在<code>~/.gdbinit</code>中配置源码所在路径，我这里只配置常用的源码</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/source_dbg_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/source_dbg_1.png"></a>
+</li>
+<li><p>配置完后，用 gdb 调试程序，<code>start</code> 启动后会在程序入口断下，单步（<code>si</code>指令）到库函数例如 malloc  中，就可以看到源码了，如下图所示</p>
+</li>
+<li><p>我这里直接在 vscode 的 terminal 中调试，没用 ubuntu 自带的 terminal，这样方便查看源码。尽管已经是源码调试，但 terminal 中只能看到源码片段，并不完整，所以还是需要有源码进行辅助</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/libc_malloc_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/libc_malloc_2.png"></a>
+
+
+
+
+</li>
+</ol>
+<h2 id="libc-malloc-主流程"><a href="#libc-malloc-主流程" class="headerlink" title="__libc_malloc 主流程"></a>__libc_malloc 主流程</h2><ol>
+<li><p>首先编写一个会使用到 malloc / free 的简单程序：</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/libc_malloc_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/libc_malloc_1.png"></a>
+</li>
+<li><p>用 pwndbg 结合源码进行单步调试，<code>si</code>单步到 malloc 中，进入下图所示的状态</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/libc_malloc_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/libc_malloc_2.png"></a>
+
+<ul>
+<li>DISASM：反汇编窗口显示经过 .plt 表中的 stub 代码后，跳转到了 malloc 函数真正开始的地方 </li>
+<li>SOURCE：源码窗口，可以看到目前位于 <code>__libc_malloc()</code> 函数的开始处</li>
+<li>BACKTRACE：调用栈窗口显示，此时进入了 malloc 函数中执行</li>
+</ul>
+<p>综上，可以分析得出，在<strong>程序进入 malloc 函数后，最先执行的函数为 <code>__libc_malloc()</code></strong></p>
+</li>
+<li><p>接下来，开始分析 <code>__libc_malloc()</code>，这里会先分析主体流程，涉及到的其它函数与宏，会先简要概括，并在后文根据情况适当展开，我们先来看第一部分：</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/libc_malloc_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/libc_malloc_3.png"></a>
+
+<ul>
+<li>mstate 类型对应的结构体是 malloc_state，其作用相当于 Arena Header</li>
+<li>判断是否存在 __malloc_hook，若存在则调用该 hook 函数并返回。值得注意的是，在 2.34 版本中，malloc_hook 同其它大部分的 hook 都被删除了</li>
+<li><code>atomic_forced_read(x)</code>这个宏的作用相当于 <code>*ptr</code>，只不过是原子操作</li>
+<li>若开启了 tcache 机制（默认开启），则：<ul>
+<li>调用 <code>checked_request2size()</code> 判断申请的空间大小是否超过边界。若未超过边界，则<strong>根据申请的大小计算出需要分配的 chunk 大小，该值保存在传入的 tbytes 参数中</strong></li>
+<li>调用<code>csize2tidx()</code>根据 tbytes 中指定的 chunk 大小找到对应的 tcache bin 下标</li>
+<li>若 tcache 还未创建，则通过宏<code>MAYBE_INIT_TCACHE</code>调用<code>tcache_init()</code>来初始化 tcache</li>
+<li>接下来进行 3 项判断，若都满足，则调用<code>tcache_get()</code>返回对应大小的 chunk：<ol>
+<li>先前计算出的下标是否在 tcache bins 范围内（这里的 mp_ 对应的结构体是 malloc_par）</li>
+<li>tcache 是否存在</li>
+<li>下标所对应的 tcache bin 中是否仍有空闲的 tcache chunk</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>接下来分析<code>libc_malloc()</code>的第二部分：</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/libc_malloc_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/libc_malloc_4.png"></a>
+
+<ul>
+<li>首先处理单线程的情况：<ul>
+<li>调用<code>_int_malloc()</code>函数分配内存，该函数是内存分配的最核心函数，后面会对其进行分析。<ol>
+<li>main_arena：由于是单线程，所以只有一个主分配区。其为 malloc_state 结构体，在第一次申请时可能值为 NULL，在<code>_int_malloc()</code>内部会对其进行初始化</li>
+<li>bytes：也就是申请的字节数了，注意这里的 bytes 是外层在 malloc 中传入的申请的字节数，尚未转换成需要申请的 chunk 大小</li>
+</ol>
+</li>
+<li>如果执行成功的话，就会返回一个指向内存的指针。本质上，这个指针<strong>指向分配的 chunk 中存放数据的首地址</strong>，也就是 chunkaddr + 2 * SIZE_SZ 的位置</li>
+</ul>
+</li>
+<li>然后是多线程的情况：<ul>
+<li>首先调用<code>arena_get()</code>获取分配区</li>
+<li>然后通过<code>_int_malloc()</code>从该分配区中拿到分配给咱的内存地址</li>
+<li><strong>如果成功获取分配区，但是分配内存失败，可能是 mmap 区域的内存耗尽等多种原因</strong>。所里会调用<code>arena_get_retry()</code>更换分配区，然后再调用<code>_int_malloc</code>从新的分配区上进行分配</li>
+<li>前面两次无论是否分配成功，只要获取到了分配区，这里就会将线程锁释放。这个锁是在获取空闲分配区时加上的。在前面两次试图获取或者更换分配区时，会在不同情况下进行上锁，这个后面会讨论</li>
+<li>最后将指向分配内存的指针返回给用户</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>至此，<code>__libc_malloc()</code>的主体流程分析完毕</p>
+</li>
+</ol>
+<h2 id="libc-malloc-辅助函数"><a href="#libc-malloc-辅助函数" class="headerlink" title="__libc_malloc 辅助函数"></a>__libc_malloc 辅助函数</h2><p>这部分会对在分析<code>__libc_malloc()</code>时见到的几个关键的”函数 / 宏”展开分析，部分函数也在<code>_int_malloc()</code>中被调用，因为首次出现在<code>__libc_malloc()</code>中，所以放在此处分析，在后面分析<code>_int_malloc()</code>时也是如此</p>
+<h3 id="checked-request2size"><a href="#checked-request2size" class="headerlink" title="checked_request2size"></a>checked_request2size</h3><ol>
+<li><p>首先来看<code>checked_requeset2size()</code></p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/request2size_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/request2size_1.png"></a>
+
+<ul>
+<li>首先判断申请的内存大小是否超过了边界 PTRDIFF_MAX，这个在 64 位系统上是 0x7fffffffffffffff</li>
+<li>如果符合要求，就调用<code>request2size()</code>这个宏，根据申请申请大小 req，计算出需要分配的 chunk 大小返回给 sz，并返回 true</li>
+</ul>
+</li>
+<li><p>然后进入<code>request2size()</code>，这里涉及到的宏均已经列出，其中 SIZE_SZ，根据系统位数变化，64 位对应 8 字节，32 位对应 4 字节。<strong>我们默认环境是 64 位的，所以都以 8 字节进行计算</strong></p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/request2size_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/request2size_2.png"></a>
+
+<ul>
+<li><p>MALLOC_ALIGNMENT 是 2 个 SIZE_SZ 的大小，就是 0x10 字节</p>
+</li>
+<li><p>MALLOC_ALIGN_MASK 就是 15 字节，也就是 0xF</p>
+</li>
+<li><p>MIN_CHUNK_SIZE 是从 malloc_chunk 结构体开头，到 fd_nextsize 这个字段之前的大小，也就是 4个 SIZE_SZ，共 32 字节，即 0x20</p>
+</li>
+<li><p>MINSIZE 算出来也是 0x20 字节</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-> (<span class="number">0x20</span> + <span class="number">0xF</span>) & (~<span class="number">0x0F</span>)</span><br><span class="line">-> <span class="number">0x2F</span> & <span class="number">0xF0</span></span><br><span class="line">-> <span class="number">0x20</span></span><br></pre></td></tr></tbody></table></figure></div>
+</li>
+<li><p>最后计算出 <code>request2size()</code> 的两种情况：</p>
+<ul>
+<li>当申请的内存少于 25(0x19) 字节时，分配一个 0x20 大小的 chunk 块。这个值可以根据 malloc_chunk 结构体推算出，<strong>因为 fd & bk 这俩字段仅在 free_chunk 中有效，否则用于存放数据，并且当 chunk 被使用时，下一个 chunk 的 prev_size 字段也可以用于存放当前 chunk 的数据</strong>，这 3 个字段加起来就是 24 字节，因此，当申请的空间小于 25 字节时，一个最小 chunk （0x20）即可满足需求 </li>
+<li>当大于等于 25(0x19) 字节时，就会计算出一个按照 0x10 对其的值，作为至少需要分配的 chunk 大小，具体算法参考下面的计算过程</li>
+</ul>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-> req + SIZE_SZ + MALLOC_ALIGN_MASK < MINSIZE</span><br><span class="line">-> req + <span class="number">0x8</span> + <span class="number">0xF</span> < <span class="number">0x20</span></span><br><span class="line">-> req < <span class="number">0x20</span> - <span class="number">0x8</span> - <span class="number">0xF</span></span><br><span class="line">-> req < <span class="number">0x9</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">// 为方便理解，这里假设req是一个小于0xFF的数    </span></span><br><span class="line">-> (req + SIZE_SZ + MALLOC_ALIGN_MASK) & ~MALLOC_ALIGN_MASK</span><br><span class="line">-> (req + <span class="number">0x8</span> + <span class="number">0xF</span>) & ~<span class="number">0x0F</span></span><br><span class="line">-> (req + <span class="number">0x17</span>) & <span class="number">0xF0</span></span><br><span class="line">-> (req + <span class="number">0x30</span> - <span class="number">0x19</span>) & <span class="number">0xF0</span></span><br></pre></td></tr></tbody></table></figure></div>
+
+
+
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="csize2tidx"><a href="#csize2tidx" class="headerlink" title="csize2tidx"></a>csize2tidx</h3><a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/csize2tidx_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/csize2tidx_1.png"></a>
+
+<ul>
+<li><p>这里的参数 x，正是前<code>request2size()</code>这个宏计算出的实际需要分配的 chunk 大小</p>
+</li>
+<li><p>MALLOC_ALIGNMENT 是 2 个 SIZE_SZ 的大小，就是 0x10 字节</p>
+</li>
+<li><p>MINSIZE 前面也算出来是 0x20 字节</p>
+</li>
+<li><p>下面进行一个简单的演算，假设 x 的值为 0x30 字节</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-> (x - MINSIZE + MALLOC_ALIGNMENT - <span class="number">1</span>) / <span class="number">0x10</span></span><br><span class="line">-> (<span class="number">0x30</span> - <span class="number">0x20</span> + <span class="number">0x10</span> - <span class="number">1</span>) / <span class="number">0x10</span></span><br><span class="line">-> (<span class="number">0x10</span> + <span class="number">0xF</span>) / <span class="number">0x10</span></span><br><span class="line">-> <span class="number">0x1F</span> / <span class="number">0x10</span></span><br><span class="line">-> <span class="number">1</span></span><br></pre></td></tr></tbody></table></figure></div>
+
+<p>此时得到的 idx 值为 1，我们知道 idx 是从 0 开始的，最小的 tcache bin chunk 大小是 0x20 字节。因此可以得出<code>chunksize = 0x20 + idx * 0x10</code>，这个 chunksize 就是需要分配的 chunk 大小，这样就会好理解很多</p>
+</li>
+</ul>
+<h3 id="MAYBE-INIT-TCACHE"><a href="#MAYBE-INIT-TCACHE" class="headerlink" title="MAYBE_INIT_TCACHE"></a>MAYBE_INIT_TCACHE</h3><a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/tcache_init_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/tcache_init_1.png"></a>
+
+<ul>
+<li><p>先看 3006 行，这里<code>MAYBE_INIT_TCACHE</code>宏内部调用了<code>tcache_init()</code></p>
+</li>
+<li><p>回到 2972 行，我们来看<code>tcache_init()</code>的内部实现</p>
+<ol>
+<li>首先计算出 tcache_perthread_struct 结构的大小，然后为其分配空间</li>
+<li>分配空间的过程和<code>__libc_malloc()</code>中类似，为了防止套娃这里只分析最外层的函数</li>
+<li>调用<code>arena_get()</code>获取分配区，然后通过<code>_int_malloc()</code>从该分配区分配内存</li>
+<li>如果分配区存在但没分配到，那就调用<code>arena_get_retry()</code>换个分配区再分配</li>
+<li>分配完成后调用<code>__libc_lock_unlock</code>释放分配区，这是因为在获取分配区或者更换分配区时会进行上锁操作</li>
+<li>最后将申请到的内存赋给 tcache_perthread_struct 结构，再调用<code>memset()</code>将内容初始化为0</li>
+</ol>
+</li>
+</ul>
+<h3 id="tcache-get"><a href="#tcache-get" class="headerlink" title="tcache_get"></a>tcache_get</h3><p>方才在<code>__libc_malloc()</code>中提到，如果满足一定条件，则通过<code>tcache_get()</code>获取到一个 chunk，传入的参数是经过宏<code>csize2tidx</code>算出来的所在 tcache bin 的 idx，下面来看这个函数：</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/tcache_get_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/tcache_get_1.png"></a>
+
+<ul>
+<li>先根据 idx 找到对应的 tcache bin 的第一个 tcache_entry，也就是这条 bin 上的第一个 chunk 块</li>
+<li>将这条 tcache bin 上的第一个 tcache_entry 修改为当前 tcache_entry 的下一个 tcache_entry，相当于将原先第一个 tcache_entry 给取出来（这玩意本质上就是 malloc_chunk，用到的字段不同，参考前一篇介绍的内容）</li>
+<li>修改此 tcache_bin 对应 tcache_counts 中表示该链上 chunk 数量的值，执行减 1 操作</li>
+<li>将取出的 chunk 的 key 字段置为 NULL，表示已经从 tcache 上取出；最后将其返回</li>
+</ul>
+<h3 id="chunk-is-mmapped"><a href="#chunk-is-mmapped" class="headerlink" title="chunk_is_mmapped"></a>chunk_is_mmapped</h3><a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/chunk_is_mmapped_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/chunk_is_mmapped_1.png"></a>
+
+<ul>
+<li>这个宏就是判断当前这个 chunk 是否通过<code>mmap()</code>申请的，这部分在前一篇介绍 malloc_chunk 时有提到，在 chunksize 的低 3 位保存了当前 chunk 的一些属性，其中下标为1的位（10b）就是用于判断 IS_MAPPED 的 M 位</li>
+</ul>
+<h3 id="chunk2mem-mem2chunk"><a href="#chunk2mem-mem2chunk" class="headerlink" title="chunk2mem / mem2chunk"></a>chunk2mem / mem2chunk</h3><p>这俩宏功能互补，所以放在一起说</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/chunk2mem_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/chunk2mem_1.png"></a>
+
+<ul>
+<li><code>chunk2mem</code><strong>传入的是 chunk 的实际首地址</strong>，所以需要加上 prev_size 和 chunksize 两个字段的大小后，才能指向开始存储数据的位置。一般调用这个宏是将分配好的 chunk 转换为可以返回给用户的地址</li>
+<li><code>mem2chunk</code><strong>传入的是返回给用户的地址，即经过 chunk2mem 处理后的结果</strong>，其指向 malloc_chunk 中位于开始存储数据的位置，减去 2 个 SIZE_SZ 大小后，即可指向 chunk 实际开始的位置</li>
+</ul>
+<h3 id="arena-for-chunk"><a href="#arena-for-chunk" class="headerlink" title="arena_for_chunk"></a>arena_for_chunk</h3><p>这部分涉及的宏定义还是挺多的</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/arena_for_chunk_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/arena_for_chunk_1.png"></a>
+
+<ul>
+<li>这个宏传入的参数是经过<code>mem2chunk</code>得到的 chunk 地址，用来获取 chunk 所在的分配区（arena）</li>
+<li>首先会调用<code>chunk_main_arena</code>这个宏，判断是否设置了 NON_MAIN_ARENA 位，这个值若未设置，就可以直接判断出是 main_arena（主分配区）</li>
+<li>否则，先计算 HEAP_MAX_SIZE - 1 取反后的值，将其与 chunk 所在地址进行与操作，从而得到 chunk 所在堆的 heap_info 地址（<strong>这么做是因为每次申请的堆的起始地址是与 HEAP_MAX_SIZE 对齐的，因此这样可以取到堆的起始地址，从而拿到堆的 heap_info</strong>）</li>
+<li>这里再回顾一下前一篇中总结的概念：<strong>一个堆对应一个 heap_info，一个 thread_arena（非主分配区） 对应一个 malloc_state，一个 thread_arena 中包含多个堆</strong></li>
+<li>拿到 heap_info 的地址后，就可以根据 ar_ptr 字段得到堆所在的分配区的地址了</li>
+</ul>
+<h3 id="arena-get"><a href="#arena-get" class="headerlink" title="arena_get"></a>arena_get</h3><p>这里涉及到的函数比较多，分开来讲</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/arena_get_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/arena_get_1.png"></a>
+
+<ul>
+<li><strong>arena_get</strong>：<ul>
+<li>直接从 thread_arena 获取分配区（主分配区的获取不使用<code>arena_get()</code>）</li>
+<li>将获取到的分配区和申请内存大小作为参数传入 <code>arean_lock()</code></li>
+</ul>
+</li>
+<li><strong>arena_lock</strong>：<ul>
+<li>判断是否成功获取分配区，若成功获取，则调用<code>__libc_lock_lock</code>对分配区上锁</li>
+<li>若获取失败，则调用<code>arena_get2()</code>重新获取分配区</li>
+</ul>
+</li>
+<li><strong>arena_get2</strong>：<ul>
+<li>这个函数就干了一件事，调用<code>get_free_list()</code>获取分配区，如果获取成功则将分配区返回，这里<code>get_free_list()</code>返回的是 malloc_state 结构体</li>
+</ul>
+</li>
+<li><strong>get_free_list</strong>：<ul>
+<li>想要弄明白这个函数，需要回顾下前一篇中介绍 malloc_state 的部分</li>
+<li>这里的 replaced_arena 是给下面要分析的<code>arena_get_retry()</code>用的，调用<code>arena_get()</code>时这个值通常为 NULL</li>
+<li>先获取 free_list 上的第一个空闲分配区（free_arena），这是一个串着所有空闲分配区的链表，然后将其从 free_list 上摘下来</li>
+<li>摘下来后，修改分配区的 attached_threads 的值为1，表明该分配区附加到当前线程；如果是通过<code>arena_get_retry</code>调用的，则还会将线程与原先的分配区（replaced_arena）进行 detach 操作；最后将新获取的分配区返回</li>
+</ul>
+</li>
+</ul>
+<h3 id="arena-get-retry"><a href="#arena-get-retry" class="headerlink" title="arena_get_retry"></a>arena_get_retry</h3><a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/arena_get_retry_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/arena_get_retry_1.png"></a>
+
+<ul>
+<li>对于非主分配区来说，如果分配区没空间了，可以考虑试着从主分配区分出来一点；否则，试着通过<code>sbrk()</code>进行分配区扩展；如果还不行的话，就试试其它空闲的分配区。这里最终调用回到了<code>arena_get2()</code>上面，前面刚分析过，就不再赘述了</li>
+</ul>
+<h2 id="int-malloc-主流程"><a href="#int-malloc-主流程" class="headerlink" title="_int_malloc 主流程"></a>_int_malloc 主流程</h2><h3 id="初始校验"><a href="#初始校验" class="headerlink" title="初始校验"></a>初始校验</h3><a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/int_malloc_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/int_malloc_1.png"></a>
+
+<ul>
+<li><p><code>_int_malloc()</code>接收两个参数，分配区和需要分配的大小，然后从分配区中分配满足需求大小的 chunk</p>
+</li>
+<li><p>变量中需要注意，mchunkptr 与 mbinptr 类型均是 malloc_chunk 结构体，其余参考注释即可</p>
+</li>
+<li><p>进入函数后最先会遇到两处校验：</p>
+<ol>
+<li><code>checked_request2size()</code>前面分析过了，这里主要是判断申请的内存大小是否超过了边界，若未超过，则会计算出至少需要分配的 chunksize，将值保存到 nb 中，然后进入下一个判断</li>
+<li>接下来会判断 av 也就是传入的分配区是否为空，通常不为空。但如果为空，说明前面<code>arena_get()</code>与<code>arena_get_retry()</code>都未能获取到分配区。此时就会调用<code>sysmalloc()</code>去请求一个 chunk，通过<code>alloc_perturb()</code>初始化后，将这个 chunk 返回。这里 perturb_byte 的值默认为 0</li>
+</ol>
+</li>
+<li><p>这里需要补充一些宏的含义（此处来自<a href="https://bbs.pediy.com/thread-271316.htm" target="_blank" rel="noopener">xi@0ji233的文章</a>）</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这三个宏定义在源码中经常能看到，其实它不会改编程序逻辑，只是告诉编译器这个很可能为某个值，就</span></span><br><span class="line"><span class="comment">// 把否的情况作为跳转，真的情况就顺序运行下去，减少程序的跳转，一定程度上可以优化程序运行速度。</span></span><br><span class="line"><span class="comment">// 或者还有一个简单粗暴的办法，你把这三个字符全都去了，不影响代码逻辑。</span></span><br><span class="line">__glibc_unlikely(<span class="built_in">exp</span>): 表示<span class="built_in">exp</span>很可能为假</span><br><span class="line">__glibc_likely(<span class="built_in">exp</span>): 表示<span class="built_in">exp</span>很可能为真</span><br><span class="line">__builtin_expect(<span class="built_in">exp</span>, value): 表示<span class="built_in">exp</span>==value大概率成立</span><br></pre></td></tr></tbody></table></figure></div>
+
+
+
+</li>
+</ul>
+<h3 id="Fast-Bin-处理流程"><a href="#Fast-Bin-处理流程" class="headerlink" title="Fast Bin 处理流程"></a>Fast Bin 处理流程</h3><ol>
+<li><p>在 fast bin 处理的开始处有一个宏定义如下：</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/fastbin_part_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/fastbin_part_1.png"></a>
+
+<ul>
+<li>这个宏主要是通过 lock-free 的技术实现单向链表删除第一个 node 的操作，暂时不必关注</li>
+</ul>
+</li>
+<li><p>接下来进入 fast bin 的处理过程，源码的格式看着可能比较乱，这里分别框出来来看：</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/fastbin_part_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/fastbin_part_2.png"></a>
+
+<ul>
+<li><p>首先，<strong>判断 nb（先前计算出的所需 chunk 大小）是否位于 fast bin 范围内</strong>，如果在范围内，就进入红框做进一步处理，否则直接跳过 fast bin 的处理逻辑</p>
+</li>
+<li><p><strong>红色方框</strong>：</p>
+<ul>
+<li>先通过<code>fastbin_index</code>算出 idx，即所需的 chunk 位于哪条 bin 上</li>
+<li>调用<code>fastbin</code>获取对应 bin 的链表头，并将链表上的第一个 chunk 地址赋给 victim</li>
+<li>判断 vicitim 是否存在，若不存在，说明这条 bin 上已经没有多余的 chunk 了，又<strong>因为 fast bin 中是大小严格匹配的</strong>，如果大小符合的 chunk 不存在，也不会去寻找其它的 bin，就会直接跳过 fast bin 剩余的处理逻辑</li>
+</ul>
+</li>
+<li><p><strong>橙色方框</strong>：</p>
+<ul>
+<li>进入橙色方框，说明 chunk 存在。这里只做了一件事，就是将这个 chunk 从 bin 上摘下来；由于 fast bin 是先进后出单链表，具体手法就是<strong>令当前 bin 的指针指向最后一个 chunk 的前一个</strong>。其中<code>REMOVE_FB</code>这个宏对应的是多线程的处理</li>
+</ul>
+</li>
+<li><p><strong>蓝色方框</strong>：</p>
+<ul>
+<li>这部分主要是两个 check，第一个 check 是用 vicitim 再算一遍，判断其是否属于它原先所在的 bin</li>
+<li>第二个 check 是对一些标志位的 check</li>
+</ul>
+</li>
+<li><p><strong>粉色方框</strong>：</p>
+<ul>
+<li>这里是仅在开启了 tcache 的情况下才会发生的操作，当然 glibc2.31 版本中 tcache 是默认开启的</li>
+<li>首先根据申请的 chunk 的大小，计算出当前 fast bin 对应的 tcache bin 是哪一个</li>
+<li><strong>如果当前 fast bin 不为空，且 tcache bin 仍有多余空间（少于 7 个 chunk）</strong>，就会将 fast bin 中的 chunk 移动到 tcache bin 中，这个操作放在一个循环里，每轮都会判断一次 fast bin 是否还有 chunk 以及 tcache bin 是否还有空间。从 fast bin 摘下来的操作和前面橙色方框中的一样；放入 tcache bin 中则是用的 <code>tcache_put</code></li>
+</ul>
+</li>
+<li><p><strong>绿色方框</strong>：</p>
+<ul>
+<li>粉色方框是不影响整体逻辑的部分，这里可以直接跟着蓝色方框来看</li>
+<li>拿到 vicitim 后，调用<code>chunk2mem</code>将指针指向 chunk 存储数据的开始地址</li>
+<li>再调用<code>alloc_perturb()</code>对这块内存初始化，然后返回给用户</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="Small-Bin-处理流程"><a href="#Small-Bin-处理流程" class="headerlink" title="Small Bin 处理流程"></a>Small Bin 处理流程</h3><ol>
+<li><p>如果 fast bin 中没有合适的 chunk 就会进入 small bin 的处理流程。small bin 与 fast bin 的处理流程大体看着类似，但是细节有所不同：</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/smallbin_part_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/smallbin_part_1.png"></a>
+
+<ul>
+<li>首先是判断申请的 chunksize 范围是否在 small bin 的范围内，不在就跳过这段处理逻辑，在的话就<ul>
+<li>先调用<code>smallbin_index</code>算出 chunk 所在的 idx 是多少</li>
+<li>再调用<code>bin_at</code>得到 idx 在 bins 中对应的那个 bin 的链表头。这里简单回顾一下，<strong>bins 是一个数组，数组中包含了 unsorted bin、small bin 以及 large bin 中各个 bin 的链表头，这些 bin 都是双链表</strong></li>
+</ul>
+</li>
+<li>然后判断这个链表头的后一个元素是否还是它自己（<strong>注意这里在判断的同时，也进行了赋值操作，此时该链表若至少存在 1 个 chunk，那么 vicitim 指向的就是这个 chunk 的地址</strong>），如果是，说明这个 bin 已经空了，就跳过 small bin 的处理逻辑，因为 small bin 和 fast bin 一样也是严格匹配的，一旦大小不符合，就会跳过这段处理逻辑<ul>
+<li>否则，获取 vicitim 的下一个 chunk，victim 是刚刚在进行判断链表是否为空时，取到的第一个 chunk，并判断这个 chunk 与 victim 之间的双链表是否完整，从而防止一些堆利用</li>
+<li>然后，通过<code>set_inuse_bit_at_offset</code>将 victim 之后（进程虚拟内存中紧挨着 victim  地址的 chunk）的一个 chunk 的 prev_inuse 设置为 1，表示 victim 这个 chunk 正在被使用。fast bin 处理过程中是没有这个操作的，因为 fast bin 中的 chunk 默认都设置了 prev_inuse 的值，从而防止 chunk 之间的前后合并</li>
+<li>设置完以后是一个常规的链表操作，将 victim 从双链表上摘下来</li>
+<li>然后再判断一下用来分配这个 chunk 的分配区是否为主分配区，若是，则设置相应字段的值</li>
+<li>接着调用<code>check_malloced_chunk</code>进行一些字段的检查</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>接下来是针对 tcache 情况的一些处理以及将 chunk 返回给用户，这部分和 fast bin 处理过程也很像，简单来看下：</p>
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/smallbin_part_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/smallbin_part_2.png"></a>
+
+<ul>
+<li>tcache 处理的部分和  fast bin 中 tcache 处理的部分基本上一样，就是在对应大小（<strong>刚刚分配的 chunk 的大小</strong>）的 small bin 不为空且 tcache bin 还有额外空间时，通过循环将 small bin 中的 chunk 塞到 tcache bin 中；且每次循环判断一次 small bin 是否为空，以及 tcache bin 是否满了。这里仅说下不同点：<ul>
+<li>small bin 中的 chunk 放入 tcache bin 中时需要设置 prev_inuse；fast bin 中的 chunk 默认是设置了的</li>
+<li>small bin 断链进行的是双链表操作；fast bin 是单链表操作</li>
+<li>small bin 需要判断是否为主分配区，并设置相应字段；fast bin 没有</li>
+</ul>
+</li>
+<li>最后和 fast bin 一样，将分配的好的 chunk 初始化后返回给用户</li>
+</ul>
+</li>
+</ol>
+<h3 id="Unsorted-Bin-处理流程"><a href="#Unsorted-Bin-处理流程" class="headerlink" title="Unsorted Bin 处理流程"></a>Unsorted Bin 处理流程</h3><h2 id="int-malloc-辅助函数"><a href="#int-malloc-辅助函数" class="headerlink" title="_int_malloc 辅助函数"></a>_int_malloc 辅助函数</h2><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ol>
+<li><a href="https://www.cnblogs.com/luoleqi/p/15520621.html" target="_blank" rel="noopener">博客园：glibc2.31 malloc 与 free 源码分析</a></li>
+<li><a href="https://bbs.pediy.com/thread-271316.htm" target="_blank" rel="noopener">看雪：malloc源码分析</a></li>
+<li><a href="https://blog.csdn.net/weixin_44215692/article/details/123930658" target="_blank" rel="noopener">CSDN：glibc下malloc与free的实现原理（二）：malloc函数的实现</a></li>
+<li><a href="https://www.lmlphp.com/user/56/article/item/7838/" target="_blank" rel="noopener">堆学习之 fastbin-attack</a></li>
+</ol>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">cataLoc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cata1oc.github.io/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">http://cata1oc.github.io/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E5%85%A8/">二进制安全    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/2022/06/30/%E5%A0%86%E5%9F%BA%E7%A1%8001-ptmalloc2%E5%88%9D%E6%8E%A2/"><img class="next_cover lazyload" data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>堆基础01-ptmalloc2初探</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2021/10/31/初探GOT与PLT/" title="初探GOT与PLT"><img class="relatedPosts_cover lazyload"data-src="https://raw.githubusercontent.com/cata1oc/cata1oc.github.io/master/2021/10/31/%E5%88%9D%E6%8E%A2GOT%E4%B8%8EPLT/cover0x4C.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2021-10-31</div><div class="relatedPosts_title">初探GOT与PLT</div></div></a></div><div class="relatedPosts_item"><a href="/2021/11/07/缓冲区溢出入门-上/" title="缓冲区溢出入门(上)"><img class="relatedPosts_cover lazyload"data-src="https://raw.githubusercontent.com/cata1oc/cata1oc.github.io/master/2021/11/07/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%85%A5%E9%97%A8-%E4%B8%8A/cover0x4D.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2021-11-07</div><div class="relatedPosts_title">缓冲区溢出入门(上)</div></div></a></div><div class="relatedPosts_item"><a href="/2021/11/13/缓冲区溢出入门-下/" title="缓冲区溢出入门(下)"><img class="relatedPosts_cover lazyload"data-src="https://raw.githubusercontent.com/cata1oc/cata1oc.github.io/master/2021/11/13/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%85%A5%E9%97%A8-%E4%B8%8B/cover0x4E.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2021-11-13</div><div class="relatedPosts_title">缓冲区溢出入门(下)</div></div></a></div><div class="relatedPosts_item"><a href="/2022/01/02/AFL源码分析01/" title="AFL源码分析01：afl-gcc.c"><img class="relatedPosts_cover lazyload"data-src="https://raw.githubusercontent.com/cata1oc/cata1oc.github.io/master/2022/01/02/AFL%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%9001/cover0x50.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2022-01-02</div><div class="relatedPosts_title">AFL源码分析01：afl-gcc.c</div></div></a></div><div class="relatedPosts_item"><a href="/2021/12/22/AFL环境搭建/" title="AFL环境搭建"><img class="relatedPosts_cover lazyload"data-src="https://raw.githubusercontent.com/cata1oc/cata1oc.github.io/master/2021/12/22/AFL%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/cover0x4F.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2021-12-22</div><div class="relatedPosts_title">AFL环境搭建</div></div></a></div><div class="relatedPosts_item"><a href="/2022/01/05/AFL源码分析02/" title="AFL源码分析02：afl-as.c"><img class="relatedPosts_cover lazyload"data-src="https://raw.githubusercontent.com/cata1oc/cata1oc.github.io/master/2022/01/05/AFL%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%9002/cover0x51.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2022-01-05</div><div class="relatedPosts_title">AFL源码分析02：afl-as.c</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By cataLoc</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
