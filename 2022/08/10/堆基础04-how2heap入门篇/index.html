@@ -439,7 +439,7 @@ function activateLightMode(){
 </ul>
 </li>
 <li><p><strong>赋值 chunk0_ptr[0] 后：</strong></p>
-<a href="/2022/08/10/%E5%A0%86%E5%9F%BA%E7%A1%8004-how2heap%E5%85%A5%E9%97%A8%E7%AF%87/unsafe_unlink_dbg_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/10/%E5%A0%86%E5%9F%BA%E7%A1%8004-how2heap%E5%85%A5%E9%97%A8%E7%AF%87/unsafe_unlink_dbg_4.png"></a>
+<a href="/2022/08/10/%E5%A0%86%E5%9F%BA%E7%A1%8004-how2heap%E5%85%A5%E9%97%A8%E7%AF%87/unsafe_unlink_dbg_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/10/%E5%A0%86%E5%9F%BA%E7%A1%8004-how2heap%E5%85%A5%E9%97%A8%E7%AF%87/unsafe_unlink_dbg_5.png"></a>
 
 <ul>
 <li>从这里也可以看出，当我们再次尝试给 chunk0_ptr 赋值时，其实就是给字符串所在的地址赋值，这样就实现了修复字符串的操作，正如执行结果中显示的那样</li>
@@ -470,10 +470,10 @@ function activateLightMode(){
 <p>执行结果很清晰，不多讲了，结合源码很容易看明白</p>
 <h3 id="调试分析-4"><a href="#调试分析-4" class="headerlink" title="调试分析"></a>调试分析</h3><ol>
 <li><p><strong>两次 <code>free()</code> 后：</strong></p>
-<a href="/2022/08/10/%E5%A0%86%E5%9F%BA%E7%A1%8004-how2heap%E5%85%A5%E9%97%A8%E7%AF%87/tcache_poisoning_run_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/10/%E5%A0%86%E5%9F%BA%E7%A1%8004-how2heap%E5%85%A5%E9%97%A8%E7%AF%87/tcache_poisoning_run_1.png"></a>
+<a href="/2022/08/10/%E5%A0%86%E5%9F%BA%E7%A1%8004-how2heap%E5%85%A5%E9%97%A8%E7%AF%87/tcache_poisoning_dbg_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/10/%E5%A0%86%E5%9F%BA%E7%A1%8004-how2heap%E5%85%A5%E9%97%A8%E7%AF%87/tcache_poisoning_dbg_1.png"></a>
 </li>
 <li><p><strong>修改 <code>tcache_entry -> next</code> 后：</strong></p>
-
+<a href="/2022/08/10/%E5%A0%86%E5%9F%BA%E7%A1%8004-how2heap%E5%85%A5%E9%97%A8%E7%AF%87/tcache_poisoning_dbg_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/10/%E5%A0%86%E5%9F%BA%E7%A1%8004-how2heap%E5%85%A5%E9%97%A8%E7%AF%87/tcache_poisoning_dbg_2.png"></a>
 
 <ul>
 <li>这里原本 a 对应的 chunk 被修改为了栈中的地址</li>
