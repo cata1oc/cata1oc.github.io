@@ -69,48 +69,158 @@ function activateLightMode(){
   isHome: false,
   isPost: true
   
-}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">152</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">14</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#前言"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">前言</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#poison-null-byte"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">poison_null_byte</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#源码分析"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">源码分析</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#完整版"><span class="toc_mobile_items-number">2.1.1.</span> <span class="toc_mobile_items-text">完整版</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#简化版"><span class="toc_mobile_items-number">2.1.2.</span> <span class="toc_mobile_items-text">简化版</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行分析"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">执行分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#调试分析"><span class="toc_mobile_items-number">2.3.</span> <span class="toc_mobile_items-text">调试分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#原理小结"><span class="toc_mobile_items-number">2.4.</span> <span class="toc_mobile_items-text">原理小结</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#house-of-lore"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">house_of_lore</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#源码分析-1"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">源码分析</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#完整版-1"><span class="toc_mobile_items-number">3.1.1.</span> <span class="toc_mobile_items-text">完整版</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#简化版-1"><span class="toc_mobile_items-number">3.1.2.</span> <span class="toc_mobile_items-text">简化版</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行分析-1"><span class="toc_mobile_items-number">3.2.</span> <span class="toc_mobile_items-text">执行分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#调试分析-1"><span class="toc_mobile_items-number">3.3.</span> <span class="toc_mobile_items-text">调试分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#原理小结-1"><span class="toc_mobile_items-number">3.4.</span> <span class="toc_mobile_items-text">原理小结</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#house-of-einherjar"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">house_of_einherjar</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#源码分析-2"><span class="toc_mobile_items-number">4.1.</span> <span class="toc_mobile_items-text">源码分析</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#完整版-2"><span class="toc_mobile_items-number">4.1.1.</span> <span class="toc_mobile_items-text">完整版</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#简化版-2"><span class="toc_mobile_items-number">4.1.2.</span> <span class="toc_mobile_items-text">简化版</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行分析-2"><span class="toc_mobile_items-number">4.2.</span> <span class="toc_mobile_items-text">执行分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#调试分析-2"><span class="toc_mobile_items-number">4.3.</span> <span class="toc_mobile_items-text">调试分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#原理小结-2"><span class="toc_mobile_items-number">4.4.</span> <span class="toc_mobile_items-text">原理小结</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#house-of-mind-fastbin"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">house_of_mind_fastbin</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#源码分析-3"><span class="toc_mobile_items-number">5.1.</span> <span class="toc_mobile_items-text">源码分析</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#完整版-3"><span class="toc_mobile_items-number">5.1.1.</span> <span class="toc_mobile_items-text">完整版</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#简化版-3"><span class="toc_mobile_items-number">5.1.2.</span> <span class="toc_mobile_items-text">简化版</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行分析-3"><span class="toc_mobile_items-number">5.2.</span> <span class="toc_mobile_items-text">执行分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#调试分析-3"><span class="toc_mobile_items-number">5.3.</span> <span class="toc_mobile_items-text">调试分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#原理小结-3"><span class="toc_mobile_items-number">5.4.</span> <span class="toc_mobile_items-text">原理小结</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#mmap-overlapping-chunks"><span class="toc_mobile_items-number">6.</span> <span class="toc_mobile_items-text">mmap_overlapping_chunks</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#源码分析-4"><span class="toc_mobile_items-number">6.1.</span> <span class="toc_mobile_items-text">源码分析</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#完整版-4"><span class="toc_mobile_items-number">6.1.1.</span> <span class="toc_mobile_items-text">完整版</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#简化版-4"><span class="toc_mobile_items-number">6.1.2.</span> <span class="toc_mobile_items-text">简化版</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行分析-4"><span class="toc_mobile_items-number">6.2.</span> <span class="toc_mobile_items-text">执行分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#调试分析-4"><span class="toc_mobile_items-number">6.3.</span> <span class="toc_mobile_items-text">调试分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#原理小结-4"><span class="toc_mobile_items-number">6.4.</span> <span class="toc_mobile_items-text">原理小结</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考链接"><span class="toc_mobile_items-number">7.</span> <span class="toc_mobile_items-text">参考链接</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#poison-null-byte"><span class="toc-number">2.</span> <span class="toc-text">poison_null_byte</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析"><span class="toc-number">2.1.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#完整版"><span class="toc-number">2.1.1.</span> <span class="toc-text">完整版</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简化版"><span class="toc-number">2.1.2.</span> <span class="toc-text">简化版</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行分析"><span class="toc-number">2.2.</span> <span class="toc-text">执行分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试分析"><span class="toc-number">2.3.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理小结"><span class="toc-number">2.4.</span> <span class="toc-text">原理小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#house-of-lore"><span class="toc-number">3.</span> <span class="toc-text">house_of_lore</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析-1"><span class="toc-number">3.1.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#完整版-1"><span class="toc-number">3.1.1.</span> <span class="toc-text">完整版</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简化版-1"><span class="toc-number">3.1.2.</span> <span class="toc-text">简化版</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行分析-1"><span class="toc-number">3.2.</span> <span class="toc-text">执行分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试分析-1"><span class="toc-number">3.3.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理小结-1"><span class="toc-number">3.4.</span> <span class="toc-text">原理小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#house-of-einherjar"><span class="toc-number">4.</span> <span class="toc-text">house_of_einherjar</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析-2"><span class="toc-number">4.1.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#完整版-2"><span class="toc-number">4.1.1.</span> <span class="toc-text">完整版</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简化版-2"><span class="toc-number">4.1.2.</span> <span class="toc-text">简化版</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行分析-2"><span class="toc-number">4.2.</span> <span class="toc-text">执行分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试分析-2"><span class="toc-number">4.3.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理小结-2"><span class="toc-number">4.4.</span> <span class="toc-text">原理小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#house-of-mind-fastbin"><span class="toc-number">5.</span> <span class="toc-text">house_of_mind_fastbin</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析-3"><span class="toc-number">5.1.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#完整版-3"><span class="toc-number">5.1.1.</span> <span class="toc-text">完整版</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简化版-3"><span class="toc-number">5.1.2.</span> <span class="toc-text">简化版</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行分析-3"><span class="toc-number">5.2.</span> <span class="toc-text">执行分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试分析-3"><span class="toc-number">5.3.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理小结-3"><span class="toc-number">5.4.</span> <span class="toc-text">原理小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mmap-overlapping-chunks"><span class="toc-number">6.</span> <span class="toc-text">mmap_overlapping_chunks</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析-4"><span class="toc-number">6.1.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#完整版-4"><span class="toc-number">6.1.1.</span> <span class="toc-text">完整版</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简化版-4"><span class="toc-number">6.1.2.</span> <span class="toc-text">简化版</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行分析-4"><span class="toc-number">6.2.</span> <span class="toc-text">执行分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试分析-4"><span class="toc-number">6.3.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理小结-4"><span class="toc-number">6.4.</span> <span class="toc-text">原理小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">7.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://raw.githubusercontent.com/cata1oc/cata1oc.github.io/master/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/cover0x64.png)"><div id="post-info"><div id="post-title"><div class="posttitle">堆基础06-how2heap进阶篇</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2022-08-20<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2022-08-21</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">cataLoc's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/Substitute.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">152</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">14</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#前言"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">前言</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#poison-null-byte"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">poison_null_byte</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#源码分析"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">源码分析</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#完整版"><span class="toc_mobile_items-number">2.1.1.</span> <span class="toc_mobile_items-text">完整版</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#简化版"><span class="toc_mobile_items-number">2.1.2.</span> <span class="toc_mobile_items-text">简化版</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行分析"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">执行分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#调试分析"><span class="toc_mobile_items-number">2.3.</span> <span class="toc_mobile_items-text">调试分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#原理小结"><span class="toc_mobile_items-number">2.4.</span> <span class="toc_mobile_items-text">原理小结</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#house-of-lore"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">house_of_lore</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#源码分析-1"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">源码分析</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#完整版-1"><span class="toc_mobile_items-number">3.1.1.</span> <span class="toc_mobile_items-text">完整版</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#简化版-1"><span class="toc_mobile_items-number">3.1.2.</span> <span class="toc_mobile_items-text">简化版</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行分析-1"><span class="toc_mobile_items-number">3.2.</span> <span class="toc_mobile_items-text">执行分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#调试分析-1"><span class="toc_mobile_items-number">3.3.</span> <span class="toc_mobile_items-text">调试分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#原理小结-1"><span class="toc_mobile_items-number">3.4.</span> <span class="toc_mobile_items-text">原理小结</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#house-of-einherjar"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">house_of_einherjar</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#源码分析-2"><span class="toc_mobile_items-number">4.1.</span> <span class="toc_mobile_items-text">源码分析</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#完整版-2"><span class="toc_mobile_items-number">4.1.1.</span> <span class="toc_mobile_items-text">完整版</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#简化版-2"><span class="toc_mobile_items-number">4.1.2.</span> <span class="toc_mobile_items-text">简化版</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行分析-2"><span class="toc_mobile_items-number">4.2.</span> <span class="toc_mobile_items-text">执行分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#调试分析-2"><span class="toc_mobile_items-number">4.3.</span> <span class="toc_mobile_items-text">调试分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#原理小结-2"><span class="toc_mobile_items-number">4.4.</span> <span class="toc_mobile_items-text">原理小结</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#house-of-mind-fastbin"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">house_of_mind_fastbin</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#前置知识"><span class="toc_mobile_items-number">5.1.</span> <span class="toc_mobile_items-text">前置知识</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#源码分析-3"><span class="toc_mobile_items-number">5.2.</span> <span class="toc_mobile_items-text">源码分析</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#完整版-3"><span class="toc_mobile_items-number">5.2.1.</span> <span class="toc_mobile_items-text">完整版</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#简化版-3"><span class="toc_mobile_items-number">5.2.2.</span> <span class="toc_mobile_items-text">简化版</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行分析-3"><span class="toc_mobile_items-number">5.3.</span> <span class="toc_mobile_items-text">执行分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#调试分析-3"><span class="toc_mobile_items-number">5.4.</span> <span class="toc_mobile_items-text">调试分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#原理小结-3"><span class="toc_mobile_items-number">5.5.</span> <span class="toc_mobile_items-text">原理小结</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#mmap-overlapping-chunks"><span class="toc_mobile_items-number">6.</span> <span class="toc_mobile_items-text">mmap_overlapping_chunks</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#前置知识-1"><span class="toc_mobile_items-number">6.1.</span> <span class="toc_mobile_items-text">前置知识</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#mmap-threshold"><span class="toc_mobile_items-number">6.1.1.</span> <span class="toc_mobile_items-text">mmap_threshold</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#mmap-chunk"><span class="toc_mobile_items-number">6.1.2.</span> <span class="toc_mobile_items-text">mmap_chunk</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#源码分析-4"><span class="toc_mobile_items-number">6.2.</span> <span class="toc_mobile_items-text">源码分析</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#完整版-4"><span class="toc_mobile_items-number">6.2.1.</span> <span class="toc_mobile_items-text">完整版</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#简化版-4"><span class="toc_mobile_items-number">6.2.2.</span> <span class="toc_mobile_items-text">简化版</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#执行分析-4"><span class="toc_mobile_items-number">6.3.</span> <span class="toc_mobile_items-text">执行分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#调试分析-4"><span class="toc_mobile_items-number">6.4.</span> <span class="toc_mobile_items-text">调试分析</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#原理小结-4"><span class="toc_mobile_items-number">6.5.</span> <span class="toc_mobile_items-text">原理小结</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考链接"><span class="toc_mobile_items-number">7.</span> <span class="toc_mobile_items-text">参考链接</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#poison-null-byte"><span class="toc-number">2.</span> <span class="toc-text">poison_null_byte</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析"><span class="toc-number">2.1.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#完整版"><span class="toc-number">2.1.1.</span> <span class="toc-text">完整版</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简化版"><span class="toc-number">2.1.2.</span> <span class="toc-text">简化版</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行分析"><span class="toc-number">2.2.</span> <span class="toc-text">执行分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试分析"><span class="toc-number">2.3.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理小结"><span class="toc-number">2.4.</span> <span class="toc-text">原理小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#house-of-lore"><span class="toc-number">3.</span> <span class="toc-text">house_of_lore</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析-1"><span class="toc-number">3.1.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#完整版-1"><span class="toc-number">3.1.1.</span> <span class="toc-text">完整版</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简化版-1"><span class="toc-number">3.1.2.</span> <span class="toc-text">简化版</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行分析-1"><span class="toc-number">3.2.</span> <span class="toc-text">执行分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试分析-1"><span class="toc-number">3.3.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理小结-1"><span class="toc-number">3.4.</span> <span class="toc-text">原理小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#house-of-einherjar"><span class="toc-number">4.</span> <span class="toc-text">house_of_einherjar</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析-2"><span class="toc-number">4.1.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#完整版-2"><span class="toc-number">4.1.1.</span> <span class="toc-text">完整版</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简化版-2"><span class="toc-number">4.1.2.</span> <span class="toc-text">简化版</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行分析-2"><span class="toc-number">4.2.</span> <span class="toc-text">执行分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试分析-2"><span class="toc-number">4.3.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理小结-2"><span class="toc-number">4.4.</span> <span class="toc-text">原理小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#house-of-mind-fastbin"><span class="toc-number">5.</span> <span class="toc-text">house_of_mind_fastbin</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#前置知识"><span class="toc-number">5.1.</span> <span class="toc-text">前置知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析-3"><span class="toc-number">5.2.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#完整版-3"><span class="toc-number">5.2.1.</span> <span class="toc-text">完整版</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简化版-3"><span class="toc-number">5.2.2.</span> <span class="toc-text">简化版</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行分析-3"><span class="toc-number">5.3.</span> <span class="toc-text">执行分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试分析-3"><span class="toc-number">5.4.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理小结-3"><span class="toc-number">5.5.</span> <span class="toc-text">原理小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mmap-overlapping-chunks"><span class="toc-number">6.</span> <span class="toc-text">mmap_overlapping_chunks</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#前置知识-1"><span class="toc-number">6.1.</span> <span class="toc-text">前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#mmap-threshold"><span class="toc-number">6.1.1.</span> <span class="toc-text">mmap_threshold</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mmap-chunk"><span class="toc-number">6.1.2.</span> <span class="toc-text">mmap_chunk</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析-4"><span class="toc-number">6.2.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#完整版-4"><span class="toc-number">6.2.1.</span> <span class="toc-text">完整版</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简化版-4"><span class="toc-number">6.2.2.</span> <span class="toc-text">简化版</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行分析-4"><span class="toc-number">6.3.</span> <span class="toc-text">执行分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试分析-4"><span class="toc-number">6.4.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理小结-4"><span class="toc-number">6.5.</span> <span class="toc-text">原理小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">7.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://raw.githubusercontent.com/cata1oc/cata1oc.github.io/master/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/cover0x64.png)"><div id="post-info"><div id="post-title"><div class="posttitle">堆基础06-how2heap进阶篇</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2022-08-20<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2022-09-01</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
 <li><strong>学习材料：</strong>shellphish 团队在 <a href="https://github.com/fr0ster/how2heap" target="_blank" rel="noopener">Github</a> 上开源的堆漏洞系统教程 “how2heap”</li>
 <li><strong>glibc版本：</strong>glibc2.31</li>
 <li><strong>操作系统：</strong>Ubuntu 20.04</li>
 <li><strong>示例选择：</strong>本篇依旧参考<a href="https://bbs.pediy.com/thread-272416.htm" target="_blank" rel="noopener">pukrquq师傅</a>基于 glibc2.34 版本的分析文章，选取与其文章中第三部分相同的 poc 示例</li>
+<li><strong>编译选项：</strong><code>gcc xxx.c -o xxx -g</code>，添加 -g 选项以创建调试符号表，并关闭所有的优化机制</li>
 </ul>
-<h2 id="poison-null-byte"><a href="#poison-null-byte" class="headerlink" title="poison_null_byte"></a>poison_null_byte</h2><h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="完整版"><a href="#完整版" class="headerlink" title="完整版"></a>完整版</h4>
+<h2 id="poison-null-byte"><a href="#poison-null-byte" class="headerlink" title="poison_null_byte"></a>poison_null_byte</h2><h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="完整版"><a href="#完整版" class="headerlink" title="完整版"></a>完整版</h4><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_fullcode_long.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_fullcode_long.png"></a>
 
-
-
-
-
-
-
-
-
-
-
-<h4 id="简化版"><a href="#简化版" class="headerlink" title="简化版"></a>简化版</h4>
-
-<p>他这里注释标记出了 step1~step7，咱就按照他这个来分析：</p>
-<ul>
-<li><strong>step 1:</strong></li>
-<li><strong>step 2:</strong></li>
-<li><strong>step 3:</strong></li>
-<li><strong>step 4:</strong></li>
-<li><strong>step 5:</strong></li>
-<li><strong>step 6:</strong></li>
-<li><strong>step 7:</strong></li>
-</ul>
-<h3 id="执行分析"><a href="#执行分析" class="headerlink" title="执行分析"></a>执行分析</h3>
-
-
+<h4 id="简化版"><a href="#简化版" class="headerlink" title="简化版"></a>简化版</h4><p>由于注释已经标出了 step1~step7，咱就按照他这个步骤来分析：</p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_simplecode_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_simplecode_1.png"></a>
 
 <ul>
-<li></li>
+<li><p><strong>step 1:</strong></p>
+<ol>
+<li><p>这一步用来将堆进行对齐，<strong>使得后面申请的 chunk 地址可以从 0xxxxx0000 开始</strong></p>
+</li>
+<li><p>假设 tmp 的地址为 0x555555551010</p>
+</li>
+<li><p>则计算出 heap_base 的值为 0x555555551000</p>
+</li>
+<li><p>再算出 size 的值为 0xEFD0</p>
+</li>
+<li><p>然后为 padding 申请 size 大小的空间：</p>
+<ul>
+<li>前面为 tmp 申请了 1 字节大小的空间，因此分配了一个 MINSIZE 的 chunk</li>
+<li>tmp 的返回地址为 0x555555551010，其 chunk 对应的地址为 0x555555551000</li>
+<li>接下来为 padding 申请 size 大小的空间，其 chunk 位于 tmp 对应的 chunk 之后，起始地址为 0x555555551020</li>
+<li>chunk 大小为 0xEFD0 + 0x10（prev_size 与 size 字段占据了 2 个 SIZE_SZ）</li>
+<li>因此 padding 对应的 chunk 的结束地址就是 <code>0x555555551020 + 0xEFD0 + 0x10 == 0x555555560000</code></li>
 </ul>
-<h3 id="调试分析"><a href="#调试分析" class="headerlink" title="调试分析"></a>调试分析</h3><h3 id="原理小结"><a href="#原理小结" class="headerlink" title="原理小结"></a>原理小结</h3><h2 id="house-of-lore"><a href="#house-of-lore" class="headerlink" title="house_of_lore"></a>house_of_lore</h2><h3 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="完整版-1"><a href="#完整版-1" class="headerlink" title="完整版"></a>完整版</h4><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_lore_fullcode_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_lore_fullcode_1.png"></a>
+</li>
+<li><p>此时若再次分配 chunk，则会从 0x555555560000 开始，<strong>这一步保证了新申请的 chunk 的起始地址的后两个字节为 0x00</strong></p>
+</li>
+</ol>
+</li>
+<li><p><strong>step 2:</strong></p>
+<ol>
+<li><code>malloc()</code> 了 3 个内存块，前 2 个相邻，第 3 个是个 padding 用于防止 <code>free()</code> 时与 top chunk 合并</li>
+<li>继续按照 <code>step 1</code> 中假设的地址来看</li>
+<li>prev 指向 0x555555560010，chunk 地址从 0x555555560000 开始，大小 0x510</li>
+<li>victim 指向 0x555555560520， chunk 地址从 0x555555560510 开始，大小 0x500</li>
+<li>padding 指向 0x5555555610A20，chunk 地址从 0x5555555610A10 开始，大小0x20</li>
+</ol>
+</li>
+<li><p><strong>step 3:</strong></p>
+<ol>
+<li><p>为变量 a 申请一个 0x500 大小的 chunk，然后申请一个 padding 防合并</p>
+</li>
+<li><p>为变量 b 申请一个 0x520 大小的 chunk，然后申请一个 padding 防合并</p>
+</li>
+<li><p>依次释放 a、b、prev，使得它们进入 unsorted bin</p>
+</li>
+<li><p>再申请一个 0x1010 大小的 chunk，使得上述三个 chunk 进入 large bin，此时 large bin 中情况如下所示：</p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_simplecode_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_simplecode_3.png"></a>
+</li>
+</ol>
+</li>
+<li><p><strong>step 4:</strong></p>
+<ol>
+<li>这一步用于在 prev2(prev) 这个块中伪造一个 chunk</li>
+<li>首先为 prev2 申请一个 0x510 大小的块，直接可以获得之前 <code>free()</code> 掉的 prev</li>
+<li>所以这里 prev2 与 prev 相等，都指向 chunk+0x10 的位置</li>
+<li>设置 prev2[1]  处的值为 0x501</li>
+<li>在 victim 中设置 prev_size 为 0x500</li>
+<li>这两步操作相当于：<ul>
+<li>在 prev2 开始处设置了一个大小为 0x500 的 fake chunk</li>
+<li><strong>将 fake chunk 的 fd/bk 设置为 prev 的 fd_nextsize/bk_nextsize</strong>，此时</li>
+<li><code>prev->fd_nextsize == fake_chunk->fd == a(0x520)</code></li>
+<li><code>prev->bk_nextsize == fake_chunk->bk == b(0x500)</code></li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_simplecode_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_simplecode_2.png"></a>
 
-<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_lore_fullcode_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_lore_fullcode_2.png"></a>
+<ul>
+<li><strong>step 5:</strong><ol>
+<li>先把 b 这个 chunk（大小0x520） 给申请出来（通常情况下，不设置 perturb_byte 这个值时，不会清空 chunk 中原先的数据）</li>
+<li>因为是小端存储，所以低位对应低字节，所以这里是<strong>将 b 的 fd 字段值的最后两个字节设置为 0x0010</strong>。假设原先是 0x55555555ab00，那么修改后就会变成 0x555555550010，而 0x555555550010 刚好是 prev+0x10 的位置，也就是 <strong>step4</strong> 设置的 fake chunk 的位置。这里的操作实现了 <code>b->fd = fake_chunk</code>，结合 <strong>step4</strong> 也就有了 <code>fake_chunk->bk->fd == fake_chunk</code></li>
+<li>先把 a 这个 chunk（大小0x500）从 large bin 里面申请出来，然后把 a 释放掉，扔到 unsorted bin 中</li>
+<li>再把 victim 也释放掉，也扔到 unsorted bin 中，使得 <ul>
+<li><code>a->bk == victim</code></li>
+<li><code>victim->fd == a</code></li>
+</ul>
+</li>
+<li>再把 a 申请出来，这里需要参考一下<a href="https://cata1oc.github.io/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/#Unsorted-Bin-%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B">unsorted bin处理流程</a>，因为刚好找到合适大小的，所以直接把第一个找到的 0x500 大小的 chunk 返回了（<strong>unsorted bin 是先进先出</strong>），此时 victim 仍然在 unsorted bin 中</li>
+<li>然后和前面一样，将 <code>a->bk = fake_chunk</code>，使得 <code>fake_chunk->fd->bk == fake_chunk</code></li>
+</ol>
+</li>
+<li><strong>step 6:</strong><ol>
+<li>把 victim 这个 chunk （大小0x500）申请出来</li>
+<li>通过 <strong>off-by-null</strong> 将 victim 的 size 字段的最后一个字节设置位 <code>\x00</code></li>
+<li>使 victim 位置的前一个 chunk 的状态变成空闲，也就是让 fake_chunk 变成空闲块</li>
+<li>然后<strong>将 victim 释放（大小0x500），释放时会与 fake_chunk（大小0x500） 合并后（大小0xA00）进入 unsorted bin</strong></li>
+</ol>
+</li>
+<li><strong>step 7:</strong><ol>
+<li>victim 与 fake_chunk 合并后的这个大块是 bins 中唯一的块，所以申请新的内存空间时，就会从这个大块分割（当然我还是不知道为啥满足了 last remainder chunk 这个条件，因此是在 unsorted bin 中分割而不是在 large bin 中分割）</li>
+<li>分割了以后，先将申请的 chunk 初始化为字符 ‘A’，然后将 prev2 对应的 chunk 的内容初始化为 ‘C’</li>
+<li>显然是会发生覆盖的，因为新申请的地址是 <code>fake_chunk+0x10</code> 处的地址，而 fake_chunk 本身又在 <code>prev2+0x10</code> 处</li>
+</ol>
+</li>
+</ul>
+<h3 id="执行分析"><a href="#执行分析" class="headerlink" title="执行分析"></a>执行分析</h3><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_run_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_run_1.png"></a>
 
-<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_lore_fullcode_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_lore_fullcode_3.png"></a>
+<ul>
+<li><code>Step1</code> 的结果可以在 <code>Step2</code> 中体现，prev 返回的地址是 0x558ef8de0010，符合源码推论</li>
+<li><code>Step3</code> 将 prev、a、b 放入 large bin 中，并打印了 prev 的 fd_nextsize 与 bk_nextsize，确实就是 a、b</li>
+<li><code>Step4</code> 就是在 prev 中构造 fake chunk，也利用了 prev 的 fd_nextsize 与 bk_nextsize，使之成为 fake chunk 的 fd 与 bk</li>
+</ul>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_run_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_run_2.png"></a>
+
+<ul>
+<li><code>Step5</code> 就是过掉 <code>fake_chunk->fd->bk == fake_chunk</code> 与 <code>fake_chunk->bk->fd == fake_chunk</code> 这俩 unlink 时的校验</li>
+<li><code>Step6</code> 这里把 <code>Step5</code> 中实现的结果又说了一遍，最后演示了一下合并后（经过 off-by-null）再申请然后实现 overlap 的效果</li>
+</ul>
+<h3 id="调试分析"><a href="#调试分析" class="headerlink" title="调试分析"></a>调试分析</h3><ol>
+<li><p><strong>Step 3</strong></p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_dbg_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_dbg_1.png"></a>
+
+<ul>
+<li>这里 <code>step3</code> 结束后，显示 a、b、prev 这几个 chunk 从 unsorted bin 进入 large bin 的过程</li>
+</ul>
+</li>
+<li><p><strong>Step 4</strong></p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_dbg_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_dbg_2.png"></a>
+
+<ul>
+<li><code>step4</code> 这里就是伪造 chunk，在 prev 内部，我们这里也可以看到 prev 的 fd_nextsize 与 bk_nextsize</li>
+</ul>
+</li>
+<li><p><strong>Step 6</strong></p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_dbg_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_dbg_3.png"></a>
+
+<ul>
+<li>把 victim 申请出来，可以看到返回地址是 0x555555560520，对应的 chunk 地址为 0x555555560510</li>
+</ul>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_dbg_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/poison_null_byte_dbg_4.png"></a>
+
+<ul>
+<li>经过 off-by-null 的操作后，释放回 unsorted bin 时，因为发生合并，chunk 地址变为了 0x555555560010，也就是 fake chunk 的位置，之后就可以据此进行 overlap 的操作了</li>
+</ul>
+</li>
+</ol>
+<h3 id="原理小结"><a href="#原理小结" class="headerlink" title="原理小结"></a>原理小结</h3><ul>
+<li>利用手法是通过伪造 fake chunk，使得 chunk 在释放时触发与 fake chunk 的合并，之后可通过 fake chunk 覆盖新申请的地址</li>
+<li>新颖的点在于 <code>off-by-null</code>  的操作，仅需要覆盖 1 个字节为 <code>\x00</code>（使得 prev_inuse 的值为 0），就可以触发 chunk 在释放时与前一个 chunk 的合并，从而实现对地址的写入</li>
+<li>简单概括，就是通过 <code>off-by-null</code> 的手法实现<a href="https://cata1oc.github.io/2022/08/10/%E5%A0%86%E5%9F%BA%E7%A1%8004-how2heap%E5%85%A5%E9%97%A8%E7%AF%87/#overlapping-chunks">初级篇</a>中的 overlapping chunks</li>
+</ul>
+<h2 id="house-of-lore"><a href="#house-of-lore" class="headerlink" title="house_of_lore"></a>house_of_lore</h2><h3 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="完整版-1"><a href="#完整版-1" class="headerlink" title="完整版"></a>完整版</h4><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_lore_fullcode_long.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_lore_fullcode_long.png"></a>
 
 <h4 id="简化版-1"><a href="#简化版-1" class="headerlink" title="简化版"></a>简化版</h4><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_lore_simplecode_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_lore_simplecode_1.png"></a>
 
@@ -275,33 +385,234 @@ function activateLightMode(){
 </ul>
 </li>
 </ul>
-<h2 id="house-of-einherjar"><a href="#house-of-einherjar" class="headerlink" title="house_of_einherjar"></a>house_of_einherjar</h2><h3 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="完整版-2"><a href="#完整版-2" class="headerlink" title="完整版"></a>完整版</h4>
+<h2 id="house-of-einherjar"><a href="#house-of-einherjar" class="headerlink" title="house_of_einherjar"></a>house_of_einherjar</h2><h3 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="完整版-2"><a href="#完整版-2" class="headerlink" title="完整版"></a>完整版</h4><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_einherjar_fullcode_long.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_einherjar_fullcode_long.png"></a>
 
-
-
-
-
-
-
-
-
-
-
-<h4 id="简化版-2"><a href="#简化版-2" class="headerlink" title="简化版"></a>简化版</h4>
-
-
+<h4 id="简化版-2"><a href="#简化版-2" class="headerlink" title="简化版"></a>简化版</h4><p>为了看的清晰，这里简化版也分为两张图来看</p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_einherjar_simplecode_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_einherjar_simplecode_1.png"></a>
 
 <ul>
-<li></li>
+<li><p><strong>橙色方框：</strong></p>
+<ol>
+<li>本例将实现在 <code>malloc()</code> 后返回一个任意的地址，此处选用 stack_var 所在的栈地址作为实验中返回的任意地址</li>
+<li>申请一个 0x40 大小的 chunk 给 a，在这个 <code>chunk_a+0x10</code> 的位置设置一个 fake chunk，size 设置为 0x60，fd/bk 均设置为 a</li>
+<li>申请一个 0x30 大小的 chunk 给 b，并获取这个 chunk 真正可用空间，即 0x28</li>
+<li>申请一个 0x100 大小的 chunk 给 c，获取到 chunk_c 对应的 size 字段，此处值应该是 0x101，因为 b 被申请了，所以 prev_inuse 置为 1</li>
+</ol>
+</li>
+<li><p><strong>蓝色方框：</strong></p>
+<ol>
+<li>通过 b[0x28] 刚好访问 chunk_c 对应 size 字段的<strong>最低有效字节（least siginificant byte）</strong>，将该值置 0，此时发生的变化为 <code>0x101 -> 0x100</code>，也就是说，此时 chunk_b 对于 chunk_c 来说，处于空闲状态，那么当释放 chunk_c 时，就会与 chunk_b 发生合并</li>
+<li>获取一个 fake_size，<strong>这个 fake_size 是 chunk_c 起始地址减去 a 指针的地址的大小</strong>，注意 a 指针对应的位置刚好是 fake_chunk 的地址，这里算出来的值为 0x60。a 指针位于 <code>chunk_a+0x10</code> 处，因此 a 指针（或者说 fake_chunk）到 chunk_c 之间的大小就是 0x60</li>
+<li>算出 fake_size 的值后，<strong>将 chunk_c 的 prev_size 设置为 fake_size</strong></li>
+<li>最后将 fake_chunk 的 size 字段值也设置为 fake_size</li>
+<li>经过上述操作后，chunk_c 的前一个块变成了 fake_chunk，是一个 0x60 大小的块，且处于空闲状态。那么 chunk_c 在释放时将与 fake_chunk 进行合并</li>
+</ol>
+</li>
 </ul>
-<h3 id="执行分析-2"><a href="#执行分析-2" class="headerlink" title="执行分析"></a>执行分析</h3>
-
-
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_einherjar_simplecode_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_einherjar_simplecode_2.png"></a>
 
 <ul>
-<li></li>
+<li><p><strong>紫色方框：</strong></p>
+<ol>
+<li>申请 7 个大小 0x100 的块，再将它们释放掉，以填满 0x100 大小的 tcache bin。<strong>这 7 个 chunk 从 chunk_c 之后的位置开始申请，进入 tcache bin 后，仍处于 inuse 状态</strong>，这样 chunk_c 释放后就不会与 top chunk 合并了。虽然，即使合并了也不影响结果</li>
+<li>释放 chunk_c 这个 0x100 大小的块，由于 tcache bin 已满，chunk_c 不会进入 0x100 大小的 tcache bin，它将会与前面的 fake_chunk 进行合并成一个 0x160 大小的 chunk，然后进入 unsorted bin</li>
+<li>此时申请一个 0x160 大小的 chunk_d，刚好会申请到以 fake chunk 开始的 0x160 大小的 chunk</li>
+</ol>
+</li>
+<li><p><strong>红色方框：</strong></p>
+<ol>
+<li><p>申请一个 0x30 大小的 chunk_pad，然后再释放掉。其进入 0x30 大小的 tcache bin 中</p>
+</li>
+<li><p>再把 0x30 大小的 chunk_b 释放掉，其同样会进入 tcache bin 中。此时 0x30 大小的这个 tcache bin 中排布为：</p>
+<p><code>tcache bin -> chunk_b -> chunk_pad</code></p>
+</li>
+<li><p><strong>d[0x30/8]，也就是 chunk_d + 0x10 + 0x30 的位置</strong>，这个位置对应  chunk_b 的 fd 字段，此时将这个值修改为我们设置的栈中地址 stack_var，此时 0x30 大小的 tcache bin 中排布为：</p>
+<p><code>tcache bin -> chunk_b -> stack_var</code></p>
+</li>
+</ol>
+</li>
+<li><p><strong>粉色方框：</strong></p>
+<ol>
+<li>然后申请 2 次 0x30 大小的 chunk，第二次就可以把 stack_var 这个地址申请出来</li>
+</ol>
+</li>
 </ul>
-<h3 id="调试分析-2"><a href="#调试分析-2" class="headerlink" title="调试分析"></a>调试分析</h3><h3 id="原理小结-2"><a href="#原理小结-2" class="headerlink" title="原理小结"></a>原理小结</h3><h2 id="house-of-mind-fastbin"><a href="#house-of-mind-fastbin" class="headerlink" title="house_of_mind_fastbin"></a>house_of_mind_fastbin</h2><h3 id="源码分析-3"><a href="#源码分析-3" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="完整版-3"><a href="#完整版-3" class="headerlink" title="完整版"></a>完整版</h4><h4 id="简化版-3"><a href="#简化版-3" class="headerlink" title="简化版"></a>简化版</h4><h3 id="执行分析-3"><a href="#执行分析-3" class="headerlink" title="执行分析"></a>执行分析</h3><h3 id="调试分析-3"><a href="#调试分析-3" class="headerlink" title="调试分析"></a>调试分析</h3><h3 id="原理小结-3"><a href="#原理小结-3" class="headerlink" title="原理小结"></a>原理小结</h3><h2 id="mmap-overlapping-chunks"><a href="#mmap-overlapping-chunks" class="headerlink" title="mmap_overlapping_chunks"></a>mmap_overlapping_chunks</h2><h3 id="源码分析-4"><a href="#源码分析-4" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="完整版-4"><a href="#完整版-4" class="headerlink" title="完整版"></a>完整版</h4><h4 id="简化版-4"><a href="#简化版-4" class="headerlink" title="简化版"></a>简化版</h4><h3 id="执行分析-4"><a href="#执行分析-4" class="headerlink" title="执行分析"></a>执行分析</h3><h3 id="调试分析-4"><a href="#调试分析-4" class="headerlink" title="调试分析"></a>调试分析</h3><h3 id="原理小结-4"><a href="#原理小结-4" class="headerlink" title="原理小结"></a>原理小结</h3><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ol>
+<h3 id="执行分析-2"><a href="#执行分析-2" class="headerlink" title="执行分析"></a>执行分析</h3><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_einherjar_run_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_einherjar_run_1.png"></a>
+
+<ul>
+<li>描述很多，其实更方便源码分析时看。粉色方框展示了 chunk_c 的 size 字段 prev_inuse 被清空的过程。橙色方框计算出 fake_size 的大小为 0x60。红色方框则验证了申请出的内存为栈中地址</li>
+</ul>
+<h3 id="调试分析-2"><a href="#调试分析-2" class="headerlink" title="调试分析"></a>调试分析</h3><p>我觉得调试的目的主要是为了弄明白看源码弄不明白的东西，但是我弄明白了，调完一遍发现也符合预期。所以就不贴图分析了。当然主要是懒，其次是不知道该在哪下断截图。如果以后回顾时忘记了原理，也许会再调试一遍以加深印象，到时候可能会再进行截图分析</p>
+<h3 id="原理小结-2"><a href="#原理小结-2" class="headerlink" title="原理小结"></a>原理小结</h3><ul>
+<li>本例可以说是 poison_null_byte（理念相同，但需覆盖至少 9 个字节） 与 tcache_poisoning 的结合</li>
+<li>没有涉及新的手法，而是在条件限制的情况下进行手法的组合变换</li>
+<li>如果可以同时控制一个 chunk 的 prev_size（8字节） 与 prev_inuse（1字节）字段</li>
+<li>那么可最终可通过 tcache poisoning 的手法实现任意地址 chunk 申请</li>
+</ul>
+<h2 id="house-of-mind-fastbin"><a href="#house-of-mind-fastbin" class="headerlink" title="house_of_mind_fastbin"></a>house_of_mind_fastbin</h2><h3 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h3><p>本示例中需要具备的前置知识作者已在注释中进行了介绍，或参考这篇文章的<a href="https://cata1oc.github.io/2022/06/30/%E5%A0%86%E5%9F%BA%E7%A1%8001-ptmalloc2%E5%88%9D%E6%8E%A2/#%E5%A0%86%E7%AE%A1%E7%90%86%E7%BB%93%E6%9E%84">堆管理结构</a>部分。</p>
+<h3 id="源码分析-3"><a href="#源码分析-3" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="完整版-3"><a href="#完整版-3" class="headerlink" title="完整版"></a>完整版</h4><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_fullcode_long.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_fullcode_long.png"></a>
+
+<h4 id="简化版-3"><a href="#简化版-3" class="headerlink" title="简化版"></a>简化版</h4><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_simplecode_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_simplecode_1.png"></a>
+
+<ul>
+<li><p><strong>橙色方框：</strong></p>
+<ul>
+<li><p>分配信息设置：</p>
+<ul>
+<li>设置 HEAP_MAX_SIZE 的值为 0x4000000，表示一个分配区（arena）的大小</li>
+<li>默认情况下 mmap_threshold 的值会设置为 128*1024，在不超过这个值的情况下，调用 <code>malloc()</code> 申请内存时会使用 bin 中的 chunk 或者从 top chunk 进行切割。超过时将通过系统调用 <code>mmap()</code> 进行内存分配，这部分可以参考下面的 mmap_overlapping_chunks。这里设置了一个小于 mmap_threshold 的值，防止通过 <code>mmap()</code> 申请内存</li>
+</ul>
+</li>
+<li><p>目标位置设置：</p>
+<ul>
+<li>申请一个可以容纳 0x1000 大小的空间，赋给 fake_arena，用于伪造一个 malloc_state 结构体，当然我们不需要初始化这个伪造的 malloc_state 全部字段 </li>
+<li>用 fake_arena+0x30 初始化一个 target_loc 作为目标地址</li>
+<li>获取到 fake_arena 对应 chunk 的地址，赋值给 target_chunk，用于后面设置分配区</li>
+<li>在 fake_arena 的 0x888 偏移处设置值 0xFFFFFF。也就是将伪造的 malloc_state 的 system_mem 字段设置为 0xFFFFFF。因为在某一分配区申请内存时，会与 system_mem 的值进行比较，防止申请的内存超过操作系统一开始分配区所分配的内存大小</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>蓝色方框：</strong></p>
+<ul>
+<li><p>通过 target_chunk 以及 HEAP_MAX_SIZE 计算出一个值，赋值给 new_arena_value，这个 new_arena_value 就是新的分配区的地址。这里参考了 glibc 源码中 <code>heap_for_ptr</code> 这个宏的计算方式，<code>heap_for_ptr</code> 可以算出 chunk 对应的分配区的起始地址。这里稍有不同，它加上了一个 HEAP_MAX_SIZE，因此算出的是一个新的分配区的起始地址：</p>
+<ul>
+<li>假设 target_chunk 地址为 0x555555550010，那么 <code>heap_for_ptr</code> 可以算出 target_chunk 所在的分配区起始地址为：0x555554000000</li>
+<li>假设 target_chunk 地址为 0x555555550010，那么此处 new_arena_value 的值为 0x555558000000</li>
+</ul>
+</li>
+<li><p>然后用 new_arena_value 的值来初始化变量 fake_heap_info，在先前的<a href="https://cata1oc.github.io/2022/06/30/%E5%A0%86%E5%9F%BA%E7%A1%8001-ptmalloc2%E5%88%9D%E6%8E%A2/#%E5%A0%86%E7%AE%A1%E7%90%86%E7%BB%93%E6%9E%84">文章</a>中了解到，malloc_state 表示一个分配区，heap_info 表示一个堆。一个分配区中可能包含多个堆，这里 fake_heap_info 就是我们伪造的堆区开始处，new_arean_value 表示我们设置的一个分配区的开始处。所以这个赋值操作，就是把 fake_heap_info 放在这个分配区的最开始处</p>
+</li>
+<li><p>我们先前 <code>malloc</code> 一个可以容纳 0x1000 大小的空间作为 fake_arena，<strong>这个 fake_arena 用作一个伪造的 malloc_state。尽管它本身位于 0x555554000000 这个分配区中，而它所表示的是 0x555558000000 这个分配区</strong>。接下来，我们再调用 <code>malloc</code> 的话，就会从 fake_arena 后面的位置开始切割 top chunk 进行内存分配。但依然位于 0x555554000000 这个分配区中，因此<strong>这里用了一个循环，在不触发 <code>mmap()</code> 系统调用的情况下不断分配内存，直到分配的内存位于 0x555558000000 这个分配区中，然后停下</strong></p>
+</li>
+</ul>
+</li>
+<li><p><strong>绿色方框：</strong></p>
+<ul>
+<li>分配一个 0x60 大小的 chunk，此时它位于 0x555558000000 这个分配区，释放时它会进入 fast bin；然后获取到这个 chunk 的首地址</li>
+<li>申请 7 个 0x60 大小的 chunk 再释放掉以填满 tcache，这样前面申请的 chunk 就会进入 fast bin</li>
+</ul>
+</li>
+<li><p><strong>红色方框：</strong></p>
+<ul>
+<li><p>设置 fake_heap_info[0] 处的值为 fake_arena，也就是伪造了 heap_info 的 ar_ptr 字段，将其设置为 fake_arena，也是我们伪造的 malloc_state，当然我们仅设置了 malloc_state 结构体的 system_mem 的值</p>
+</li>
+<li><p>然后修改先前未释放的那个 0x60 大小的 chunk，将其 size 字段中的 N(non_main_arena) 位设置为 1，表示这个 chunk 属于 thread_arena，然后将其释放</p>
+</li>
+<li><p>在释放的过程中会首先执行 <code>__libc_free</code>，其内部会调用 <code>arena_for_chunk</code> 来获取 chunk 所在 arena（见下图），<strong>经过前面步骤（蓝色方框）针对分配区和堆块的伪造，此时在获取这个 0x60 大小的 chunk 所在分配区时，得到值为 0x555558000000，也就是我们先前伪造的分配区</strong>，并且这个 chunk 会释放到该分配区的 0x60 对应的 fast bin 中，对应开头 target_loc 的位置，这个 target_loc 位于伪造的 malloc_state 中，也就是 fake_arena，即原先的分配区 0x555554000000 中。这里可以通过 target_loc 访问到从 0x555558000000 这个分配区中申请的 chunk，即可验证将这个 chunk 释放到了我们伪造的 arena 上</p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_simplecode_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_simplecode_2.png"></a>
+
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="执行分析-3"><a href="#执行分析-3" class="headerlink" title="执行分析"></a>执行分析</h3><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_run_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_run_1.png"></a>
+
+<ul>
+<li>目的地址设置为 0x5629140d76e0，设置的 fast bin 大小的 chunk 位于 0x56291803aa70；可以看出一开始目标地址保存的值为空，在将设置的 chunk 释放到伪造的分配区所在的 fast bin 后，就可以在目标地址看到 chunk 的地址了</li>
+</ul>
+<h3 id="调试分析-3"><a href="#调试分析-3" class="headerlink" title="调试分析"></a>调试分析</h3><ol>
+<li><p>初始化 fake_arena （0x5555555596b0）与 targe_loc（0x5555555596e0）</p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_dbg_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_dbg_1.png"></a>
+</li>
+<li><p>获取到伪造的分配区的起始地址（0x555558000000），并赋值给 fake_heap_info</p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_dbg_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_dbg_2.png"></a>
+</li>
+<li><p>在伪造的分配区范围内申请一个 fast bin 大小的 chunk（返回指针为：0x555558026530，chunk 地址为 0x555558026520）</p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_dbg_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_dbg_3.png"></a>
+</li>
+<li><p>设置 fake_heap_info 的 ar_ptr 字段</p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_dbg_4.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_dbg_4.png"></a>
+</li>
+<li><p>释放了之前申请的 fast bin 大小的 chunk</p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_dbg_5.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_dbg_5.png"></a>
+
+<p>可以看到，释放后，fast bin 仍然是空的，也就是说，它并没有进入我们当前主线程的 fast bin 中</p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_dbg_6.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/house_of_mind_fastbin_dbg_6.png"></a>
+
+<p>查看 target_loc 地址处的值，可以发现保存了 chunk 的首地址，这说明 chunk 将我们伪造的分配区当作自己所在的分配区，并释放到了我们伪造的 fast bin 中</p>
+</li>
+</ol>
+<h3 id="原理小结-3"><a href="#原理小结-3" class="headerlink" title="原理小结"></a>原理小结</h3><ul>
+<li>利用条件：<ul>
+<li>可分配足够大的内存</li>
+<li>单字节溢出（off-by-one）</li>
+<li>堆内存泄露</li>
+</ul>
+</li>
+<li>利用手法：<ul>
+<li>伪造一个 arena，在 arena 开始处放置一个伪造的 heap_info，heap_info 中第一个元素的位置指向一个伪造的 malloc_state，这个 malloc_state 结构体设置了 system_mem 的值</li>
+<li>然后通过不断申请内存，使得在某次申请时会申请到伪造的 arena 这个分配区中的内存</li>
+<li>修改 non_main_arena 标志位，再将申请的内存释放，使其进入我们伪造的 arena 的 fast bin 中 </li>
+</ul>
+</li>
+</ul>
+<h2 id="mmap-overlapping-chunks"><a href="#mmap-overlapping-chunks" class="headerlink" title="mmap_overlapping_chunks"></a>mmap_overlapping_chunks</h2><h3 id="前置知识-1"><a href="#前置知识-1" class="headerlink" title="前置知识"></a>前置知识</h3><h4 id="mmap-threshold"><a href="#mmap-threshold" class="headerlink" title="mmap_threshold"></a>mmap_threshold</h4><p>在 glibc 中，当分配一个巨大的内存块时，它将不会采用常规的方式从现有的 heap 段中进行分配，而是会调用 <code>sysmalloc()</code> 函数并最终通过系统调用 <code>mmap()</code> 完成内存的分配。此次分配会返回给用户一块虚拟内存。</p>
+<p>那么多大的内存块会触发 <code>mmap()</code> 系统调用呢？这个值由 malloc_par 结构体中的 mmap_threshold 字段决定，参考下图，<strong>默认情况下这个值会被设置为 0x20000</strong></p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/mmap_overlapping_chunks_pre_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/mmap_overlapping_chunks_pre_1.png"></a>
+
+<p>类似的，在对 <code>mmap()</code> 申请的内存区进行释放时也与常规情况有所不同，它并不会进入任何 bin 或者合并到 top chunk 中，而是通过特定的系统调用 <code>munmap()</code> 将 chunk 直接返回给操作系统内核。并且<strong>如果释放了一个大于阈值 mmap_threshold 的 chunk，那么 mmap_threshold 的值将会被设置为新释放的 chunk 大小</strong>。例如原先阈值是 0x20000，那么申请一个 0x100000 的 chunk 就会通过 <code>mmap()</code> 进行分配，如果将这个 0x100000 的 chunk 释放掉，阈值就会变为 0x100000，此时再申请 0x100000 就不会由 <code>mmap()</code> 来进行分配了，这叫做<strong>分配阈值动态调整机制</strong>，由 malloc_par 的 no_dyn_threshold 字段所控制。这部分在下图中 <code>_libc_free()</code> 的源码中进行了实现</p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/mmap_overlapping_chunks_pre_2.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/mmap_overlapping_chunks_pre_2.png"></a>
+
+<h4 id="mmap-chunk"><a href="#mmap-chunk" class="headerlink" title="mmap_chunk"></a>mmap_chunk</h4><p>可能也注意到了，<code>mmap()</code> 分配的超大内存块，也称为 chunk，其与常规的 chunk 有着相同的字段，但是用法有所不同，这里再来回顾一下 chunk 的各个字段，这里选用了之前的 free chunk 的图片来进行说明：</p>
+<a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/mmap_overlapping_chunks_pre_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/mmap_overlapping_chunks_pre_3.png"></a>
+
+<ul>
+<li><strong>元数据：</strong>元数据就是 chunk_size 中的 N、M、P 这 3 个位，对于 <code>mmap()</code> 申请的 chunk，M 位都会置 1</li>
+<li><strong>chunk_size：</strong>该字段表示当前 chunk 的大小，与默认情况相同</li>
+<li><strong>prev_size：</strong>由于 <code>mmap()</code> 申请的 chunk 不存在合并等情况，不需要定位前后 chunk 的位置，因此该字段表示当前 chunk 的剩余空间</li>
+<li><strong>fd/bk：</strong><code>mmap()</code> 申请的 chunk 不会进入 bin，因此这两个字段也是不使用的</li>
+<li><strong>对齐：</strong>普通的 chunk 是按照 0x10 对齐的，例如 <code>malloc()</code> 一个容纳 0x30 字节空间的内存，就会分配一个 0x40 大小的 chunk，虽然分配 0x38 字节就够了，因为下一个 chunk 的 prev_size 字段可以存 0x8 字节的数据。但是为了对齐，最终会分配一个 0x40 大小的 chunk。对于 <code>mmap()</code> 申请的内存则是按照页（0x1000 / 4096 / 4KB）对齐的。例如<code>mmap()</code> 一个可以容纳 0x100000 字节的内存，虽然 0x100010 空间就够，但是要按照页对齐，所以最终会分配一个 0x101000 大小的空间</li>
+</ul>
+<h3 id="源码分析-4"><a href="#源码分析-4" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="完整版-4"><a href="#完整版-4" class="headerlink" title="完整版"></a>完整版</h4><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/mmap_overlapping_chunks_fullcode_long.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/mmap_overlapping_chunks_fullcode_long.png"></a>
+
+<h4 id="简化版-4"><a href="#简化版-4" class="headerlink" title="简化版"></a>简化版</h4><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/mmap_overlapping_chunks_simplecode_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/mmap_overlapping_chunks_simplecode_1.png"></a>
+
+<ul>
+<li><strong>橙色方框：</strong><ol>
+<li>先申请 0x20 大小的 chunk 初始化堆</li>
+<li><code>malloc()</code> 3 个超过阈值 mmap_threshold 的内存块，使用系统调用 <code>mmap()</code> 来申请。分配为 top_ptr，mmap_chunk_2 与 mmap_chunk_3</li>
+<li>top_ptr 位于 libc.so 的上方，后两个 chunk 位于 libc.so 的下方。正常情况下，第一次调用 <code>mmap()</code> 得到的地址都在 libc.so 加载进的 chunk 的上方，比较趋近于栈。之后用 <code>mmap()</code> 申请的 chunk 会在 libc.so 的下方，趋近于堆（只是趋近，地址仍然是 0x7fff 开头）</li>
+</ol>
+</li>
+<li><strong>红色方框：</strong><ol>
+<li>这里修改了 mmap_chunk_3 的 size 字段，将其改为 mmap_chunk_2 与 mmap_chunk_2 大小之和，也就是 0x202002（<code>0x101000 + 0x101000 + 0x2</code>）</li>
+<li>然后将 mmap_chunk_3 释放掉，<strong>由于修改了大小为 0x202002，所以会释放 0x202000 大小的 chunk，从而导致 mmap_chunk_3 与 mmap_chunk_2 这两个 chunk 包含的内存全部返还给了内核</strong></li>
+</ol>
+</li>
+<li><strong>粉色方框：</strong><ol>
+<li>由于 mmap_chunk_2 所在的内存已经返回给内核，此时若访问 mmap_chunk_2[0] 会报错。因此需要再申请个 chunk </li>
+<li>这里申请一个能容纳 0x300000 大小的 chunk，<strong>因为先前释放了一个 0x202000 大小的 chunk，因此阈值 mmap_threshold 也发生了变化，变成 0x202000</strong>，此时需要申请一个大于 0x202000 的内存块才会触发 <code>mmap()</code> 系统调用</li>
+<li>申请到 chunk 后，在这个 chunk 中原先 mmap_chunk_2 位置处放置一个值，然后通过 mmap_chunk_2[0] 来访问看是否能访问到。能访问到，说明新申请的 chunk 已经覆盖了原先 mmap_chunk_2 的位置，也就实现了 overlap</li>
+</ol>
+</li>
+</ul>
+<h3 id="执行分析-4"><a href="#执行分析-4" class="headerlink" title="执行分析"></a>执行分析</h3><a href="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/mmap_overlapping_chunks_run_1.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/08/20/%E5%A0%86%E5%9F%BA%E7%A1%8006-how2heap%E8%BF%9B%E9%98%B6%E7%AF%87/mmap_overlapping_chunks_run_1.png"></a>
+
+<ul>
+<li><strong>橙色方框：</strong><ul>
+<li>mmap_chunk_2 返回的指针为 0x7f4002edc010</li>
+</ul>
+</li>
+<li><strong>红色方框：</strong><ul>
+<li>mmap_chunk_3 的 chunk_size 初始为 0x101002</li>
+<li>mmap_chunk_3 的 chunk_size 修改为 0x202002，包含了 mmap_chunk_2 的内存空间</li>
+</ul>
+</li>
+<li><strong>粉色方框：</strong><ul>
+<li>释放后，重新申请的 0x301000 大小的 chunk 返回的指针为 0x7f4002bdb010</li>
+<li>在新申请的 chunk 中设置了特定值，通过 mmap_chunk_2 也可以访问到</li>
+</ul>
+</li>
+</ul>
+<h3 id="调试分析-4"><a href="#调试分析-4" class="headerlink" title="调试分析"></a>调试分析</h3><p>太简单了，不调了</p>
+<h3 id="原理小结-4"><a href="#原理小结-4" class="headerlink" title="原理小结"></a>原理小结</h3><ul>
+<li>经典的 overlap 手法，只是用在了 <code>mmap()</code> 获取的内存上，因此需要掌握一些前置知识</li>
+<li>libc.so 所在的内存块也是通过 <code>mmap()</code> 申请的，因此也衍生出 <a href="https://bbs.pediy.com/thread-272416.htm#msg_header_h3_56" target="_blank" rel="noopener">house_of_muney</a> 这种利用手法 </li>
+</ul>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ol>
 <li><a href="https://bbs.pediy.com/thread-272416.htm" target="_blank" rel="noopener">看雪：how2heap深入浅出学习堆利用</a></li>
 <li><a href="https://github.com/fr0ster/how2heap" target="_blank" rel="noopener">Github：shellphish/how2heap</a></li>
 <li><a href="https://blog.csdn.net/tbsqigongzi/article/details/126293932" target="_blank" rel="noopener">CSDN：Tcache Stashing Unlink Attack (House of Lore Attack)</a></li>
