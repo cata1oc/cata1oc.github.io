@@ -548,26 +548,23 @@ function activateLightMode(){
 </li>
 <li><p><code>idx2block</code> 这个宏的操作是将 idx 右移 5位，即将 idx 除 32，得到一个位于 0~3 范围内的值，从而找到该下标位于 binmap 中的第几个 32 位的整数上</p>
 </li>
-<li><p><code>idx2bit</code> 这个宏我没大看明白，我知道它的意思应该是取到 idx 对应 large bin 的下标，因为后面移动到下一个 bin 时，bit 也会进行左移，但是我没看明白这个宏为什么是这样操作的</p>
+<li><p><code>idx2bit</code> 这个宏如下，作用是取到 idx 对应 large bin 的下标（图片来自付师傅的笔记）</p>
 <div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BINMAPSHIFT      5</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> idx2bit(i)       ((1U << ((i) & ((1U << BINMAPSHIFT) - 1))))</span></span><br></pre></td></tr></tbody></table></figure></div>
 
-
-
+<a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/idx2bit.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/idx2bit.png"></a>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-</ol>
-<ol start="3">
 <li><p>接下来会进入一个死循环，直到找到一个符合要求的 chunk</p>
 <a href="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/largebin_part_3.png" data-fancybox="group" data-caption="undefined" class="fancybox"><img class="lazyload" data-src="/2022/07/16/%E5%A0%86%E5%9F%BA%E7%A1%8002-malloc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/largebin_part_3.png"></a>
 
 <ul>
-<li><p>if 语句有两个条件 </p>
+<li><p>if 语句有两个条件（来自付师傅的笔记）</p>
 <ul>
-<li>bit > map：说明没有对齐，换句话说，map 上的那个 bit 的权值必定为0，说明 bin 是空的</li>
-<li>bit == 0：bit 为 0，说明没找对位置，因为 bit 为 0 对应的是 unsorted bin，肯定就不对了</li>
+<li>bit > map：如果bit大于map说明在本block中，map中大于bit的位置都为0，表示对应的bin都为空，无需继续检查</li>
+<li>bit == 0：通过idx2bit转化为32位的数据中，应该是31个0和一个1组成的，所以bit!=0；且因为前面进行了++idx，所以不可能转变成对应第一个bin的unsorted bin</li>
 </ul>
 <p>然后进入循环，判断当前 block 的值是否为 0，即这个 block 所表示的 32 个 bin 是否都是空的，如果是空的，就找下一个 block。如果全部都为空，就跳转到后面的 use_top 中进行处理。如果不为空，那么找到下标对应的 bin 并将 bit 置 1</p>
 </li>
