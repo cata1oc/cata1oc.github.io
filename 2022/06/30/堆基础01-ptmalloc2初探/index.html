@@ -359,7 +359,7 @@ function activateLightMode(){
 <ol>
 <li>tcache bin 中共<strong>包含 64 个 bin</strong>（定义在 TCACHE_MAX_BINS），<strong>每个 bin 中最多缓存 7 个 chunk</strong></li>
 <li>64 位系统上以 0x10 字节递增（24 -> 1032），32位系统上以 0x8 字节递增（12 -> 516）</li>
-<li>tcache 缓存的是非 large chunk</li>
+<li><del>tcache 缓存的是非 large chunk</del></li>
 <li>tcache bin 上的 <strong>chunk 的 prev_inuse 设为1</strong>，不会与相邻的空闲 chunk 合并，与 fast bin 类似</li>
 <li>当一个 chunk 被释放时，首先进入 tcache bin，而不是 fast bin，这样当该线程再次申请分配的时候，<strong>如果在其线程 tcache bin 上有空闲 chunk，就从 tcache bin 中取出，无需等待堆锁</strong>，从而实现加速分配。填满了<strong>这个大小</strong>的 tcache bin 后，再释放的 chunk 才会进入 fast bin</li>
 <li>tcache bin 由 tcache_entry 和 tcache_perthread_struct 两个结构体管理</li>
